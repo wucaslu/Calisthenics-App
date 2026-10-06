@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **48 skills grouped into Pull, Push, Legs, and Core**. No account, external database, API key, or backend service is needed.
+A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **51 skills grouped into Pull, Push, Legs, and Core**. No account, external database, API key, or backend service is needed.
 
 ## Run locally
 
@@ -35,6 +35,10 @@ All fonts are bundled locally; the app makes no external application requests. I
 - Progress, personal records, goals, and equipment stored under `calisthenics-skill-tree:v1` in localStorage, with validation, safe recovery from corrupt data, and cross-tab updates. Existing profiles gain an empty records collection while keeping their progress. If storage is blocked, the UI reports that progress and records last for the current session.
 
 The demo starts with eight mastered fundamentals, two skills in training, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Available equipment is floor, a fixed pull-up bar, parallettes, and a resistance band. Equipment changes do not erase historical mastery. Floor is always available; the Gym equipment option supplies a bar, dip bars, and parallettes, plus a secure bench for the dragon flag.
+
+Explosive Pull-up and High Pull-up branch directly from Pull-up. Band Muscle-up and Muscle-up also connect directly to Pull-up and require Straight-Bar Dip. Strict Muscle-up follows Muscle-up.
+
+Legs includes a Dragon Squat progression: Dragon Squat Prep → Assisted Dragon Squat → Dragon Squat. It builds on reverse lunges and pistol squat strength, with descriptions, practice drills, mastery criteria, and personal records for every step. Choose Legs, then Dragon Squat in the progression filter to explore the branch and its supporting skills.
 
 Because every prerequisite is required (AND, not alternatives), a goal's minimal path is its complete outstanding dependency set in prerequisite-first order. The goal view shows all supporting dependencies, rather than choosing one chain and omitting other requirements. On a filtered desktop tree, the initial viewport focuses on the goal path; pan or use Fit View to explore the rest of the progression.
 

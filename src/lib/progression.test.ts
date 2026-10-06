@@ -11,8 +11,8 @@ import { createDemoProfile, parseProfile } from "@/lib/profile";
 import { getRecommendations } from "@/lib/recommendations";
 
 describe("skill database", () => {
-  it("contains all 48 skills with valid, acyclic dependencies and reverse links", () => {
-    expect(skills).toHaveLength(48);
+  it("contains all 51 skills with valid, acyclic dependencies and reverse links", () => {
+    expect(skills).toHaveLength(51);
     expect(new Set(skills.map((skill) => skill.id)).size).toBe(skills.length);
     const visit = (id: string, ancestors: string[] = []) => {
       expect(ancestors).not.toContain(id);
@@ -68,6 +68,77 @@ describe("skill database", () => {
 });
 
 describe("progression", () => {
+  it("unlocks the Dragon Squat branch through preparation and single-leg strength", () => {
+    let progress = createDemoProfile().progress;
+    expect(getSkillState(skillById["dragon-squat-prep"], progress)).toBe(
+      "locked",
+    );
+    for (const id of ["bodyweight-squat", "split-squat", "reverse-lunge"])
+      progress = updateSkillProgress(progress, id, "mastered");
+    expect(getSkillState(skillById["dragon-squat-prep"], progress)).toBe(
+      "available",
+    );
+    progress = updateSkillProgress(progress, "dragon-squat-prep", "mastered");
+    expect(getSkillState(skillById["assisted-dragon-squat"], progress)).toBe(
+      "locked",
+    );
+    progress = updateSkillProgress(
+      progress,
+      "assisted-pistol-squat",
+      "mastered",
+    );
+    expect(getSkillState(skillById["assisted-dragon-squat"], progress)).toBe(
+      "available",
+    );
+    progress = updateSkillProgress(
+      progress,
+      "assisted-dragon-squat",
+      "mastered",
+    );
+    expect(getSkillState(skillById["dragon-squat"], progress)).toBe("locked");
+    progress = updateSkillProgress(progress, "pistol-squat", "mastered");
+    expect(getSkillState(skillById["dragon-squat"], progress)).toBe(
+      "available",
+    );
+    progress = updateSkillProgress(progress, "dragon-squat", "training");
+    progress = updateSkillProgress(progress, "reverse-lunge", "reset");
+    expect(progress["dragon-squat"]).toBeUndefined();
+    expect(getSkillState(skillById["dragon-squat"], progress)).toBe("locked");
+  });
+  it("unlocks explosive and high pulls from Pull-up and muscle-ups after straight-bar pressing", () => {
+    let progress = createDemoProfile().progress;
+    for (const id of ["explosive-pull-up", "high-pull-up"])
+      expect(getSkillState(skillById[id], progress)).toBe("available");
+    for (const id of ["band-muscle-up", "muscle-up"])
+      expect(getSkillState(skillById[id], progress)).toBe("locked");
+
+    progress = updateSkillProgress(progress, "dip", "mastered");
+    progress = updateSkillProgress(progress, "straight-bar-dip", "mastered");
+    for (const id of ["band-muscle-up", "muscle-up"])
+      expect(getSkillState(skillById[id], progress)).toBe("available");
+    expect(getSkillState(skillById["strict-muscle-up"], progress)).toBe(
+      "locked",
+    );
+
+    progress = updateSkillProgress(progress, "muscle-up", "mastered");
+    expect(getSkillState(skillById["strict-muscle-up"], progress)).toBe(
+      "available",
+    );
+    progress = updateSkillProgress(progress, "explosive-pull-up", "mastered");
+    progress = updateSkillProgress(progress, "explosive-pull-up", "reset");
+    expect(progress["muscle-up"]).toBe("mastered");
+
+    progress = updateSkillProgress(progress, "pull-up", "reset");
+    for (const id of [
+      "explosive-pull-up",
+      "high-pull-up",
+      "band-muscle-up",
+      "muscle-up",
+      "strict-muscle-up",
+    ])
+      expect(getSkillState(skillById[id], progress)).toBe("locked");
+    expect(progress["muscle-up"]).toBeUndefined();
+  });
   it("keeps a skill locked until every prerequisite is mastered", () => {
     expect(
       getSkillState(skillById["tuck-planche"], { "planche-lean": "mastered" }),
@@ -121,6 +192,31 @@ describe("progression", () => {
 });
 
 describe("goal paths", () => {
+  it("includes both Dragon Squat preparation and pistol strength once in the Legs branch", () => {
+    const path = getGoalPath("dragon-squat", {}).map((skill) => skill.id);
+    expect(path).toEqual([
+      "bodyweight-squat",
+      "split-squat",
+      "reverse-lunge",
+      "dragon-squat-prep",
+      "assisted-pistol-squat",
+      "assisted-dragon-squat",
+      "pistol-squat",
+      "dragon-squat",
+    ]);
+    expect(
+      getVisibleSkills("legs", "", "dragon-squat")
+        .map((skill) => skill.id)
+        .sort(),
+    ).toEqual([...path].sort());
+  });
+  it("plans muscle-ups from Pull-up and pressing strength without intermediate pull or band requirements", () => {
+    expect(
+      getGoalPath("strict-muscle-up", createDemoProfile().progress).map(
+        (skill) => skill.id,
+      ),
+    ).toEqual(["dip", "straight-bar-dip", "muscle-up", "strict-muscle-up"]);
+  });
   it("returns the shortest outstanding planche path for the demo profile", () => {
     expect(
       getGoalPath("tuck-planche", createDemoProfile().progress).map(

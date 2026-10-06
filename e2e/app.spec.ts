@@ -199,7 +199,7 @@ test("the four groups, global search, and dashboard are functional", async ({
       page.getByRole("button", { name: `Show ${name} skills` }),
     ).toBeVisible();
   await page.getByRole("button", { name: "Show Legs skills" }).click();
-  await expect(page.locator(".react-flow__node-skill")).toHaveCount(6);
+  await expect(page.locator(".react-flow__node-skill")).toHaveCount(9);
   await expect(page.getByRole("combobox", { name: "Skill group" })).toHaveValue(
     "legs",
   );
@@ -267,7 +267,27 @@ test("mobile lists, navigation, and skill dialog work without horizontal overflo
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Toggle navigation" }).click();
   await page.getByRole("button", { name: "Show Legs skills" }).click();
-  await expect(page.locator(".mobile-skill")).toHaveCount(6);
+  await expect(page.locator(".mobile-skill")).toHaveCount(9);
+  await page
+    .getByRole("combobox", { name: "Skill branch" })
+    .selectOption("dragon-squat");
+  await expect(page.locator(".mobile-skill")).toHaveCount(8);
+  const dragon = page
+    .locator(".mobile-skill")
+    .filter({ has: page.getByText("Dragon Squat", { exact: true }) });
+  await dragon.click();
+  await expect(
+    dialog.getByRole("heading", { name: "Dragon Squat", exact: true }),
+  ).toBeVisible();
+  await expect(dialog.locator(".movement-badge")).toHaveText("Dynamic");
+  await expect(dialog.locator(".detail-description")).toContainText(
+    "free leg passes behind",
+  );
+  await record.fill("2 reps per leg");
+  await page.keyboard.press("Escape");
+  await dragon.click();
+  await expect(record).toHaveValue("2 reps per leg");
+  await page.keyboard.press("Escape");
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,

@@ -6,7 +6,8 @@ export type Branch =
   | "handstand"
   | "muscle-up"
   | "core"
-  | "legs";
+  | "legs"
+  | "dragon-squat";
 export type Equipment =
   | "floor"
   | "pull-up-bar"
