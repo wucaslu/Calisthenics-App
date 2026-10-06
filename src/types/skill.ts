@@ -36,6 +36,30 @@ export interface MuscleProfile {
   secondary: string[];
 }
 
+export interface PrerequisiteRoute {
+  id: string;
+  label: string;
+  description: string;
+  prerequisites: string[];
+}
+
+export interface EquipmentSetup {
+  id: string;
+  label: string;
+  description: string;
+  equipment: Equipment[];
+}
+
+export interface PracticeEntry {
+  id: string;
+  skillId: string;
+  date: string;
+  sets: number;
+  repetitions?: number;
+  holdSeconds?: number;
+  notes: string;
+}
+
 export interface Skill {
   id: string;
   name: string;
@@ -48,8 +72,10 @@ export interface Skill {
   references: string[];
   referenceLevel?: string;
   prerequisites: string[];
+  alternativeRoutes?: PrerequisiteRoute[];
   progressionTo: string[];
   equipment: Equipment[];
+  equipmentSetups?: EquipmentSetup[];
   requirements: { exercise: string; target: string }[];
   exercises: {
     name: string;
@@ -61,12 +87,13 @@ export interface Skill {
 }
 
 export interface UserProfile {
-  version: 1;
+  version: 2;
   progress: Progress;
   personalRecords: PersonalRecords;
   goals: string[];
   equipment: Equipment[];
   archivedSkills: Record<string, ArchivedSkill>;
+  practiceLog: PracticeEntry[];
 }
 
 export interface ArchivedSkill {

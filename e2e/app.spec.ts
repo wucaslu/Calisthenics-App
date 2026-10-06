@@ -902,7 +902,7 @@ test("mobile lists, navigation, and skill dialog work without horizontal overflo
   await page
     .getByRole("combobox", { name: "Skill branch" })
     .selectOption("dragon-squat");
-  await expect(page.locator(".mobile-skill")).toHaveCount(7);
+  await expect(page.locator(".mobile-skill")).toHaveCount(8);
   const dragon = page
     .locator(".mobile-skill")
     .filter({ has: page.getByText("Dragon Squat", { exact: true }) });

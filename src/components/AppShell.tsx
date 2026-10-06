@@ -16,6 +16,7 @@ import {
   Dumbbell,
   GitBranch,
   LayoutDashboard,
+  NotebookPen,
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
@@ -32,14 +33,16 @@ import { Dashboard, ProgressStats } from "@/components/Dashboard/Dashboard";
 import { GoalSelector } from "@/components/GoalSelector/GoalSelector";
 import { EquipmentSelector } from "@/components/EquipmentSelector/EquipmentSelector";
 import { Recommendations } from "@/components/Recommendations";
+import { PracticeLog } from "@/components/PracticeLog/PracticeLog";
 import { categories, categoryLabels, skillById, skills } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import type { Branch, Category } from "@/types/skill";
 
-type View = "tree" | "overview" | "goals" | "equipment";
+type View = "tree" | "overview" | "goals" | "equipment" | "practice";
 const navigation = [
   { id: "tree" as const, label: "Skill tree", Icon: GitBranch },
   { id: "overview" as const, label: "Overview", Icon: LayoutDashboard },
+  { id: "practice" as const, label: "Practice log", Icon: NotebookPen },
   { id: "goals" as const, label: "My goals", Icon: Target },
   { id: "equipment" as const, label: "Equipment", Icon: Dumbbell },
 ];
@@ -68,6 +71,12 @@ const pageCopy = {
     description:
       "A thoughtful practice starts with the tools you have available.",
   },
+  practice: {
+    eyebrow: "MAKE PRACTICE A HABIT",
+    title: "Every session adds up.",
+    description:
+      "Record your holds and repetitions, follow your consistency, and see what’s improving.",
+  },
 };
 function subscribeDesktop(callback: () => void) {
   const media = window.matchMedia("(min-width: 768px)");
@@ -86,6 +95,8 @@ export function AppShell() {
     toggleGoal,
     toggleEquipment,
     restoreDemo,
+    savePractice,
+    deletePractice,
   } = useProgress();
   const [view, setView] = useState<View>("tree");
   const [group, setGroup] = useState<Category | "all">("push");
@@ -98,6 +109,7 @@ export function AppShell() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [practiceSkillId, setPracticeSkillId] = useState<string | null>(null);
   const isDesktop = useSyncExternalStore(
     subscribeDesktop,
     desktopSnapshot,
@@ -149,7 +161,7 @@ export function AppShell() {
     (id: string, action: "training" | "mastered" | "reset") => {
       setSkillProgress(id, action);
       setNotice(
-        `${skillById[id].name}: ${action === "mastered" ? "mastered. New progressions unlocked!" : action === "training" ? "added to your training." : "progress reset, including dependent skills."}`,
+        `${skillById[id].name}: ${action === "mastered" ? "mastered. New progressions unlocked!" : action === "training" ? "added to your training." : "progress reset. Dependent skills keep progress when another route is complete."}`,
       );
     },
     [setSkillProgress],
@@ -158,6 +170,7 @@ export function AppShell() {
     setView(next);
     setMenuOpen(false);
     if (next !== "tree") setSelection(null);
+    if (next === "practice") setPracticeSkillId(null);
   };
   const selectGroup = (next: Category | "all") => {
     setGroup(next);
@@ -276,7 +289,7 @@ export function AppShell() {
             onClick={() => {
               if (
                 window.confirm(
-                  "Restore the demo profile? This replaces your saved progress, personal records, goals, and equipment on this device.",
+                  "Restore the demo profile? This replaces your saved progress, personal records, practice log, goals, and equipment on this device.",
                 )
               ) {
                 restoreDemo();
@@ -400,6 +413,11 @@ export function AppShell() {
                     onPersonalRecord={setPersonalRecord}
                     storageAvailable={storageAvailable}
                     hydrated={hydrated}
+                    onLogPractice={(id) => {
+                      setPracticeSkillId(id);
+                      setSelection(null);
+                      setView("practice");
+                    }}
                   />
                 )}
               </div>
@@ -433,6 +451,17 @@ export function AppShell() {
               onToggle={toggleEquipment}
               onSelect={exploreGoal}
               hydrated={hydrated}
+            />
+          )}
+          {view === "practice" && (
+            <PracticeLog
+              key={practiceSkillId ?? "all"}
+              entries={profile.practiceLog}
+              initialSkillId={practiceSkillId}
+              hydrated={hydrated}
+              storageAvailable={storageAvailable}
+              onSave={savePractice}
+              onDelete={deletePractice}
             />
           )}
           <footer className="page-footer">

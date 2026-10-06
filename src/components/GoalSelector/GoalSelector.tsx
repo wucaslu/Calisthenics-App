@@ -41,14 +41,15 @@ export function GoalSelector({
             <span className="eyebrow">Your direction</span>
             <h2>Small steps. Big milestones.</h2>
             <p>
-              Every supporting prerequisite is included. Already mastered skills
-              are cleared from your path.
+              One preparation route is chosen at each step, favoring your
+              equipment and fewer remaining skills. Already mastered skills are
+              cleared from your path.
             </p>
           </div>
         </div>
         {profile.goals.map((id) => {
           const skill = skillById[id],
-            path = getGoalPath(id, profile.progress);
+            path = getGoalPath(id, profile.progress, profile.equipment);
           return (
             <article className="surface-panel goal-path-card" key={id}>
               <div className="goal-path-heading">

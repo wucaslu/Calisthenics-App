@@ -5,10 +5,9 @@ import {
   ArrowRight,
   Check,
   CheckCheck,
-  ChevronRight,
-  Dumbbell,
   ExternalLink,
   Flame,
+  NotebookPen,
   RotateCcw,
   Sparkles,
   Target,
@@ -20,13 +19,16 @@ import {
   MovementBadge,
   SkillIcon,
   StateBadge,
-  StateIcon,
 } from "@/components/ui";
-import { branchLabels, equipmentLabels, skillById } from "@/data/skills";
+import { branchLabels, skillById } from "@/data/skills";
 import { researchSources } from "@/data/references";
 import { DIFFICULTY_EXPLANATION, MAX_DIFFICULTY } from "@/lib/difficulty";
 import { getSkillState, missingEquipment } from "@/lib/progression";
 import { PERSONAL_RECORD_MAX_LENGTH } from "@/lib/profile";
+import {
+  PrerequisiteOptions,
+  EquipmentOptions,
+} from "@/components/TrainingOptions/TrainingOptions";
 import type { Skill, UserProfile } from "@/types/skill";
 
 function subscribeMobile(callback: () => void) {
@@ -46,6 +48,7 @@ interface Props {
   onPersonalRecord: (id: string, value: string) => void;
   hydrated: boolean;
   storageAvailable: boolean;
+  onLogPractice: (id: string) => void;
 }
 
 export function SkillDetails({
@@ -58,6 +61,7 @@ export function SkillDetails({
   onPersonalRecord,
   hydrated,
   storageAvailable,
+  onLogPractice,
 }: Props) {
   const state = getSkillState(skill, profile.progress);
   const missing = missingEquipment(skill, profile.equipment);
@@ -213,6 +217,15 @@ export function SkillDetails({
             </small>
           </div>
           <button
+            className="goal-button practice-shortcut"
+            onClick={() => onLogPractice(skill.id)}
+            disabled={!hydrated}
+          >
+            <NotebookPen size={15} />
+            Log practice
+            <ArrowRight size={14} />
+          </button>
+          <button
             className={`goal-button ${isGoal ? "is-goal" : ""}`}
             onClick={() => onToggleGoal(skill.id)}
             disabled={!hydrated}
@@ -223,40 +236,11 @@ export function SkillDetails({
             {isGoal && <Check size={13} />}
           </button>
 
-          <div className="detail-section">
-            <h3>
-              Prerequisites{" "}
-              <span>
-                {
-                  skill.prerequisites.filter(
-                    (id) => profile.progress[id] === "mastered",
-                  ).length
-                }
-                /{skill.prerequisites.length}
-              </span>
-            </h3>
-            {skill.prerequisites.length ? (
-              <div className="prerequisite-list">
-                {skill.prerequisites.map((id) => {
-                  const item = skillById[id],
-                    itemState = getSkillState(item, profile.progress);
-                  return (
-                    <button key={id} onClick={() => onSelect(id)}>
-                      <span className={`prerequisite-check state-${itemState}`}>
-                        <StateIcon state={itemState} size={14} />
-                      </span>
-                      <span>{item.name}</span>
-                      <ChevronRight size={13} />
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="muted-copy">
-                No prerequisites. Start here and build your foundation.
-              </p>
-            )}
-          </div>
+          <PrerequisiteOptions
+            skill={skill}
+            profile={profile}
+            onSelect={onSelect}
+          />
           <div className="criteria-card">
             <Sparkles size={16} />
             <div>
@@ -290,21 +274,7 @@ export function SkillDetails({
               ))}
             </div>
           </div>
-          <div className="detail-section">
-            <h3>Equipment needed</h3>
-            <div className="equipment-chips">
-              {skill.equipment.map((item) => (
-                <span
-                  key={item}
-                  className={missing.includes(item) ? "missing" : ""}
-                >
-                  <Dumbbell size={12} />
-                  {equipmentLabels[item]}
-                  {missing.includes(item) && " · missing"}
-                </span>
-              ))}
-            </div>
-          </div>
+          <EquipmentOptions skill={skill} profile={profile} />
           <div className="detail-section">
             <h3>Progression references</h3>
             <p className="muted-copy">
@@ -360,7 +330,7 @@ export function SkillDetails({
         </div>
         <div className="detail-actions">
           {state === "locked" && (
-            <p>Master all prerequisites to unlock this skill.</p>
+            <p>Master every prerequisite in one route to unlock this skill.</p>
           )}
           {state !== "locked" && missing.length > 0 && (
             <p>Update your equipment to start training.</p>
@@ -396,7 +366,7 @@ export function SkillDetails({
             Reset Progress
           </button>
           {profile.progress[skill.id] && (
-            <small>Resetting also relocks dependent skills.</small>
+            <small>Dependent skills relock if no complete route remains.</small>
           )}
         </div>
       </aside>

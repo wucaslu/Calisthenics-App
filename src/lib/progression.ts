@@ -1,8 +1,28 @@
 import { skillById, skills } from "@/data/skills";
-import type { Equipment, Progress, Skill, SkillState } from "@/types/skill";
+import {
+  getEquipmentSetups,
+  getPrerequisiteRoutes,
+} from "@/data/trainingOptions";
+import type {
+  Equipment,
+  EquipmentSetup,
+  Progress,
+  Skill,
+  SkillState,
+} from "@/types/skill";
+
+export {
+  getEquipmentSetups,
+  getPrerequisiteIds,
+  getPrerequisiteRoutes,
+} from "@/data/trainingOptions";
 
 export function getSkillState(skill: Skill, progress: Progress): SkillState {
-  if (!skill.prerequisites.every((id) => progress[id] === "mastered"))
+  if (
+    !getPrerequisiteRoutes(skill).some((route) =>
+      route.prerequisites.every((id) => progress[id] === "mastered"),
+    )
+  )
     return "locked";
   return progress[skill.id] ?? "available";
 }
@@ -39,12 +59,12 @@ export function updateSkillProgress(
   return normalizeProgress(next);
 }
 
-export function missingEquipment(
-  skill: Skill,
+export function missingEquipmentForSetup(
+  setup: EquipmentSetup,
   available: Equipment[],
 ): Equipment[] {
   // Floor is always available; a gym supplies the fixed apparatus used by these skills.
-  return skill.equipment.filter(
+  return setup.equipment.filter(
     (item) =>
       item !== "floor" &&
       !available.includes(item) &&
@@ -52,6 +72,19 @@ export function missingEquipment(
         available.includes("gym") &&
         ["pull-up-bar", "dip-bars", "parallettes"].includes(item)
       ),
+  );
+}
+
+export function missingEquipment(
+  skill: Skill,
+  available: Equipment[],
+): Equipment[] {
+  const options = getEquipmentSetups(skill).map((setup) =>
+    missingEquipmentForSetup(setup, available),
+  );
+  return options.reduce(
+    (best, option) => (option.length < best.length ? option : best),
+    options[0],
   );
 }
 

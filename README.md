@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-A local-first MVP for personal use built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **101 skills grouped into Pull, Push, Legs, and Core**: Pull 40, Push 37, Legs 13, and Core 11. No account, external database, API key, or backend service is needed.
+A local-first application for personal use built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **101 skills grouped into Pull, Push, Legs, and Core**: Pull 40, Push 37, Legs 13, and Core 11. No account, external database, API key, or backend service is needed.
 
 ## Run locally
 
@@ -29,13 +29,16 @@ All fonts are bundled locally; the app makes no external application requests. I
 - Individually calibrated difficulty scores from 1 to 10, shown with five shared tiers: Foundation, Developing, Intermediate, Advanced, and Elite. Scores reflect the overall strength, balance, control, and mobility demands of each skill's benchmark.
 - Dynamic/Static badges on every tree node, mobile skill card, and details panel. Static skills hold a position; dynamic skills move through repetitions.
 - Click a skill to read its description and edit its Personal Record (for example, `25 seconds` or `12 reps + 10 kg`). Records save automatically, can be cleared, and stay intact when resetting skill progress.
-- Locked, available, training, and mastered states with labels and icons. All prerequisites must be mastered before a skill becomes available.
-- Start training, mark mastery, and reset progress. Resetting a prerequisite also clears dependent progress so the graph remains consistent.
-- Multiple goals with highlighted, ordered prerequisite paths. Paths include missing supporting prerequisites, deduplicate shared dependencies, and stop at mastered skills.
+- A **Practice log** workspace for dated entries with sets, repetitions per set, hold seconds per set, and notes. Use **Log practice** in skill details to preselect that skill. Edit or delete entries, filter history by skill, and see the best logged hold and repetition values. Logging remains independent of mastery and the editable Personal Record.
+- An eight-week consistency chart counts distinct practice days in rolling seven-day windows. The latest seven days are compared with the previous seven days; multiple entries on one day count once. Dates follow the user's local calendar, including daylight-saving boundaries.
+- Locked, available, training, and mastered states with labels and icons. Master every prerequisite in any one complete route to unlock a skill. Where alternatives exist, skill details show each route and its readiness; dashed tree edges indicate alternative prerequisites.
+- Start training, mark mastery, and reset progress. Resetting a prerequisite clears dependent progress only when no complete alternative route remains.
+- Multiple goals with highlighted, ordered prerequisite paths. Each step chooses one preparation route, includes its supporting prerequisites, deduplicates shared dependencies, and stops at mastered skills.
 - Deterministic recommendations ranked by goal relevance, current training, supporting strength, and difficulty. Only available/training skills with compatible equipment are recommended.
+- Exercise-specific equipment substitutions appear in skill details, with notes about grip, stability, clearance, and execution. Any complete listed setup qualifies for equipment filtering and recommendations. Bar-contact and ring-specific movements retain their required apparatus.
 - Equipment filtering, completion statistics, category progress, training lists, and mastered-skill lists.
 - A responsive mobile skill list and a keyboard-accessible details dialog. Desktop nodes are also keyboard accessible; use the zoom and fit controls or drag the canvas to explore.
-- Progress, personal records, goals, and equipment stored under `calisthenics-skill-tree:v1` in localStorage, with validation, safe recovery from corrupt data, and cross-tab updates. Existing profiles gain an empty records collection while keeping their progress. If storage is blocked, the UI reports that progress and records last for the current session.
+- Progress, personal records, practice history, goals, and equipment stored under the existing `calisthenics-skill-tree:v1` localStorage key, with validation, recovery from corrupt data, and cross-tab updates. The profile schema is now version 2; version 1 profiles migrate automatically with an empty practice log while keeping their other data. Invalid log rows are discarded individually. If storage is blocked, the UI reports that data lasts for the current session.
 
 The demo starts with eight mastered fundamentals, two skills in training, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Available equipment is floor, a fixed pull-up bar, and parallettes. Equipment changes do not erase historical mastery. Floor is always available; the Gym equipment option supplies a bar, dip bars, and parallettes, plus a secure bench for the dragon flag. Rings must be selected separately for ring skills.
 
@@ -53,7 +56,7 @@ One-leg progression steps have been removed: One-Leg Front Lever, One-Leg Back L
 
 Retained skill IDs and Personal Records stay intact. The old generic Front Lever Row described a tuck variation; its records are archived, and Full Front Lever Row has a new ID so old tuck records are not mislabeled. Removed milestone records and prior progress relocked by new prerequisites appear under **Overview → Previous skill records** and persist in the profile archive. The app does not grant mastery for new prerequisites automatically. Retired goals leave the active list; archived progress does not count toward tree completion.
 
-Because every prerequisite is required (AND, not alternatives), a goal's minimal path is its complete outstanding dependency set in prerequisite-first order. The goal view shows all supporting dependencies, rather than choosing one chain and omitting other requirements. On a filtered desktop tree, the initial viewport focuses on the goal path; pan or use Fit View to explore the rest of the progression.
+Prerequisites within a route are all required; different complete routes are alternatives. Goal planning chooses one route at each step and includes all of that route's outstanding supporting dependencies. Standard routes win otherwise equal choices. On a filtered desktop tree, the initial viewport focuses on the goal path; pan or use Fit View to explore the rest of the progression. The graph includes every alternative route, while goal highlights show the planned route.
 
 ## Architecture
 
@@ -64,12 +67,14 @@ src/
   data/skills.ts          Definitions, group labels, and derived reverse unlock links
   data/references.ts      Reviewed sources and published per-progression levels
   data/muscles.ts         Target, primary, and secondary muscles for each skill
+  data/trainingOptions.ts Alternative preparation routes and equipment setups
   data/retiredSkills.ts   Names used to preserve removed milestone records
   lib/progression.ts      Skill states, equipment checks, and cascading resets
   lib/difficulty.ts       Shared 1–10 scale, tier labels, and explanatory text
   lib/graph.ts            Dependency paths, filtering, and graph layout
   lib/recommendations.ts  Pure deterministic recommendation rules
   lib/profile.ts          Demo profile and stored-data validation
+  lib/practice.ts         Log validation, calendar dates, records, and trends
   hooks/useProgress.ts    React state and localStorage persistence
   components/             App shell and focused feature components
 e2e/                      Browser interaction tests
@@ -105,6 +110,8 @@ define(
 
 `progressionTo` is generated from prerequisites automatically. The new skill appears in the graph, search, goal selector, details, equipment checks, and completion metrics without UI changes. Add a new branch label/type only when the skill needs a new named progression. Update the intentional database-count assertion in the tests when expanding the catalog, and run tests to check missing references and cycles. Never rename a persisted skill ID casually: existing local progress and goals refer to it.
 
+Add optional preparation routes and equipment setups by stable skill ID in `src/data/trainingOptions.ts`. Each route must list its full set of requirements, including shared foundations. Each setup must list its full equipment requirement and describe any execution differences. Reverse links and the tree include all routes; planning and unlocks use one complete route. Keep the union of alternative dependencies acyclic.
+
 Add a matching entry in `src/data/muscles.ts` for every new skill ID, with a target muscle-group summary and nonempty primary and secondary muscle lists. Use the movement's actual form, including isometric support and stabilizers. The catalog rejects missing muscle profiles; keep retired skills out of the active muscle map.
 
 ## Validation
@@ -116,7 +123,7 @@ npm test
 npm run build
 ```
 
-Vitest covers prerequisite gating, unlock propagation, locked-state actions, cascading resets, minimal goal paths, equipment compatibility, recommendations, saved-data validation, group membership, and graph/data consistency.
+Vitest covers prerequisite gating, alternative routes, unlock propagation, cascading resets, complete goal planning, exercise-specific equipment compatibility, recommendations, profile migration, practice validation, local-calendar arithmetic, consistency trends, group membership, and graph/data consistency.
 
 To run the browser tests:
 
@@ -125,7 +132,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The suite starts and stops its own dev server on port 3001, then checks skill unlocking and persistence, goals, equipment, the dashboard, search, responsive navigation, dialogs, and corrupt-storage recovery. To use an existing server or a system Chromium installation:
+The suite starts and stops its own dev server on port 3001, then checks skill unlocking and persistence, practice logging and trends, cross-tab updates, profile migration, alternative routes, equipment substitutions, goals, the dashboard, search, responsive navigation, dialogs, and corrupt-storage recovery. To use an existing server or a system Chromium installation:
 
 ```sh
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 \
@@ -135,12 +142,10 @@ npm run test:e2e
 
 `npm run format` formats source and docs; `npm run format:check` checks formatting.
 
-## Sensible next steps for version 2
+## Future improvements
 
-1. A practice log with hold durations, repetitions, and consistency trends.
-2. Short technique videos, entry/exit demonstrations, and coaching cues.
-3. Optional account-based synchronization and progress export/import.
-4. Alternative prerequisite routes and exercise-specific equipment substitutions.
-5. Richer leg progressions, accessibility preferences, and saved graph views.
+1. Short technique videos, entry/exit demonstrations, and coaching cues.
+2. Optional account-based synchronization and progress export/import.
+3. Richer leg progressions, accessibility preferences, and saved graph views.
 
 Progress currently stays in this browser and does not synchronize between devices. Clearing site data removes it. Mastery benchmarks are illustrative guides, not automatic assessments.

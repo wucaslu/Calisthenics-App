@@ -1,0 +1,442 @@
+.log {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.log h2 {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.log :global(.panel-heading) {
+  flex-wrap: wrap;
+}
+
+.log h2 svg {
+  flex-shrink: 0;
+}
+
+.muted,
+.metricHint {
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: 12px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  margin: 23px 0;
+}
+
+.stats > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #1c232b;
+}
+
+.stats > div > span {
+  color: #b8c6d5;
+  font-size: 11px;
+}
+
+.stats strong {
+  font-size: 27px;
+  color: var(--accent);
+}
+
+.stats small {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.chart {
+  margin: 0;
+}
+
+.chart figcaption {
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.chart figcaption span {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.bars {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: clamp(4px, 1.5vw, 18px);
+  margin: 21px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bars li {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  text-align: center;
+}
+
+.bars strong {
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.bars strong small {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.barTrack {
+  display: flex;
+  align-items: end;
+  height: 95px;
+  border-bottom: 1px solid #526171;
+  background: linear-gradient(#202b36, #192128);
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+}
+
+.barTrack span {
+  display: block;
+  width: 100%;
+  background: linear-gradient(#aac9ea, #648ab2);
+  border-radius: 4px 4px 0 0;
+}
+
+.bars time {
+  color: #a9b2bd;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: start;
+  gap: 22px;
+  min-width: 0;
+}
+
+.formPanel,
+.historyPanel,
+.trends {
+  min-width: 0;
+}
+
+.fields {
+  display: grid;
+  gap: 15px;
+  margin: 20px 0 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.fields label,
+.filter {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  color: #c7cdd5;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.fields label > span {
+  display: contents;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.fields input,
+.fields select,
+.fields textarea,
+.filter select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: 10px 11px;
+  border: 1px solid #39414a;
+  border-radius: 6px;
+  background: #12181e;
+  color: var(--foreground);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.fields textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.fields textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.fields input::placeholder,
+.fields textarea::placeholder {
+  color: #747e89;
+}
+
+.fieldPair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.formActions,
+.entryActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.primaryButton,
+.secondaryButton,
+.deleteButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border: 1px solid #455466;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.primaryButton {
+  background: #c3d9f0;
+  border-color: #c3d9f0;
+  color: #162433;
+}
+
+.primaryButton:hover {
+  background: #dae9f8;
+}
+
+.secondaryButton {
+  background: #202a35;
+  color: #cbddef;
+}
+
+.secondaryButton:hover {
+  background: #2c3b4b;
+}
+
+.deleteButton {
+  background: #2d2326;
+  border-color: #67454e;
+  color: #e2b3bb;
+}
+
+.deleteButton:hover {
+  background: #423039;
+}
+
+.warning,
+.error {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid #795f39;
+  border-radius: 6px;
+  background: #29231a;
+  color: #e7cfaa;
+  line-height: 1.6;
+  font-size: 12px;
+}
+
+.error {
+  margin: 0;
+  border-color: #7d4656;
+  background: #312128;
+  color: #f1becd;
+}
+
+.status {
+  color: #bfd7ed;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.status:not(:empty) {
+  margin-top: 15px;
+}
+
+.filter {
+  margin: 18px 0;
+}
+
+.records {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-bottom: 17px;
+}
+
+.records > span {
+  display: grid;
+  gap: 7px;
+  padding: 14px;
+  border: 1px solid #37495b;
+  border-radius: 7px;
+  background: #1b2834;
+  color: #b9d4ed;
+}
+
+.records strong {
+  font-size: 17px;
+}
+
+.records small {
+  color: #98a9ba;
+  font-size: 10px;
+}
+
+.history {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+}
+
+.entry {
+  padding: 16px;
+  border: 1px solid #343d47;
+  border-radius: 8px;
+  background: #161d25;
+  overflow-wrap: anywhere;
+}
+
+.entryHeading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 7px;
+  margin-bottom: 11px;
+}
+
+.entryHeading strong {
+  color: #d8e7f5;
+  font-size: 12px;
+}
+
+.entryHeading time {
+  color: #97a4b2;
+  font-size: 10px;
+}
+
+.entryMetrics {
+  color: #bfcfdf;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.notes {
+  margin-top: 8px;
+  color: #a4aeba;
+  font-size: 11px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.entry > .entryActions {
+  margin-top: 14px;
+}
+
+.confirm {
+  display: grid;
+  gap: 10px;
+  margin-top: 13px;
+  padding-top: 13px;
+  border-top: 1px solid #55404a;
+  color: #d6b6bf;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.empty {
+  display: grid;
+  place-items: center;
+  gap: 13px;
+  padding: 35px 12px;
+  color: #95a7b9;
+  text-align: center;
+}
+
+.empty h3 {
+  color: #c4d4e4;
+  font-size: 14px;
+}
+
+.empty p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+  max-width: 310px;
+}
+
+@media (max-width: 1100px) {
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats {
+    gap: 8px;
+  }
+
+  .stats > div {
+    padding: 11px;
+  }
+
+  .bars time {
+    font-size: 8px;
+  }
+
+  .fieldPair {
+    gap: 9px;
+  }
+
+  .fields input,
+  .fields select,
+  .fields textarea,
+  .filter select {
+    font-size: 16px;
+    padding: 9px 7px;
+  }
+
+  .records > span {
+    padding: 10px;
+  }
+
+  .entry {
+    padding: 12px;
+  }
+}

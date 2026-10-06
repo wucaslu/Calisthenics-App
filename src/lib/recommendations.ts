@@ -15,7 +15,7 @@ export function getRecommendations(
 ): Recommendation[] {
   const goalPaths = profile.goals.map((id) => ({
     id,
-    path: getGoalPath(id, profile.progress),
+    path: getGoalPath(id, profile.progress, profile.equipment),
   }));
   return skills
     .filter((skill) => {

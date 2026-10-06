@@ -7,6 +7,7 @@ import {
   parseProfile,
   PERSONAL_RECORD_MAX_LENGTH,
   updatePersonalRecord,
+  savePracticeEntry,
 } from "@/lib/profile";
 
 describe("personal records", () => {
@@ -241,5 +242,82 @@ describe("personal records", () => {
     expect(
       parseProfile(JSON.stringify(profile))?.personalRecords["push-up"],
     ).toHaveLength(PERSONAL_RECORD_MAX_LENGTH);
+  });
+});
+
+describe("version 2 profiles", () => {
+  const entry = {
+    id: "practice-test-1",
+    skillId: "tuck-planche",
+    date: "2026-01-02",
+    sets: 3,
+    holdSeconds: 12.5,
+    notes: "Clean tuck holds",
+  };
+
+  it("migrates version 1 without losing records or preferences and keeps the storage format reusable", () => {
+    const { practiceLog, ...profile } = createDemoProfile();
+    expect(practiceLog).toEqual([]);
+    const old = {
+      ...profile,
+      version: 1,
+      personalRecords: { "pull-up": "12 reps" },
+    };
+    const parsed = parseProfile(JSON.stringify(old))!;
+    expect(parsed).toEqual({ ...old, version: 2, practiceLog: [] });
+    expect(parseProfile(JSON.stringify(parsed))).toEqual(parsed);
+  });
+
+  it("round-trips practice history independently of mastery and personal records", () => {
+    const profile = createDemoProfile();
+    profile.practiceLog = savePracticeEntry([], entry);
+    const parsed = parseProfile(JSON.stringify(profile))!;
+    expect(parsed).toEqual(profile);
+    expect(parsed.progress["tuck-planche"]).toBeUndefined();
+    expect(parsed.personalRecords).toEqual({});
+  });
+
+  it("recovers valid history entries without discarding the rest of a profile", () => {
+    const profile = createDemoProfile();
+    const parsed = parseProfile(
+      JSON.stringify({
+        ...profile,
+        practiceLog: [
+          entry,
+          null,
+          { ...entry, id: "unknown", skillId: "fake" },
+          { ...entry, id: "bad-date", date: "2026-02-30" },
+          entry,
+        ],
+      }),
+    )!;
+    expect(parsed).toEqual({ ...profile, practiceLog: [entry] });
+    for (const value of [null, {}, "wrong", 5]) {
+      expect(
+        parseProfile(JSON.stringify({ ...profile, practiceLog: value })),
+      ).toEqual(profile);
+    }
+    expect(parseProfile(JSON.stringify({ ...profile, version: 3 }))).toBeNull();
+  });
+
+  it("replaces an edited entry by ID and rejects invalid changes", () => {
+    const original = [entry];
+    const changed = { ...entry, holdSeconds: 20, notes: "Longer hold" };
+    expect(savePracticeEntry(original, changed)).toEqual([changed]);
+    expect(original).toEqual([entry]);
+    expect(savePracticeEntry(original, { ...entry, sets: 0 })).toBe(original);
+    expect(
+      savePracticeEntry(original, { ...entry, holdSeconds: Number.NaN }),
+    ).toBe(original);
+  });
+
+  it("keeps stored calendar history when the device clock or timezone moves backward", () => {
+    const profile = createDemoProfile();
+    const stored = { ...entry, date: "9999-12-30" };
+    expect(
+      parseProfile(JSON.stringify({ ...profile, practiceLog: [stored] }))
+        ?.practiceLog,
+    ).toEqual([stored]);
+    expect(savePracticeEntry([], stored)).toEqual([]);
   });
 });

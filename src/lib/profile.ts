@@ -1,16 +1,30 @@
 import { equipmentLabels, skillById } from "@/data/skills";
 import { retiredSkillNames } from "@/data/retiredSkills";
 import { normalizeProgress } from "@/lib/progression";
+import { sanitizePracticeEntries, validatePracticeEntry } from "@/lib/practice";
 import type {
   Equipment,
   PersonalRecords,
   Progress,
   UserProfile,
   ArchivedSkill,
+  PracticeEntry,
 } from "@/types/skill";
 
 export const STORAGE_KEY = "calisthenics-skill-tree:v1";
 export const PERSONAL_RECORD_MAX_LENGTH = 160;
+
+export function savePracticeEntry(
+  entries: PracticeEntry[],
+  entry: PracticeEntry,
+): PracticeEntry[] {
+  if (validatePracticeEntry(entry)) return entries;
+  const validated = sanitizePracticeEntries([entry])[0];
+  if (!validated) return entries;
+  const index = entries.findIndex((item) => item.id === entry.id);
+  if (index === -1) return [...entries, validated];
+  return entries.map((item) => (item.id === entry.id ? validated : item));
+}
 
 export function updatePersonalRecord(
   records: PersonalRecords,
@@ -26,7 +40,8 @@ export function updatePersonalRecord(
 
 export function createDemoProfile(): UserProfile {
   return {
-    version: 1,
+    version: 2,
+    practiceLog: [],
     personalRecords: {},
     archivedSkills: {},
     equipment: ["floor", "pull-up-bar", "parallettes"],
@@ -52,7 +67,7 @@ export function parseProfile(raw: string): UserProfile | null {
     if (!data || typeof data !== "object") return null;
     const candidate = data as Record<string, unknown>;
     if (
-      candidate.version !== 1 ||
+      (candidate.version !== 1 && candidate.version !== 2) ||
       !Array.isArray(candidate.goals) ||
       !Array.isArray(candidate.equipment) ||
       !candidate.progress ||
@@ -142,7 +157,8 @@ export function parseProfile(raw: string): UserProfile | null {
       }
     }
     return {
-      version: 1,
+      version: 2,
+      practiceLog: sanitizePracticeEntries(candidate.practiceLog),
       progress: normalized,
       personalRecords,
       goals,

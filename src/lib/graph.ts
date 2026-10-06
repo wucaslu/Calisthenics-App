@@ -1,29 +1,115 @@
 import { branches, categories, skillById, skills } from "@/data/skills";
-import type { Branch, Category, Progress, Skill } from "@/types/skill";
+import {
+  getPrerequisiteIds,
+  getPrerequisiteRoutes,
+} from "@/data/trainingOptions";
+import { hasEquipment } from "@/lib/progression";
+import type {
+  Branch,
+  Category,
+  Equipment,
+  PrerequisiteRoute,
+  Progress,
+  Skill,
+} from "@/types/skill";
 
-/** Minimal outstanding dependency set, prerequisites before dependents.
- * Every prerequisite is required (AND). Shared dependencies occur once, and
- * mastered subtrees are omitted; there is no unnecessary single-chain detour.
+interface RoutePlan {
+  ids: string[];
+  visited: Set<string>;
+  routeIds: Record<string, string>;
+}
+
+/** Choose complete AND routes across the dependency graph, with OR between routes.
+ * Shared skills are assigned one route and counted once; mastered subtrees are
+ * omitted. When equipment is provided, fewer unavailable steps takes priority,
+ * then fewer remaining skills. Standard routes win equal-score ties.
  */
-export function getGoalPath(goalId: string, progress: Progress): Skill[] {
-  const result: Skill[] = [];
-  const visited = new Set<string>();
-  const visit = (id: string) => {
-    if (visited.has(id) || progress[id] === "mastered") return;
-    visited.add(id);
+export function getGoalPlan(
+  goalId: string,
+  progress: Progress,
+  equipment?: Equipment[],
+): { skills: Skill[]; routeIds: Record<string, string> } {
+  const expand = (id: string, plan: RoutePlan): RoutePlan[] => {
     const skill = skillById[id];
-    if (!skill) return;
-    skill.prerequisites.forEach(visit);
-    result.push(skill);
+    if (!skill || progress[id] === "mastered" || plan.visited.has(id))
+      return [plan];
+    return getPrerequisiteRoutes(skill).flatMap((route) => {
+      const visited = new Set(plan.visited);
+      visited.add(id);
+      let candidates: RoutePlan[] = [
+        {
+          ids: [...plan.ids],
+          visited,
+          routeIds: { ...plan.routeIds, [id]: route.id },
+        },
+      ];
+      for (const parent of route.prerequisites)
+        candidates = candidates.flatMap((candidate) =>
+          expand(parent, candidate),
+        );
+      return candidates.map((candidate) => ({
+        ...candidate,
+        ids: [...candidate.ids, id],
+      }));
+    });
   };
-  visit(goalId);
-  return result;
+  const candidates = expand(goalId, {
+    ids: [],
+    visited: new Set(),
+    routeIds: {},
+  });
+  const unavailableCount = (plan: RoutePlan) =>
+    equipment
+      ? plan.ids.filter((id) => !hasEquipment(skillById[id], equipment)).length
+      : 0;
+  const best = candidates.reduce((chosen, candidate) => {
+    const difference = unavailableCount(candidate) - unavailableCount(chosen);
+    return difference < 0 ||
+      (difference === 0 && candidate.ids.length < chosen.ids.length)
+      ? candidate
+      : chosen;
+  });
+  return {
+    skills: best.ids.map((id) => skillById[id]),
+    routeIds: best.routeIds,
+  };
+}
+
+export function getGoalPath(
+  goalId: string,
+  progress: Progress,
+  equipment?: Equipment[],
+): Skill[] {
+  return getGoalPlan(goalId, progress, equipment).skills;
+}
+
+export function getPreferredPrerequisiteRoute(
+  skill: Skill,
+  progress: Progress,
+  equipment?: Equipment[],
+): PrerequisiteRoute {
+  const withoutTarget = { ...progress };
+  delete withoutTarget[skill.id];
+  const plan = getGoalPlan(skill.id, withoutTarget, equipment);
+  const routes = getPrerequisiteRoutes(skill);
+  return (
+    routes.find((route) => route.id === plan.routeIds[skill.id]) ?? routes[0]
+  );
 }
 
 export function getAncestors(id: string): string[] {
-  return getGoalPath(id, {})
-    .map((skill) => skill.id)
-    .filter((item) => item !== id);
+  const result: string[] = [];
+  const visited = new Set<string>();
+  const visit = (current: string) => {
+    if (visited.has(current)) return;
+    visited.add(current);
+    const skill = skillById[current];
+    if (!skill) return;
+    getPrerequisiteIds(skill).forEach(visit);
+    if (current !== id) result.push(current);
+  };
+  visit(id);
+  return result;
 }
 
 export function getVisibleSkills(
@@ -56,7 +142,7 @@ export function layoutSkills(
   const levels = new Map<string, number>();
   const level = (id: string): number => {
     if (levels.has(id)) return levels.get(id)!;
-    const parents = skillById[id].prerequisites;
+    const parents = getPrerequisiteIds(skillById[id]);
     const depth = parents.length ? Math.max(...parents.map(level)) + 1 : 0;
     levels.set(id, depth);
     return depth;

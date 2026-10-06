@@ -40,12 +40,17 @@ import {
 } from "@/data/skills";
 import {
   getAncestors,
-  getGoalPath,
+  getGoalPlan,
   getVisibleSkills,
   getProgressionLanes,
   layoutSkills,
 } from "@/lib/graph";
-import { getSkillState, missingEquipment } from "@/lib/progression";
+import {
+  getSkillState,
+  missingEquipment,
+  getPrerequisiteIds,
+  getPrerequisiteRoutes,
+} from "@/lib/progression";
 import type { Branch, Category, UserProfile } from "@/types/skill";
 
 type GroupGraphNode = Node<
@@ -213,9 +218,19 @@ export function SkillTree(props: Props) {
   const { nodes, edges } = useMemo(() => {
     const positions = layoutSkills(visible);
     const goalIds = new Set(profile.goals);
+    const plans = profile.goals.map((id) =>
+      getGoalPlan(id, profile.progress, profile.equipment),
+    );
     const pathIds = new Set(
-      profile.goals.flatMap((id) =>
-        getGoalPath(id, profile.progress).map((skill) => skill.id),
+      plans.flatMap((plan) => plan.skills.map((skill) => skill.id)),
+    );
+    const pathEdges = new Set(
+      plans.flatMap((plan) =>
+        plan.skills.flatMap((skill) =>
+          getPrerequisiteRoutes(skill)
+            .find((route) => route.id === plan.routeIds[skill.id])!
+            .prerequisites.map((id) => `${id}-${skill.id}`),
+        ),
       ),
     );
     const ids = new Set(visible.map((skill) => skill.id));
@@ -267,19 +282,20 @@ export function SkillTree(props: Props) {
       });
     }
     const edges: Edge[] = visible.flatMap((skill) =>
-      skill.prerequisites
+      getPrerequisiteIds(skill)
         .filter((id) => ids.has(id))
         .map((id) => {
           const highlighted =
-            highlightPath &&
-            pathIds.has(skill.id) &&
-            (pathIds.has(id) || profile.progress[id] === "mastered");
+            highlightPath && pathEdges.has(`${id}-${skill.id}`);
           return {
             id: `${id}-${skill.id}`,
             source: id,
             target: skill.id,
             type: "smoothstep",
             style: {
+              strokeDasharray: skill.prerequisites.includes(id)
+                ? undefined
+                : "5 4",
               stroke: highlighted
                 ? "var(--tree-path)"
                 : profile.progress[id] === "mastered"
@@ -469,7 +485,9 @@ export function SkillTree(props: Props) {
         <span>
           <Target size={13} />A little stronger. One skill at a time.
         </span>
-        <span>All prerequisites must be mastered to unlock a skill.</span>
+        <span>
+          Complete one full route to unlock. Dashed lines show alternatives.
+        </span>
       </div>
     </section>
   );

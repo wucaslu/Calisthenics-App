@@ -1,0 +1,109 @@
+.section {
+  min-width: 0;
+}
+
+.explanation {
+  margin-bottom: 12px;
+  color: #a7b3c0;
+  font-size: 10px;
+  line-height: 1.8;
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+}
+
+.option {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #405064;
+  border-radius: 7px;
+  background: #202934;
+}
+
+.ready {
+  border-color: #718ca9;
+  background: #273443;
+}
+
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 7px;
+}
+
+.heading h4 {
+  color: #d8e2ee;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #bacfe6;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.unavailable {
+  color: #d6b67d;
+}
+
+.description {
+  margin: 8px 0 10px;
+  color: #a5b1bf;
+  font-size: 10px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.singleSetup .description {
+  margin-top: 0;
+}
+
+.prerequisites button {
+  min-width: 0;
+  width: 100%;
+}
+
+.prerequisites button > span:nth-child(2) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.prerequisites button > span:first-child,
+.prerequisites button > svg:last-child {
+  flex-shrink: 0;
+}
+
+.prerequisites button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.equipment span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+  .explanation,
+  .description {
+    font-size: 11px;
+  }
+
+  .heading h4 {
+    font-size: 12px;
+  }
+
+  .status {
+    font-size: 10px;
+  }
+}

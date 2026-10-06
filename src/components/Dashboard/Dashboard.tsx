@@ -99,7 +99,11 @@ export function Dashboard({
           {profile.goals.length ? (
             profile.goals.map((id) => {
               const goal = skillById[id],
-                remaining = getGoalPath(id, profile.progress).length;
+                remaining = getGoalPath(
+                  id,
+                  profile.progress,
+                  profile.equipment,
+                ).length;
               return (
                 <button
                   className="overview-goal"

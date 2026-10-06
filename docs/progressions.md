@@ -56,7 +56,17 @@ The four primary groups remain Pull, Push, Legs, and Core. Each progression has 
 | Posterior chain  | Glute Bridge → Nordic Negative → Nordic Curl. Single-Leg Glute Bridge is removed.                                                                                                                                                                          |
 | Core             | Hanging Knee Raise → Hanging Leg Raise to horizontal → strict Toes-to-Bar → Hanging Windshield Wiper. Tuck Dragon Flag precedes full Dragon Flag.                                                                                                          |
 
-All edges are **required app unlock criteria**, not claims of universal physiological prerequisites. An athlete can use a different training route outside the app. Repetition/hold benchmarks remain illustrative and do not automatically assess mastery.
+Edges within one route are **required app unlock criteria**; completing any full route unlocks the skill. These are suggested preparation paths, rather than universal physiological prerequisites. Repetition/hold benchmarks remain illustrative and do not automatically assess mastery.
+
+## Version 2 preparation routes and equipment
+
+Alternative routes now supplement the standard prerequisites for Tuck Front Lever, Archer Pull-up, Tuck Ice Cream Maker, Handstand Push-up, Ring Dip, and Pistol Squat Negative. They use existing unassisted skills: chin-ups or ring pull-ups for suitable pulling foundations, freestanding frog-stand pressing for handstand strength, floor/ring pressing with turned-out support for ring dips, and shrimp squat strength for pistol negatives. Each route preserves the target movement's specific control demands. The bar muscle-up sequence and Dragon Squat prerequisites retain their existing ordering.
+
+These additional routes are custom app preparation choices; the earlier research does not establish them as published progression standards. Goal planning chooses a single complete route at each step, while the tree displays the union of routes. Resetting a prerequisite preserves a dependent skill when another route remains complete.
+
+Equipment options are scoped to each skill. Appropriate floor holds and pressing movements may use parallettes; supported L-sit shapes may use floor, parallettes, or parallel bars; suitable hangs, pulls, and levers may use a fixed bar or rings. Setup notes explain clearance, grip, and stability differences. A substitution does not add a new assisted progression or change a movement's execution standard. Bar-contact movements such as bar muscle-ups and Hefesto keep their fixed apparatus, while ring muscle-ups, Pelican Planche, Iron Cross, and Maltese keep rings. Gym equipment does not imply access to rings.
+
+Practice-log repetitions and hold durations are recorded per set and remain separate from manual mastery and Personal Records. Trends use distinct local calendar dates, so several practice entries on the same date count as one practice day.
 
 Dragon Squat, Pelican, Hefesto, 90 Degree Hold, and the detailed Maltese/Iron Cross preparation routes use **custom app sequencing**. The accessible sources did not establish published levels for these routes. Their difficulty is estimated, and details without a reviewed movement reference explicitly say that no published level is assigned. The community static catalog supports the names Maltese/Iron Cross, but not their intermediate route. Iron Cross Negative is estimated at 7/10 · Advanced, while Maltese Negative is 9/10 · Elite; both require controlled unassisted loading.
 

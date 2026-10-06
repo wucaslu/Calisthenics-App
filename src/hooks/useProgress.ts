@@ -6,10 +6,11 @@ import {
   parseProfile,
   STORAGE_KEY,
   updatePersonalRecord,
+  savePracticeEntry,
 } from "@/lib/profile";
 import { updateSkillProgress } from "@/lib/progression";
 import { skillById } from "@/data/skills";
-import type { Equipment, UserProfile } from "@/types/skill";
+import type { Equipment, UserProfile, PracticeEntry } from "@/types/skill";
 
 export function useProgress() {
   const [profile, setProfile] = useState<UserProfile>(createDemoProfile);
@@ -90,6 +91,18 @@ export function useProgress() {
     }));
   }, []);
   const restoreDemo = useCallback(() => setProfile(createDemoProfile()), []);
+  const savePractice = useCallback((entry: PracticeEntry) => {
+    setProfile((previous) => ({
+      ...previous,
+      practiceLog: savePracticeEntry(previous.practiceLog, entry),
+    }));
+  }, []);
+  const deletePractice = useCallback((id: string) => {
+    setProfile((previous) => ({
+      ...previous,
+      practiceLog: previous.practiceLog.filter((entry) => entry.id !== id),
+    }));
+  }, []);
   return {
     profile,
     hydrated,
@@ -99,5 +112,7 @@ export function useProgress() {
     toggleGoal,
     toggleEquipment,
     restoreDemo,
+    savePractice,
+    deletePractice,
   };
 }

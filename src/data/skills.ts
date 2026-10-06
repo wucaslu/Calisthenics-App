@@ -1,5 +1,10 @@
 import { skillReferences } from "@/data/references";
 import { skillMuscles } from "@/data/muscles";
+import {
+  alternativeRoutes,
+  equipmentSetups,
+  getPrerequisiteIds,
+} from "@/data/trainingOptions";
 import type {
   Branch,
   Category,
@@ -98,6 +103,8 @@ function define(
     movementType,
     prerequisites,
     equipment,
+    alternativeRoutes: alternativeRoutes[id],
+    equipmentSetups: equipmentSetups[id],
     description,
     muscles,
     progressionTo: [],
@@ -2110,7 +2117,7 @@ export const skillById: Record<string, Skill> = Object.assign(
   Object.fromEntries(skills.map((skill) => [skill.id, skill])),
 );
 for (const skill of skills) {
-  for (const prerequisite of skill.prerequisites) {
+  for (const prerequisite of getPrerequisiteIds(skill)) {
     if (!skillById[prerequisite])
       throw new Error(`Unknown prerequisite: ${prerequisite}`);
     skillById[prerequisite].progressionTo.push(skill.id);

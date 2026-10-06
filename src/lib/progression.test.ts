@@ -399,7 +399,7 @@ describe("goal paths", () => {
       getVisibleSkills("legs", "", "dragon-squat")
         .map((skill) => skill.id)
         .sort(),
-    ).toEqual([...path].sort());
+    ).toEqual([...path, "shrimp-squat"].sort());
   });
   it("plans the complete pulling chain and pressing prerequisites for strict muscle-up", () => {
     expect(
