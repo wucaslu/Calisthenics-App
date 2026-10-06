@@ -23,6 +23,7 @@ All fonts are bundled locally; the app makes no external application requests. I
 ## Features
 
 - Pannable, zoomable dependency graph with four skill groups, named progression lanes, and optional progression filters. Mobile lists use the same families.
+- Open or close the left menu with the navigation button in the top bar. Closing it on desktop gives the workspace more room. Mobile also has an in-menu close button, backdrop dismissal, and Escape support.
 - Skill details with prerequisites, estimated difficulty, drills, example mastery criteria, equipment, unlock links, and reviewed reference links. Published source levels appear separately from app difficulty.
 - Individually calibrated difficulty scores from 1 to 10, shown with five shared tiers: Foundation, Developing, Intermediate, Advanced, and Elite. Scores reflect the overall strength, balance, control, and mobility demands of each skill's benchmark.
 - Dynamic/Static badges on every tree node, mobile skill card, and details panel. Static skills hold a position; dynamic skills move through repetitions.

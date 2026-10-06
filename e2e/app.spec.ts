@@ -13,6 +13,111 @@ async function openTreeSkill(page: Page, id: string, name: string) {
   ).toBeVisible();
 }
 
+test("desktop navigation collapses to expand the workspace and can be reopened", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const sidebar = page.locator("#main-navigation");
+  const toggle = page.locator(".menu-button");
+  const main = page.locator(".app-main");
+  const canvas = page.locator(".tree-canvas");
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await expect(toggle).toHaveAttribute("aria-controls", "main-navigation");
+  for (const [width, sidebarWidth] of [
+    [1440, 224],
+    [1200, 205],
+    [900, 180],
+  ]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await expect(main).toHaveCSS("margin-left", `${sidebarWidth}px`);
+    const canvasWidth = await canvas.evaluate((element) => element.clientWidth);
+    await toggle.click();
+    await expect(toggle).toHaveAccessibleName("Open navigation");
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(sidebar).toBeHidden();
+    await expect(sidebar).toHaveAttribute("inert", "");
+    await expect(main).toHaveCSS("margin-left", "0px");
+    await expect
+      .poll(() => canvas.evaluate((element) => element.clientWidth))
+      .toBeGreaterThan(canvasWidth + 100);
+    await toggle.press("Tab");
+    await expect(
+      page.getByRole("textbox", { name: "Search all skills" }),
+    ).toBeFocused();
+    await toggle.focus();
+    await toggle.press("Enter");
+    await expect(toggle).toHaveAccessibleName("Close navigation");
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(sidebar).toBeVisible();
+    await expect(main).toHaveCSS("margin-left", `${sidebarWidth}px`);
+  }
+  await toggle.click();
+  await page
+    .getByRole("button", { name: "Set your goals", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Choose your next milestone." }),
+  ).toBeVisible();
+  await expect(sidebar).toBeHidden();
+  await toggle.click();
+  await expect(
+    sidebar.getByRole("button", { name: "My goals", exact: false }),
+  ).toHaveAttribute("aria-current", "page");
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+});
+
+test("mobile navigation closes with its button, Escape, backdrop, and selection", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const sidebar = page.locator("#main-navigation");
+  const main = page.locator(".app-main");
+  const toggle = page.locator(".menu-button");
+  const close = sidebar.getByRole("button", {
+    name: "Close navigation",
+    exact: true,
+  });
+  for (const dismissal of ["button", "escape", "backdrop"]) {
+    await page
+      .getByRole("button", { name: "Open navigation", exact: true })
+      .click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(sidebar).toBeInViewport();
+    await expect(close).toBeFocused();
+    await expect(main).toHaveAttribute("inert", "");
+    await expect(page.locator("body")).toHaveCSS("overflow", "hidden");
+    if (dismissal === "button") await close.press("Enter");
+    else if (dismissal === "escape") await page.keyboard.press("Escape");
+    else
+      await page
+        .locator(".sidebar-backdrop")
+        .click({ position: { x: 370, y: 200 } });
+    await expect(sidebar).toHaveAttribute("aria-hidden", "true");
+    await expect(sidebar).not.toBeInViewport();
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(toggle).toBeFocused();
+    await expect(main).not.toHaveAttribute("inert");
+    await expect(page.locator("body")).toHaveCSS("overflow", "visible");
+  }
+  await toggle.click();
+  await sidebar.getByRole("button", { name: "Overview", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Your progress, in perspective." }),
+  ).toBeVisible();
+  await expect(sidebar).not.toBeInViewport();
+  await expect(toggle).toBeFocused();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+});
+
 for (const mobile of [false, true]) {
   test(`new planche skills show calibrated scores and preserve records on ${mobile ? "mobile" : "desktop"}`, async ({
     page,
@@ -670,7 +775,9 @@ test("mobile lists, navigation, and skill dialog work without horizontal overflo
     .click();
   await expect(record).toHaveValue("32 seconds");
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Toggle navigation" }).click();
+  await page
+    .getByRole("button", { name: "Open navigation", exact: true })
+    .click();
   await page.getByRole("button", { name: "Show Legs skills" }).click();
   await expect(page.locator(".mobile-skill")).toHaveCount(13);
   await page

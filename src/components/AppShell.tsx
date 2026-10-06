@@ -17,6 +17,8 @@ import {
   GitBranch,
   LayoutDashboard,
   Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
   RotateCcw,
   Search,
   ShieldCheck,
@@ -94,6 +96,7 @@ export function AppShell() {
     undefined,
   );
   const [menuOpen, setMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const isDesktop = useSyncExternalStore(
     subscribeDesktop,
@@ -103,6 +106,9 @@ export function AppShell() {
   const selectedId =
     selection === undefined ? (isDesktop ? "tuck-planche" : null) : selection;
   const searchRef = useRef<HTMLInputElement>(null);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
+  const menuCloseRef = useRef<HTMLButtonElement>(null);
+  const sidebarOpen = isDesktop ? !sidebarCollapsed : menuOpen;
   const selectedSkill = selectedId ? skillById[selectedId] : null;
   const copy = pageCopy[view];
 
@@ -117,6 +123,17 @@ export function AppShell() {
     window.addEventListener("keydown", keyboard);
     return () => window.removeEventListener("keydown", keyboard);
   }, []);
+  useEffect(() => {
+    if (isDesktop || !menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    const menuToggle = menuToggleRef.current;
+    document.body.style.overflow = "hidden";
+    menuCloseRef.current?.focus();
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      menuToggle?.focus();
+    };
+  }, [isDesktop, menuOpen]);
   useEffect(() => {
     if (!notice) return;
     const timer = setTimeout(() => setNotice(null), 4500);
@@ -159,8 +176,8 @@ export function AppShell() {
   };
 
   return (
-    <div className="app-shell">
-      {menuOpen && (
+    <div className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+      {!isDesktop && menuOpen && (
         <button
           className="sidebar-backdrop"
           aria-label="Close navigation"
@@ -168,11 +185,22 @@ export function AppShell() {
         />
       )}
       <aside
-        className={`sidebar ${menuOpen ? "open" : ""}`}
+        id="main-navigation"
+        className={`sidebar ${sidebarOpen ? "open" : ""}`}
         aria-label="Main navigation"
-        inert={!isDesktop && !menuOpen}
-        aria-hidden={!isDesktop && !menuOpen}
+        inert={!sidebarOpen}
+        aria-hidden={!sidebarOpen}
       >
+        <button
+          ref={menuCloseRef}
+          className="icon-button sidebar-close"
+          onClick={() => setMenuOpen(false)}
+          aria-label="Close navigation"
+          title="Close navigation"
+          aria-controls="main-navigation"
+        >
+          <X size={20} />
+        </button>
         <Link
           className="brand"
           href="/"
@@ -262,16 +290,31 @@ export function AppShell() {
           </button>
         </div>
       </aside>
-      <div className="app-main">
+      <div className="app-main" inert={!isDesktop && menuOpen}>
         <header className="topbar">
           <div className="topbar-location">
             <button
+              ref={menuToggleRef}
               className="icon-button menu-button"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-expanded={menuOpen}
-              aria-label="Toggle navigation"
+              onClick={() =>
+                isDesktop
+                  ? setSidebarCollapsed((collapsed) => !collapsed)
+                  : setMenuOpen((open) => !open)
+              }
+              aria-controls="main-navigation"
+              aria-expanded={sidebarOpen}
+              aria-label={sidebarOpen ? "Close navigation" : "Open navigation"}
+              title={sidebarOpen ? "Close navigation" : "Open navigation"}
             >
-              <Menu size={20} />
+              {isDesktop ? (
+                sidebarOpen ? (
+                  <PanelLeftClose size={20} />
+                ) : (
+                  <PanelLeftOpen size={20} />
+                )
+              ) : (
+                <Menu size={20} />
+              )}
             </button>
             <span className="location-workspace">Workspace</span>
             <ChevronRight size={12} />

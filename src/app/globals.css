@@ -105,6 +105,10 @@ button svg {
   border-right: 1px solid var(--border);
   z-index: 20;
   overflow-y: auto;
+  transition: transform 180ms;
+}
+.sidebar .sidebar-close {
+  display: none;
 }
 .brand {
   display: flex;
@@ -314,6 +318,7 @@ button svg {
 }
 .app-main {
   margin-left: 224px;
+  transition: margin-left 180ms;
 }
 .topbar {
   height: 73px;
@@ -388,7 +393,7 @@ button svg {
   color: #b3becb;
 }
 .menu-button {
-  display: none !important;
+  flex-shrink: 0;
 }
 .page-content {
   max-width: 1680px;
@@ -1896,6 +1901,18 @@ button svg {
 .sidebar-backdrop {
   display: none;
 }
+@media (min-width: 768px) {
+  .sidebar-collapsed .sidebar {
+    transform: translateX(-100%);
+    visibility: hidden;
+  }
+  .sidebar-collapsed .app-main {
+    margin-left: 0;
+  }
+  .sidebar-collapsed .notice-region {
+    left: 50%;
+  }
+}
 @media (min-width: 1700px) {
   .tree-canvas {
     height: 650px;
@@ -2084,6 +2101,14 @@ button svg {
   }
   .sidebar.open {
     transform: translateX(0);
+  }
+  .sidebar .sidebar-close {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-self: flex-end;
+    width: 36px;
+    height: 36px;
+    margin: -12px -6px 12px 0;
   }
   .sidebar-backdrop {
     display: block;
