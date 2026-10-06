@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **48 skills grouped into Pull, Push, Legs, and Core**. Handstand and planche progressions live under Push. No account, external database, API key, or backend service is needed.
+A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **48 skills grouped into Pull, Push, Legs, and Core**. No account, external database, API key, or backend service is needed.
 
 ## Run locally
 
