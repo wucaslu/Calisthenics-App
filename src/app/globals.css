@@ -999,6 +999,68 @@ button svg {
   font-size: 11px;
   line-height: 1.85;
 }
+.skill-muscles {
+  margin-top: 17px;
+  padding: 12px;
+  border: 1px solid #3b4858;
+  border-radius: 7px;
+  background: #1d252f;
+}
+.skill-muscles > h3 {
+  color: #d8e2ee;
+  font-size: 11px;
+  font-weight: 600;
+}
+.muscle-groups {
+  margin: 12px 0 0;
+}
+.muscle-groups dt {
+  color: #a9b6c7;
+  font-size: 9px;
+  font-weight: 600;
+}
+.muscle-groups dd {
+  margin: 6px 0 0;
+  overflow-wrap: anywhere;
+}
+.muscle-target dd {
+  color: #d8e5f5;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.muscle-group {
+  margin-top: 13px;
+}
+.muscle-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.muscle-chips li {
+  max-width: 100%;
+  padding: 4px 7px;
+  border: 1px solid #455870;
+  border-radius: 5px;
+  background: #29374a;
+  color: #d5e3f6;
+  font-size: 10px;
+  line-height: 1.55;
+}
+.muscles-secondary .muscle-chips li {
+  background: #252d38;
+  border-color: #3e4a5b;
+  color: #b6c2d3;
+}
+.muscle-role-note {
+  margin-top: 12px;
+  color: #9aa9bc;
+  font-size: 9px;
+  line-height: 1.6;
+}
 .personal-record-card {
   margin-top: 17px;
   padding: 12px;

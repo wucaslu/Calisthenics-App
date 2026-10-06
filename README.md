@@ -25,6 +25,7 @@ All fonts are bundled locally; the app makes no external application requests. I
 - Pannable, zoomable dependency graph with four skill groups, named progression lanes, and optional progression filters. Mobile lists use the same families.
 - Open or close the left menu with the navigation button in the top bar. Closing it on desktop gives the workspace more room. Mobile also has an in-menu close button, backdrop dismissal, and Escape support.
 - Skill details with prerequisites, estimated difficulty, drills, example mastery criteria, equipment, unlock links, and reviewed reference links. Published source levels appear separately from app difficulty.
+- Every skill description includes its target muscle groups, primary muscles, and secondary muscles. Primary muscles drive or hold the movement; secondary muscles assist and stabilize. These are qualitative movement-based descriptions, and roles can vary with technique or grip.
 - Individually calibrated difficulty scores from 1 to 10, shown with five shared tiers: Foundation, Developing, Intermediate, Advanced, and Elite. Scores reflect the overall strength, balance, control, and mobility demands of each skill's benchmark.
 - Dynamic/Static badges on every tree node, mobile skill card, and details panel. Static skills hold a position; dynamic skills move through repetitions.
 - Click a skill to read its description and edit its Personal Record (for example, `25 seconds` or `12 reps + 10 kg`). Records save automatically, can be cleared, and stay intact when resetting skill progress.
@@ -62,6 +63,7 @@ src/
   types/skill.ts          Skill, equipment, progress, and profile models
   data/skills.ts          Definitions, group labels, and derived reverse unlock links
   data/references.ts      Reviewed sources and published per-progression levels
+  data/muscles.ts         Target, primary, and secondary muscles for each skill
   data/retiredSkills.ts   Names used to preserve removed milestone records
   lib/progression.ts      Skill states, equipment checks, and cascading resets
   lib/difficulty.ts       Shared 1–10 scale, tier labels, and explanatory text
@@ -102,6 +104,8 @@ define(
 ```
 
 `progressionTo` is generated from prerequisites automatically. The new skill appears in the graph, search, goal selector, details, equipment checks, and completion metrics without UI changes. Add a new branch label/type only when the skill needs a new named progression. Update the intentional database-count assertion in the tests when expanding the catalog, and run tests to check missing references and cycles. Never rename a persisted skill ID casually: existing local progress and goals refer to it.
+
+Add a matching entry in `src/data/muscles.ts` for every new skill ID, with a target muscle-group summary and nonempty primary and secondary muscle lists. Use the movement's actual form, including isometric support and stabilizers. The catalog rejects missing muscle profiles; keep retired skills out of the active muscle map.
 
 ## Validation
 

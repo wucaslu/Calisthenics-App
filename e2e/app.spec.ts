@@ -119,6 +119,125 @@ test("mobile navigation closes with its button, Escape, backdrop, and selection"
 });
 
 for (const mobile of [false, true]) {
+  test(`skill descriptions show target, primary, and secondary muscles on ${mobile ? "mobile" : "desktop"}`, async ({
+    page,
+  }) => {
+    if (mobile) await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    const examples = [
+      {
+        id: "pull-up",
+        name: "Pull-up",
+        primary: "Latissimus dorsi (lats)",
+        secondary: "Forearm finger flexors",
+      },
+      {
+        id: "90-degree-hold",
+        name: "90 Degree Hold",
+        primary: "Triceps",
+        secondary: "Serratus anterior",
+      },
+      {
+        id: "nordic-curl",
+        name: "Nordic Curl",
+        primary: "Hamstrings",
+        secondary: "Gastrocnemius",
+      },
+      {
+        id: "l-sit",
+        name: "L-Sit",
+        primary: "Hip flexors",
+        secondary: "Quadriceps",
+      },
+      {
+        id: "pelican-planche",
+        name: "Pelican Planche",
+        primary: "Biceps and brachialis",
+        secondary: "Rotator cuff",
+      },
+    ];
+    for (const example of examples) {
+      if (mobile) {
+        await page
+          .getByRole("textbox", { name: "Search all skills" })
+          .fill(example.name);
+        await page
+          .locator(".mobile-skill")
+          .filter({ has: page.getByText(example.name, { exact: true }) })
+          .click();
+      } else await openTreeSkill(page, example.id, example.name);
+      const panel = mobile
+        ? page.getByRole("dialog")
+        : page.locator(".detail-panel");
+      await expect(
+        panel.getByRole("heading", {
+          name: example.name,
+          exact: true,
+          level: 2,
+        }),
+      ).toBeVisible();
+      const muscles = panel.getByRole("region", {
+        name: "Muscles used",
+        exact: true,
+      });
+      await expect(
+        muscles.getByText("Target muscles", { exact: true }),
+      ).toBeVisible();
+      await expect(muscles.locator(".muscle-target dd")).not.toBeEmpty();
+      await expect(
+        muscles.getByText("Primary muscles", { exact: true }),
+      ).toBeVisible();
+      await expect(
+        muscles.getByText("Secondary muscles", { exact: true }),
+      ).toBeVisible();
+      await expect(
+        muscles
+          .locator(".muscles-primary li")
+          .filter({ hasText: example.primary }),
+      ).toHaveCount(1);
+      await expect(
+        muscles
+          .locator(".muscles-secondary li")
+          .filter({ hasText: example.secondary }),
+      ).toHaveCount(1);
+      expect(
+        await muscles.evaluate(
+          (element) => element.scrollWidth <= element.clientWidth,
+        ),
+      ).toBe(true);
+      const record = panel.getByRole("textbox", {
+        name: "Personal Record",
+        exact: true,
+      });
+      await expect(record).toBeEnabled();
+      if (example.id === "90-degree-hold") await record.fill("5 seconds");
+      if (mobile) await page.keyboard.press("Escape");
+    }
+    await page.reload();
+    if (mobile) {
+      await page
+        .getByRole("textbox", { name: "Search all skills" })
+        .fill("90 Degree Hold");
+      await page
+        .locator(".mobile-skill")
+        .filter({ has: page.getByText("90 Degree Hold", { exact: true }) })
+        .click();
+    } else await openTreeSkill(page, "90-degree-hold", "90 Degree Hold");
+    const panel = mobile
+      ? page.getByRole("dialog")
+      : page.locator(".detail-panel");
+    await expect(
+      panel.getByRole("textbox", { name: "Personal Record", exact: true }),
+    ).toHaveValue("5 seconds");
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+  });
+}
+
+for (const mobile of [false, true]) {
   test(`new planche skills show calibrated scores and preserve records on ${mobile ? "mobile" : "desktop"}`, async ({
     page,
   }) => {

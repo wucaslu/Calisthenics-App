@@ -30,6 +30,12 @@ export type MovementType = "dynamic" | "static";
 export type DifficultyLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 export type PersonalRecords = Record<string, string>;
 
+export interface MuscleProfile {
+  target: string;
+  primary: string[];
+  secondary: string[];
+}
+
 export interface Skill {
   id: string;
   name: string;
@@ -38,6 +44,7 @@ export interface Skill {
   difficulty: DifficultyLevel;
   movementType: MovementType;
   description: string;
+  muscles: MuscleProfile;
   references: string[];
   referenceLevel?: string;
   prerequisites: string[];

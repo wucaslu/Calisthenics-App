@@ -1,4 +1,5 @@
 import { skillReferences } from "@/data/references";
+import { skillMuscles } from "@/data/muscles";
 import type {
   Branch,
   Category,
@@ -86,6 +87,8 @@ function define(
   target: string,
   drills: Skill["exercises"],
 ): Skill {
+  const muscles = skillMuscles[id];
+  if (!muscles) throw new Error(`Missing muscle profile for skill: ${id}`);
   return {
     id,
     name,
@@ -96,6 +99,7 @@ function define(
     prerequisites,
     equipment,
     description,
+    muscles,
     progressionTo: [],
     requirements: [{ exercise: name, target }],
     exercises: drills,

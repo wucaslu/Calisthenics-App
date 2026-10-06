@@ -141,6 +141,35 @@ export function SkillDetails({
             <Difficulty level={skill.difficulty} text />
           </div>
           <p className="detail-description">{skill.description}</p>
+          <section className="skill-muscles" aria-label="Muscles used">
+            <h3>Muscles used</h3>
+            <dl className="muscle-groups">
+              <div className="muscle-target">
+                <dt>Target muscles</dt>
+                <dd>{skill.muscles.target}</dd>
+              </div>
+              {(["primary", "secondary"] as const).map((role) => (
+                <div className={`muscle-group muscles-${role}`} key={role}>
+                  <dt>
+                    {role === "primary"
+                      ? "Primary muscles"
+                      : "Secondary muscles"}
+                  </dt>
+                  <dd>
+                    <ul className="muscle-chips">
+                      {skill.muscles[role].map((muscle) => (
+                        <li key={muscle}>{muscle}</li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <p className="muscle-role-note">
+              Primary muscles drive or hold the position. Secondary muscles
+              assist and stabilize. Roles can vary with technique.
+            </p>
+          </section>
           <div className="personal-record-card">
             <div className="personal-record-heading">
               <label htmlFor="personal-record">
