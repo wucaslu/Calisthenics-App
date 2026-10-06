@@ -2,7 +2,6 @@ import {
   Check,
   Circle,
   Dumbbell,
-  Grip,
   Layers,
   Minus,
   RectangleHorizontal,
@@ -29,11 +28,6 @@ const equipmentInfo = {
     description:
       "Stable hand supports for L-sits, V-sits, and compression work.",
   },
-  "resistance-bands": {
-    Icon: Grip,
-    description:
-      "Assistance for muscle-up transitions and controlled practice.",
-  },
   "dip-bars": {
     Icon: RectangleHorizontal,
     description:
@@ -41,7 +35,8 @@ const equipmentInfo = {
   },
   rings: {
     Icon: Circle,
-    description: "Adjustable rings for inverted rows and horizontal pulling.",
+    description:
+      "Adjustable rings for rows, levers, support holds, and advanced strength skills.",
   },
   gym: {
     Icon: Dumbbell,

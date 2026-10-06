@@ -3,19 +3,20 @@ export type Branch =
   | "fundamentals"
   | "planche"
   | "front-lever"
+  | "back-lever"
   | "handstand"
   | "muscle-up"
   | "core"
   | "legs"
-  | "dragon-squat";
-export type Equipment =
-  | "floor"
-  | "pull-up-bar"
-  | "parallettes"
-  | "resistance-bands"
-  | "dip-bars"
+  | "dragon-squat"
   | "rings"
-  | "gym";
+  | "pelican"
+  | "hefesto"
+  | "maltese"
+  | "iron-cross"
+  | "one-arm-pull-up";
+export type Equipment =
+  "floor" | "pull-up-bar" | "parallettes" | "dip-bars" | "rings" | "gym";
 export type SkillState = "locked" | "available" | "training" | "mastered";
 export type Progress = Record<string, "training" | "mastered">;
 export type MovementType = "dynamic" | "static";

@@ -1,4 +1,115 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+async function openTreeSkill(page: Page, id: string, name: string) {
+  await page.getByRole("textbox", { name: "Search all skills" }).fill(name);
+  const node = page.locator(`[data-id="${id}"] button`);
+  await expect(node).toBeVisible();
+  await page.getByRole("button", { name: "Fit View", exact: true }).click();
+  await node.click();
+  await expect(
+    page.locator(".detail-panel").getByRole("heading", { name, exact: true }),
+  ).toBeVisible();
+}
+
+test("muscle-up follows the ordered pulling chain without band assistance", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const panel = page.locator(".detail-panel");
+  await expect(
+    panel.getByRole("textbox", { name: "Personal Record", exact: true }),
+  ).toBeEnabled();
+  await page.getByRole("button", { name: "Show Pull skills" }).click();
+  await page
+    .getByRole("combobox", { name: "Skill branch" })
+    .selectOption("muscle-up");
+  for (const [source, target] of [
+    ["pull-up", "chest-to-bar-pull-up"],
+    ["chest-to-bar-pull-up", "explosive-pull-up"],
+    ["explosive-pull-up", "high-pull-up"],
+    ["high-pull-up", "muscle-up"],
+  ])
+    await expect(
+      page.getByRole("img", {
+        name: `Edge from ${source} to ${target}`,
+        exact: true,
+      }),
+    ).toBeAttached();
+  await expect(page.locator('[data-id="band-muscle-up"]')).toHaveCount(0);
+  await openTreeSkill(page, "explosive-pull-up", "Explosive Pull-up");
+  await expect(
+    panel.getByRole("button", { name: "Start Training", exact: true }),
+  ).toBeDisabled();
+  for (const [id, name] of [
+    ["chest-to-bar-pull-up", "Chest-to-Bar Pull-up"],
+    ["explosive-pull-up", "Explosive Pull-up"],
+    ["high-pull-up", "High Pull-up"],
+  ]) {
+    await openTreeSkill(page, id, name);
+    await expect(
+      panel.getByRole("button", { name: "Start Training", exact: true }),
+    ).toBeEnabled();
+    await panel.getByRole("button", { name: "Mark as Mastered" }).click();
+  }
+  await openTreeSkill(page, "muscle-up", "Muscle-up");
+  await expect(
+    panel.getByRole("button", { name: "Start Training", exact: true }),
+  ).toBeDisabled();
+  await openTreeSkill(page, "dip", "Dip");
+  await panel.getByRole("button", { name: "Mark as Mastered" }).click();
+  await openTreeSkill(page, "straight-bar-dip", "Straight-Bar Dip");
+  await panel.getByRole("button", { name: "Mark as Mastered" }).click();
+  await openTreeSkill(page, "muscle-up", "Muscle-up");
+  await expect(
+    panel.getByRole("button", { name: "Start Training", exact: true }),
+  ).toBeEnabled();
+  await page.getByRole("button", { name: "Equipment", exact: true }).click();
+  await expect(page.locator(".equipment-card")).toHaveCount(6);
+  await expect(
+    page.getByRole("heading", { name: "Resistance bands", exact: true }),
+  ).toHaveCount(0);
+});
+
+test("advanced branches open their details and retain separate personal records", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const panel = page.locator(".detail-panel");
+  const record = panel.getByRole("textbox", {
+    name: "Personal Record",
+    exact: true,
+  });
+  await expect(record).toBeEnabled();
+  const milestones = [
+    ["back-lever", "Back Lever", "pull", "back-lever", "Static", "6 seconds"],
+    ["maltese", "Maltese", "push", "maltese", "Static", "3 seconds"],
+    ["pelican-press", "Pelican Press", "push", "pelican", "Dynamic", "2 reps"],
+    ["hefesto", "Hefesto", "pull", "hefesto", "Dynamic", "1 rep"],
+  ];
+  for (const [id, name, group, branch, movement, value] of milestones) {
+    await page
+      .getByRole("button", {
+        name: `Show ${group === "push" ? "Push" : "Pull"} skills`,
+      })
+      .click();
+    await page
+      .getByRole("combobox", { name: "Skill branch" })
+      .selectOption(branch);
+    await expect(page.locator(`[data-id="${id}"] button`)).toBeInViewport();
+    await openTreeSkill(page, id, name);
+    await expect(panel.locator(".movement-badge")).toHaveText(movement);
+    await expect(panel.locator(".detail-description")).not.toBeEmpty();
+    await expect(panel.locator(".exercise")).not.toHaveCount(0);
+    await expect(record).toHaveValue("");
+    await record.fill(value);
+  }
+  await page.reload();
+  await expect(record).toBeEnabled();
+  for (const [id, name, , , , value] of milestones) {
+    await openTreeSkill(page, id, name);
+    await expect(record).toHaveValue(value);
+  }
+});
 
 test("blocked storage reports session-only progress and keeps training usable", async ({
   page,

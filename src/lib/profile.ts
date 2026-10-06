@@ -26,7 +26,7 @@ export function createDemoProfile(): UserProfile {
   return {
     version: 1,
     personalRecords: {},
-    equipment: ["floor", "pull-up-bar", "parallettes", "resistance-bands"],
+    equipment: ["floor", "pull-up-bar", "parallettes"],
     goals: ["tuck-planche", "tuck-front-lever", "freestanding-handstand"],
     progress: {
       "push-up": "mastered",

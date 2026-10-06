@@ -11,8 +11,8 @@ import { createDemoProfile, parseProfile } from "@/lib/profile";
 import { getRecommendations } from "@/lib/recommendations";
 
 describe("skill database", () => {
-  it("contains all 51 skills with valid, acyclic dependencies and reverse links", () => {
-    expect(skills).toHaveLength(51);
+  it("contains all 80 skills with valid, acyclic dependencies and reverse links", () => {
+    expect(skills).toHaveLength(80);
     expect(new Set(skills.map((skill) => skill.id)).size).toBe(skills.length);
     const visit = (id: string, ancestors: string[] = []) => {
       expect(ancestors).not.toContain(id);
@@ -53,6 +53,9 @@ describe("skill database", () => {
       "full-front-lever",
       "freestanding-handstand",
       "l-sit",
+      "back-lever",
+      "maltese",
+      "iron-cross",
     ])
       expect(skillById[id].movementType).toBe("static");
     for (const id of [
@@ -62,6 +65,9 @@ describe("skill database", () => {
       "wall-toe-pull",
       "dragon-flag",
       "pistol-squat",
+      "skin-the-cat",
+      "pelican-press",
+      "hefesto",
     ])
       expect(skillById[id].movementType).toBe("dynamic");
   });
@@ -105,39 +111,68 @@ describe("progression", () => {
     expect(progress["dragon-squat"]).toBeUndefined();
     expect(getSkillState(skillById["dragon-squat"], progress)).toBe("locked");
   });
-  it("unlocks explosive and high pulls from Pull-up and muscle-ups after straight-bar pressing", () => {
+  it("requires the ordered pulling chain and pressing strength before muscle-up", () => {
     let progress = createDemoProfile().progress;
-    for (const id of ["explosive-pull-up", "high-pull-up"])
+    for (const [id, next] of [
+      ["chest-to-bar-pull-up", "explosive-pull-up"],
+      ["explosive-pull-up", "high-pull-up"],
+    ]) {
       expect(getSkillState(skillById[id], progress)).toBe("available");
-    for (const id of ["band-muscle-up", "muscle-up"])
-      expect(getSkillState(skillById[id], progress)).toBe("locked");
-
+      expect(getSkillState(skillById[next], progress)).toBe("locked");
+      progress = updateSkillProgress(progress, id, "mastered");
+      expect(getSkillState(skillById[next], progress)).toBe("available");
+    }
+    progress = updateSkillProgress(progress, "high-pull-up", "mastered");
+    expect(getSkillState(skillById["muscle-up"], progress)).toBe("locked");
     progress = updateSkillProgress(progress, "dip", "mastered");
     progress = updateSkillProgress(progress, "straight-bar-dip", "mastered");
-    for (const id of ["band-muscle-up", "muscle-up"])
-      expect(getSkillState(skillById[id], progress)).toBe("available");
-    expect(getSkillState(skillById["strict-muscle-up"], progress)).toBe(
-      "locked",
-    );
-
+    expect(getSkillState(skillById["muscle-up"], progress)).toBe("available");
     progress = updateSkillProgress(progress, "muscle-up", "mastered");
     expect(getSkillState(skillById["strict-muscle-up"], progress)).toBe(
       "available",
     );
-    progress = updateSkillProgress(progress, "explosive-pull-up", "mastered");
     progress = updateSkillProgress(progress, "explosive-pull-up", "reset");
-    expect(progress["muscle-up"]).toBe("mastered");
-
-    progress = updateSkillProgress(progress, "pull-up", "reset");
-    for (const id of [
-      "explosive-pull-up",
-      "high-pull-up",
-      "band-muscle-up",
-      "muscle-up",
-      "strict-muscle-up",
-    ])
+    for (const id of ["high-pull-up", "muscle-up", "strict-muscle-up"])
       expect(getSkillState(skillById[id], progress)).toBe("locked");
     expect(progress["muscle-up"]).toBeUndefined();
+  });
+  it("makes advanced milestones reachable and cascades resets through shared ring foundations", () => {
+    let progress = createDemoProfile().progress;
+    for (const goal of [
+      "back-lever",
+      "maltese",
+      "pelican-press",
+      "hefesto",
+      "iron-cross",
+      "one-arm-pull-up",
+      "ring-muscle-up",
+    ]) {
+      const visible = getVisibleSkills(
+        skillById[goal].category,
+        "",
+        skillById[goal].branch,
+      ).map((skill) => skill.id);
+      for (const skill of getGoalPath(goal, progress)) {
+        expect(visible).toContain(skill.id);
+        expect(["available", "training"]).toContain(
+          getSkillState(skill, progress),
+        );
+        progress = updateSkillProgress(progress, skill.id, "mastered");
+      }
+      expect(getSkillState(skillById[goal], progress)).toBe("mastered");
+    }
+    progress = updateSkillProgress(progress, "ring-support-hold", "reset");
+    for (const id of [
+      "maltese",
+      "pelican-press",
+      "iron-cross",
+      "ring-muscle-up",
+    ])
+      expect(getSkillState(skillById[id], progress)).toBe("locked");
+    expect(getSkillState(skillById["back-lever"], progress)).toBe("mastered");
+    expect(getSkillState(skillById["one-arm-pull-up"], progress)).toBe(
+      "mastered",
+    );
   });
   it("keeps a skill locked until every prerequisite is mastered", () => {
     expect(
@@ -210,12 +245,20 @@ describe("goal paths", () => {
         .sort(),
     ).toEqual([...path].sort());
   });
-  it("plans muscle-ups from Pull-up and pressing strength without intermediate pull or band requirements", () => {
+  it("plans the complete pulling chain and pressing prerequisites for strict muscle-up", () => {
     expect(
       getGoalPath("strict-muscle-up", createDemoProfile().progress).map(
         (skill) => skill.id,
       ),
-    ).toEqual(["dip", "straight-bar-dip", "muscle-up", "strict-muscle-up"]);
+    ).toEqual([
+      "chest-to-bar-pull-up",
+      "explosive-pull-up",
+      "high-pull-up",
+      "dip",
+      "straight-bar-dip",
+      "muscle-up",
+      "strict-muscle-up",
+    ]);
   });
   it("returns the shortest outstanding planche path for the demo profile", () => {
     expect(
@@ -242,20 +285,16 @@ describe("goal paths", () => {
 });
 
 describe("equipment and recommendations", () => {
-  it("requires every piece of equipment, while always allowing floor skills", () => {
+  it("requires rings for advanced ring skills while always allowing floor skills", () => {
     expect(hasEquipment(skillById["push-up"], [])).toBe(true);
-    expect(hasEquipment(skillById["band-muscle-up"], ["pull-up-bar"])).toBe(
+    expect(hasEquipment(skillById["pelican-press"], ["pull-up-bar"])).toBe(
       false,
     );
     expect(
-      missingEquipment(skillById["band-muscle-up"], ["pull-up-bar"]),
-    ).toEqual(["resistance-bands"]);
-    expect(
-      hasEquipment(skillById["band-muscle-up"], [
-        "pull-up-bar",
-        "resistance-bands",
-      ]),
-    ).toBe(true);
+      missingEquipment(skillById["pelican-press"], ["pull-up-bar"]),
+    ).toEqual(["rings"]);
+    expect(hasEquipment(skillById["pelican-press"], ["rings"])).toBe(true);
+    expect(hasEquipment(skillById["pelican-press"], ["gym"])).toBe(false);
     expect(hasEquipment(skillById["dip"], ["gym"])).toBe(true);
   });
   it("recommends available goal prerequisites deterministically", () => {

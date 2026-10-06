@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **51 skills grouped into Pull, Push, Legs, and Core**. No account, external database, API key, or backend service is needed.
+A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **80 skills grouped into Pull, Push, Legs, and Core**. No account, external database, API key, or backend service is needed.
 
 ## Run locally
 
@@ -34,9 +34,23 @@ All fonts are bundled locally; the app makes no external application requests. I
 - A responsive mobile skill list and a keyboard-accessible details dialog. Desktop nodes are also keyboard accessible; use the zoom and fit controls or drag the canvas to explore.
 - Progress, personal records, goals, and equipment stored under `calisthenics-skill-tree:v1` in localStorage, with validation, safe recovery from corrupt data, and cross-tab updates. Existing profiles gain an empty records collection while keeping their progress. If storage is blocked, the UI reports that progress and records last for the current session.
 
-The demo starts with eight mastered fundamentals, two skills in training, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Available equipment is floor, a fixed pull-up bar, parallettes, and a resistance band. Equipment changes do not erase historical mastery. Floor is always available; the Gym equipment option supplies a bar, dip bars, and parallettes, plus a secure bench for the dragon flag.
+The demo starts with eight mastered fundamentals, two skills in training, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Available equipment is floor, a fixed pull-up bar, and parallettes. Equipment changes do not erase historical mastery. Floor is always available; the Gym equipment option supplies a bar, dip bars, and parallettes, plus a secure bench for the dragon flag. Rings must be selected separately for ring skills.
 
-Explosive Pull-up and High Pull-up branch directly from Pull-up. Band Muscle-up and Muscle-up also connect directly to Pull-up and require Straight-Bar Dip. Strict Muscle-up follows Muscle-up.
+The pulling progression is Pull-up → Chest-to-Bar Pull-up → Explosive Pull-up → High Pull-up → Muscle-up → Strict Muscle-up. Muscle-up also requires Straight-Bar Dip for pressing strength. Ring Muscle-up branches from Muscle-up and adds False-Grip Hang and Ring Dip. Band-assisted progressions and the Resistance Bands equipment option have been removed.
+
+The advanced catalog adds these progressions, all with movement labels, descriptions, equipment requirements, practice drills, mastery benchmarks, and editable personal records:
+
+| Progression     | Milestones                                                                           |
+| --------------- | ------------------------------------------------------------------------------------ |
+| Back Lever      | Skin the Cat → German Hang → Tuck → Advanced Tuck → One-Leg → Straddle → Back Lever  |
+| Rings           | Ring Support Hold, Rings-Turned-Out Support, Ring Push-up, Ring Dip, False-Grip Hang |
+| Pelican         | Pelican Curl Prep → Pelican Curl → Pelican Press                                     |
+| Hefesto         | German Hang Pull → Hefesto Negative → Hefesto                                        |
+| Maltese         | Maltese Lean → Maltese Negative → Straddle Maltese → Maltese                         |
+| Iron Cross      | Cross Prep → Iron Cross Negative → Iron Cross                                        |
+| One-Arm Pull-up | Archer Pull-up → Typewriter Pull-up → One-Arm Pull-up Negative → One-Arm Pull-up     |
+
+Supporting prerequisites also connect these branches. Choose a group and progression filter to explore its complete path. When loading an older profile, retired band skill entries are removed. Pulling skills with newly required, unmastered prerequisites relock; personal records for retained skills remain saved independently of progress.
 
 Legs includes a Dragon Squat progression: Dragon Squat Prep → Assisted Dragon Squat → Dragon Squat. It builds on reverse lunges and pistol squat strength, with descriptions, practice drills, mastery criteria, and personal records for every step. Choose Legs, then Dragon Squat in the progression filter to explore the branch and its supporting skills.
 

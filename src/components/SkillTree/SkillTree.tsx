@@ -34,6 +34,7 @@ import {
   branches,
   categories,
   categoryLabels,
+  skillById,
   skills,
 } from "@/data/skills";
 import {
@@ -355,7 +356,13 @@ export function SkillTree(props: Props) {
                 <CanvasControls />
                 <FitTree
                   viewKey={`${group}:${branch}:${query}`}
-                  focusGoalPath={group !== "all"}
+                  focusGoalPath={
+                    group !== "all" &&
+                    (branch === "all" ||
+                      profile.goals.some(
+                        (id) => skillById[id]?.branch === branch,
+                      ))
+                  }
                 />
               </ReactFlow>
             </ReactFlowProvider>

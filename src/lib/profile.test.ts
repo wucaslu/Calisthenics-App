@@ -7,6 +7,34 @@ import {
 } from "@/lib/profile";
 
 describe("personal records", () => {
+  it("removes retired band entries while preserving records through revised prerequisites", () => {
+    const parsed = parseProfile(
+      JSON.stringify({
+        ...createDemoProfile(),
+        progress: {
+          ...createDemoProfile().progress,
+          "high-pull-up": "mastered",
+          "band-muscle-up": "mastered",
+        },
+        goals: ["band-muscle-up", "muscle-up", "back-lever"],
+        equipment: ["floor", "pull-up-bar", "rings", "resistance-bands"],
+        personalRecords: {
+          "high-pull-up": "3 reps",
+          "band-muscle-up": "5 reps",
+          "back-lever": "6 seconds",
+        },
+      }),
+    );
+    expect(parsed?.goals).toEqual(["muscle-up", "back-lever"]);
+    expect(parsed?.equipment).toEqual(["floor", "pull-up-bar", "rings"]);
+    expect(parsed?.progress["band-muscle-up"]).toBeUndefined();
+    expect(parsed?.progress["high-pull-up"]).toBeUndefined();
+    expect(parsed?.personalRecords).toEqual({
+      "high-pull-up": "3 reps",
+      "back-lever": "6 seconds",
+    });
+    expect(parsed?.progress["pull-up"]).toBe("mastered");
+  });
   it("upgrades an existing profile without losing progress, goals, or equipment", () => {
     const { personalRecords, ...oldProfile } = createDemoProfile();
     expect(personalRecords).toEqual({});
