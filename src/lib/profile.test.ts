@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getGoalPath } from "@/lib/graph";
 import { updateSkillProgress } from "@/lib/progression";
+import { retiredSkillNames } from "@/data/retiredSkills";
 import {
   createDemoProfile,
   parseProfile,
@@ -9,6 +10,49 @@ import {
 } from "@/lib/profile";
 
 describe("personal records", () => {
+  it("archives one-leg records and retains downstream mastery through the shorter routes", () => {
+    const profile = createDemoProfile();
+    const removed = [
+      "one-leg-front-lever",
+      "one-leg-back-lever",
+      "one-leg-l-sit",
+      "single-leg-glute-bridge",
+    ];
+    const successors = [
+      "straddle-front-lever",
+      "straddle-back-lever",
+      "l-sit",
+      "nordic-curl-negative",
+    ];
+    for (const goal of successors)
+      for (const skill of getGoalPath(goal, profile.progress))
+        profile.progress = updateSkillProgress(
+          profile.progress,
+          skill.id,
+          "mastered",
+        );
+    for (const id of removed) {
+      profile.progress[id] = "mastered";
+      profile.personalRecords[id] = `${id} record`;
+    }
+    profile.personalRecords["straddle-front-lever"] = "10 seconds";
+    profile.goals = [...removed, "full-front-lever", "v-sit"];
+    const parsed = parseProfile(JSON.stringify(profile))!;
+    for (const id of removed) {
+      expect(parsed.progress[id]).toBeUndefined();
+      expect(parsed.personalRecords[id]).toBeUndefined();
+      expect(parsed.archivedSkills[id]).toEqual({
+        name: retiredSkillNames[id],
+        progress: "mastered",
+        personalRecord: `${id} record`,
+      });
+    }
+    for (const id of successors) expect(parsed.progress[id]).toBe("mastered");
+    expect(parsed.personalRecords["straddle-front-lever"]).toBe("10 seconds");
+    expect(parsed.goals).toEqual(["full-front-lever", "v-sit"]);
+    expect(parsed.equipment).toEqual(profile.equipment);
+    expect(parseProfile(JSON.stringify(parsed))).toEqual(parsed);
+  });
   it("retains existing advanced mastery and records when ratings change and new skills are added", () => {
     const profile = createDemoProfile();
     for (const goal of ["full-planche", "pelican-press"])

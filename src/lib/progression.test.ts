@@ -18,8 +18,8 @@ import { getRecommendations } from "@/lib/recommendations";
 import { getDifficultyTier, MAX_DIFFICULTY } from "@/lib/difficulty";
 
 describe("skill database", () => {
-  it("contains all 105 skills with valid, acyclic dependencies and reverse links", () => {
-    expect(skills).toHaveLength(105);
+  it("contains all 101 skills with valid, acyclic dependencies and reverse links", () => {
+    expect(skills).toHaveLength(101);
     expect(new Set(skills.map((skill) => skill.id)).size).toBe(skills.length);
     const visit = (id: string, ancestors: string[] = []) => {
       expect(ancestors).not.toContain(id);
@@ -151,6 +151,35 @@ describe("skill database", () => {
 });
 
 describe("progression", () => {
+  it("skips retired one-leg milestones while keeping their successor routes reachable", () => {
+    expect(skills.some((skill) => /^(one|single)-leg/i.test(skill.name))).toBe(
+      false,
+    );
+    for (const [parent, successor] of [
+      ["advanced-tuck-front-lever", "straddle-front-lever"],
+      ["advanced-tuck-back-lever", "straddle-back-lever"],
+      ["tuck-l-sit", "l-sit"],
+      ["glute-bridge", "nordic-curl-negative"],
+    ]) {
+      expect(skillById[successor].prerequisites).toEqual([parent]);
+      const path = getGoalPath(successor, {});
+      expect(path.some((skill) => /^(one|single)-leg/.test(skill.id))).toBe(
+        false,
+      );
+      let progress = {};
+      for (const skill of path) {
+        expect(getSkillState(skill, progress)).toBe("available");
+        progress = updateSkillProgress(progress, skill.id, "mastered");
+      }
+      expect(getSkillState(skillById[successor], progress)).toBe("mastered");
+      expect(
+        getSkillState(
+          skillById[successor],
+          updateSkillProgress(progress, parent, "reset"),
+        ),
+      ).toBe("locked");
+    }
+  });
   it("prepares both new skills through unassisted routes without changing existing planche unlocks", () => {
     for (const id of ["90-degree-hold", "pelican-planche"]) {
       let progress = createDemoProfile().progress;

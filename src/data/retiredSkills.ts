@@ -1,4 +1,4 @@
-// Keep old records readable without leaving assisted milestones in the tree.
+// Keep old records readable without leaving retired milestones in the tree.
 export const retiredSkillNames: Record<string, string> = {
   "band-muscle-up": "Band-Assisted Muscle-up",
   "wall-handstand": "Wall Handstand",
@@ -12,4 +12,8 @@ export const retiredSkillNames: Record<string, string> = {
   "maltese-lean": "Maltese Lean",
   "cross-prep": "Cross Prep",
   "front-lever-row": "Front Lever Row (tuck variation)",
+  "one-leg-front-lever": "One-Leg Front Lever",
+  "one-leg-back-lever": "One-Leg Back Lever",
+  "one-leg-l-sit": "One-Leg L-Sit",
+  "single-leg-glute-bridge": "Single-Leg Glute Bridge",
 };

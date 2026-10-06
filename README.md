@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **105 skills grouped into Pull, Push, Legs, and Core**: Pull 42, Push 37, Legs 14, and Core 12. No account, external database, API key, or backend service is needed.
+A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **101 skills grouped into Pull, Push, Legs, and Core**: Pull 40, Push 37, Legs 13, and Core 11. No account, external database, API key, or backend service is needed.
 
 ## Run locally
 
@@ -39,7 +39,7 @@ The demo starts with eight mastered fundamentals, two skills in training, and go
 
 The bar pulling progression is Pull-up → Chest-to-Bar Pull-up → Explosive Pull-up → High Pull-up → Muscle-up → Strict Muscle-up. Muscle-up also requires Straight-Bar Dip. Ring Muscle-up has an independent route through False-Grip Hang, Ring Pull-up, and Ring Dip.
 
-The earlier researched reorganization added 34 movements and removed 10 assisted milestones plus one duplicate tuck-row entry. Highlights include L-Sit Pull-up, Pull Over, Archer/One-Arm Row, Tuck Front Lever Row, Diamond/Archer/One-Arm Push-up, Elbow Lever, Frog Stand to Handstand, Ring L-Sit Dip, Shrimp Squat, Nordic Curl, Tuck/One-Leg L-Sit, Toes-to-Bar, and Hanging Windshield Wiper. Back Lever, Maltese, Pelican Press, Hefesto, Iron Cross, and Dragon Squat remain in the catalog.
+The earlier researched reorganization added 34 movements and removed 10 assisted milestones plus one duplicate tuck-row entry. Highlights include L-Sit Pull-up, Pull Over, Archer/One-Arm Row, Tuck Front Lever Row, Diamond/Archer/One-Arm Push-up, Elbow Lever, Frog Stand to Handstand, Ring L-Sit Dip, Shrimp Squat, Nordic Curl, Tuck L-Sit, Toes-to-Bar, and Hanging Windshield Wiper. Back Lever, Maltese, Pelican Press, Hefesto, Iron Cross, and Dragon Squat remain in the catalog.
 
 The latest additions are **90 Degree Hold**, a static bent-arm planche with the elbows unbraced against the abdomen, and **Pelican Planche**, a dynamic ring transition from planche to back lever and back to planche. Their estimated difficulties are 7/10 and 10/10 respectively. Existing skills are scored individually rather than multiplying their old ratings: Back Lever is 6/10, Full Front Lever 8/10, Full Planche 9/10, and Maltese 10/10.
 
@@ -47,7 +47,7 @@ Assisted, band, and wall milestones are excluded. Tuck/straddle shapes and unass
 
 See [progression research and route decisions](docs/progressions.md) for the reviewed sources, full route table, difficulty scale, and research limits. Research used accessible archived/community references; direct coaching sites were blocked by the cloud network proxy. App difficulty scores are estimates rather than universal grades, and published levels apply within their source's named progression. Body proportions and execution standards can change an athlete's personal ordering. Custom routes without published ratings are identified in skill details.
 
-The two additions and difficulty update preserve every existing skill ID and prerequisite. Existing progress, goals, and Personal Records keep their associations; changing a difficulty score does not reset or relocate saved data.
+One-leg progression steps have been removed: One-Leg Front Lever, One-Leg Back Lever, One-Leg L-Sit, and Single-Leg Glute Bridge. Front/back levers now progress from advanced tuck directly to straddle; Tuck L-Sit leads directly to L-Sit, and Glute Bridge leads directly to Nordic Curl Negative. Saved progress and Personal Records for removed steps appear under **Overview → Previous skill records**. Their goals leave the active list; retained skills keep their saved progress and records.
 
 Retained skill IDs and Personal Records stay intact. The old generic Front Lever Row described a tuck variation; its records are archived, and Full Front Lever Row has a new ID so old tuck records are not mislabeled. Removed milestone records and prior progress relocked by new prerequisites appear under **Overview → Previous skill records** and persist in the profile archive. The app does not grant mastery for new prerequisites automatically. Retired goals leave the active list; archived progress does not count toward tree completion.
 

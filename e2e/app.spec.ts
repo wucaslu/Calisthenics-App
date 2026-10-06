@@ -221,6 +221,90 @@ test("reorganization keeps retired records in the overview and retained records 
   await expect(page.locator(".archived-skill-list")).toContainText("8 reps");
 });
 
+test("one-leg steps leave the tree and goals while their records remain archived", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    if (localStorage.getItem("calisthenics-skill-tree:v1")) return;
+    const ids = [
+      "one-leg-front-lever",
+      "one-leg-back-lever",
+      "one-leg-l-sit",
+      "single-leg-glute-bridge",
+    ];
+    localStorage.setItem(
+      "calisthenics-skill-tree:v1",
+      JSON.stringify({
+        version: 1,
+        progress: Object.fromEntries(ids.map((id) => [id, "mastered"])),
+        personalRecords: Object.fromEntries(ids.map((id) => [id, "8 seconds"])),
+        goals: [...ids, "full-front-lever"],
+        equipment: ["floor", "pull-up-bar", "rings", "parallettes", "gym"],
+      }),
+    );
+  });
+  await page.goto("/");
+  await expect(
+    page
+      .locator(".detail-panel")
+      .getByRole("textbox", { name: "Personal Record", exact: true }),
+  ).toBeEnabled();
+  for (const [parent, id, name] of [
+    [
+      "advanced-tuck-front-lever",
+      "straddle-front-lever",
+      "Straddle Front Lever",
+    ],
+    ["advanced-tuck-back-lever", "straddle-back-lever", "Straddle Back Lever"],
+    ["tuck-l-sit", "l-sit", "L-Sit"],
+    ["glute-bridge", "nordic-curl-negative", "Nordic Curl Negative"],
+  ]) {
+    await openTreeSkill(page, id, name);
+    await expect(
+      page.getByRole("img", {
+        name: `Edge from ${parent} to ${id}`,
+        exact: true,
+      }),
+    ).toBeAttached();
+    await expect(
+      page.locator(
+        '.react-flow__node-skill[data-id^="one-leg"], .react-flow__node-skill[data-id^="single-leg"]',
+      ),
+    ).toHaveCount(0);
+  }
+  await page
+    .getByRole("textbox", { name: "Search all skills" })
+    .fill("one-leg");
+  await expect(
+    page.getByRole("heading", { name: "No skills found" }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "My goals", exact: false })
+    .first()
+    .click();
+  await expect(page.locator(".goal-path-card")).toHaveCount(1);
+  await expect(page.locator(".goal-path-card")).toContainText(
+    "Full Front Lever",
+  );
+  await page.getByRole("button", { name: "Overview", exact: true }).click();
+  await page.locator(".archived-skills summary").click();
+  const archive = page.locator(".archived-skill-list");
+  for (const name of [
+    "One-Leg Front Lever",
+    "One-Leg Back Lever",
+    "One-Leg L-Sit",
+    "Single-Leg Glute Bridge",
+  ])
+    await expect(archive).toContainText(name);
+  await expect(archive).toContainText("8 seconds");
+  await page.reload();
+  await page.getByRole("button", { name: "Overview", exact: true }).click();
+  await page.locator(".archived-skills summary").click();
+  await expect(page.locator(".archived-skill-list")).toContainText(
+    "One-Leg Front Lever",
+  );
+});
+
 test("muscle-up follows the ordered pulling chain without band assistance", async ({
   page,
 }) => {
@@ -520,7 +604,7 @@ test("the four groups, global search, and dashboard are functional", async ({
       page.getByRole("button", { name: `Show ${name} skills` }),
     ).toBeVisible();
   await page.getByRole("button", { name: "Show Legs skills" }).click();
-  await expect(page.locator(".react-flow__node-skill")).toHaveCount(14);
+  await expect(page.locator(".react-flow__node-skill")).toHaveCount(13);
   await expect(page.getByRole("combobox", { name: "Skill group" })).toHaveValue(
     "legs",
   );
@@ -588,7 +672,7 @@ test("mobile lists, navigation, and skill dialog work without horizontal overflo
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Toggle navigation" }).click();
   await page.getByRole("button", { name: "Show Legs skills" }).click();
-  await expect(page.locator(".mobile-skill")).toHaveCount(14);
+  await expect(page.locator(".mobile-skill")).toHaveCount(13);
   await page
     .getByRole("combobox", { name: "Skill branch" })
     .selectOption("dragon-squat");
