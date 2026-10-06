@@ -1,6 +1,11 @@
 export type Category = "push" | "pull" | "core" | "legs";
 export type Branch =
   | "fundamentals"
+  | "rows"
+  | "push-up"
+  | "l-sit"
+  | "dragon-flag"
+  | "posterior-chain"
   | "planche"
   | "front-lever"
   | "back-lever"
@@ -8,6 +13,8 @@ export type Branch =
   | "muscle-up"
   | "core"
   | "legs"
+  | "pistol-squat"
+  | "shrimp-squat"
   | "dragon-squat"
   | "rings"
   | "pelican"
@@ -30,6 +37,8 @@ export interface Skill {
   difficulty: number;
   movementType: MovementType;
   description: string;
+  references: string[];
+  referenceLevel?: string;
   prerequisites: string[];
   progressionTo: string[];
   equipment: Equipment[];
@@ -49,4 +58,11 @@ export interface UserProfile {
   personalRecords: PersonalRecords;
   goals: string[];
   equipment: Equipment[];
+  archivedSkills: Record<string, ArchivedSkill>;
+}
+
+export interface ArchivedSkill {
+  name: string;
+  progress?: "training" | "mastered";
+  personalRecord?: string;
 }

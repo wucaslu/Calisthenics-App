@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **80 skills grouped into Pull, Push, Legs, and Core**. No account, external database, API key, or backend service is needed.
+A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **103 skills grouped into Pull, Push, Legs, and Core**. No account, external database, API key, or backend service is needed.
 
 ## Run locally
 
@@ -22,8 +22,8 @@ All fonts are bundled locally; the app makes no external application requests. I
 
 ## Features
 
-- Pannable, zoomable dependency graph with the four skill groups and optional progression filters.
-- Skill details with prerequisites, difficulty, drills, example mastery criteria, equipment, and unlock links.
+- Pannable, zoomable dependency graph with four skill groups, named progression lanes, and optional progression filters. Mobile lists use the same families.
+- Skill details with prerequisites, estimated difficulty, drills, example mastery criteria, equipment, unlock links, and reviewed reference links. Published source levels appear separately from app difficulty.
 - Dynamic/Static badges on every tree node, mobile skill card, and details panel. Static skills hold a position; dynamic skills move through repetitions.
 - Click a skill to read its description and edit its Personal Record (for example, `25 seconds` or `12 reps + 10 kg`). Records save automatically, can be cleared, and stay intact when resetting skill progress.
 - Locked, available, training, and mastered states with labels and icons. All prerequisites must be mastered before a skill becomes available.
@@ -36,23 +36,15 @@ All fonts are bundled locally; the app makes no external application requests. I
 
 The demo starts with eight mastered fundamentals, two skills in training, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Available equipment is floor, a fixed pull-up bar, and parallettes. Equipment changes do not erase historical mastery. Floor is always available; the Gym equipment option supplies a bar, dip bars, and parallettes, plus a secure bench for the dragon flag. Rings must be selected separately for ring skills.
 
-The pulling progression is Pull-up → Chest-to-Bar Pull-up → Explosive Pull-up → High Pull-up → Muscle-up → Strict Muscle-up. Muscle-up also requires Straight-Bar Dip for pressing strength. Ring Muscle-up branches from Muscle-up and adds False-Grip Hang and Ring Dip. Band-assisted progressions and the Resistance Bands equipment option have been removed.
+The bar pulling progression is Pull-up → Chest-to-Bar Pull-up → Explosive Pull-up → High Pull-up → Muscle-up → Strict Muscle-up. Muscle-up also requires Straight-Bar Dip. Ring Muscle-up has an independent route through False-Grip Hang, Ring Pull-up, and Ring Dip.
 
-The advanced catalog adds these progressions, all with movement labels, descriptions, equipment requirements, practice drills, mastery benchmarks, and editable personal records:
+The researched reorganization adds 34 movements and removes 10 assisted milestones plus one duplicate tuck-row entry. Highlights include L-Sit Pull-up, Pull Over, Archer/One-Arm Row, Tuck Front Lever Row, Diamond/Archer/One-Arm Push-up, Elbow Lever, Frog Stand to Handstand, Ring L-Sit Dip, Shrimp Squat, Nordic Curl, Tuck/One-Leg L-Sit, Toes-to-Bar, and Hanging Windshield Wiper. Back Lever, Maltese, Pelican Press, Hefesto, Iron Cross, and Dragon Squat remain in the catalog.
 
-| Progression     | Milestones                                                                           |
-| --------------- | ------------------------------------------------------------------------------------ |
-| Back Lever      | Skin the Cat → German Hang → Tuck → Advanced Tuck → One-Leg → Straddle → Back Lever  |
-| Rings           | Ring Support Hold, Rings-Turned-Out Support, Ring Push-up, Ring Dip, False-Grip Hang |
-| Pelican         | Pelican Curl Prep → Pelican Curl → Pelican Press                                     |
-| Hefesto         | German Hang Pull → Hefesto Negative → Hefesto                                        |
-| Maltese         | Maltese Lean → Maltese Negative → Straddle Maltese → Maltese                         |
-| Iron Cross      | Cross Prep → Iron Cross Negative → Iron Cross                                        |
-| One-Arm Pull-up | Archer Pull-up → Typewriter Pull-up → One-Arm Pull-up Negative → One-Arm Pull-up     |
+Assisted, band, and wall milestones are excluded. Tuck/straddle shapes and unassisted eccentric negatives remain. Legs now has Pistol, Shrimp, Dragon Squat, and posterior-chain routes. The Dragon route uses unassisted pistol strength and reverse-lunge balance. Ring muscle-ups and floor L-sits no longer require unrelated bar skills.
 
-Supporting prerequisites also connect these branches. Choose a group and progression filter to explore its complete path. When loading an older profile, retired band skill entries are removed. Pulling skills with newly required, unmastered prerequisites relock; personal records for retained skills remain saved independently of progress.
+See [progression research and route decisions](docs/progressions.md) for the reviewed sources, full route table, difficulty bands, and research limits. Research used accessible archived/community references; direct coaching sites were blocked by the cloud network proxy. The five app difficulty bands are estimates, and published levels apply within their source's named progression. Custom routes without published ratings are identified in skill details.
 
-Legs includes a Dragon Squat progression: Dragon Squat Prep → Assisted Dragon Squat → Dragon Squat. It builds on reverse lunges and pistol squat strength, with descriptions, practice drills, mastery criteria, and personal records for every step. Choose Legs, then Dragon Squat in the progression filter to explore the branch and its supporting skills.
+Retained skill IDs and Personal Records stay intact. The old generic Front Lever Row described a tuck variation; its records are archived, and Full Front Lever Row has a new ID so old tuck records are not mislabeled. Removed milestone records and prior progress relocked by new prerequisites appear under **Overview → Previous skill records** and persist in the profile archive. The app does not grant mastery for new prerequisites automatically. Retired goals leave the active list; archived progress does not count toward tree completion.
 
 Because every prerequisite is required (AND, not alternatives), a goal's minimal path is its complete outstanding dependency set in prerequisite-first order. The goal view shows all supporting dependencies, rather than choosing one chain and omitting other requirements. On a filtered desktop tree, the initial viewport focuses on the goal path; pan or use Fit View to explore the rest of the progression.
 
@@ -63,6 +55,8 @@ src/
   app/                    Next.js entry points and Tailwind/global styles
   types/skill.ts          Skill, equipment, progress, and profile models
   data/skills.ts          Definitions, group labels, and derived reverse unlock links
+  data/references.ts      Reviewed sources and published per-progression levels
+  data/retiredSkills.ts   Names used to preserve removed milestone records
   lib/progression.ts      Skill states, equipment checks, and cascading resets
   lib/graph.ts            Dependency paths, filtering, and graph layout
   lib/recommendations.ts  Pure deterministic recommendation rules
@@ -72,7 +66,7 @@ src/
 e2e/                      Browser interaction tests
 ```
 
-The data and algorithms are independent of the React components. The UI derives availability and recommendations from the same rules tested by Vitest. React Flow renders the graph; custom layout logic separates the four groups and positions prerequisites above dependent skills.
+The data and algorithms are independent of the React components. The UI derives availability and recommendations from the same rules tested by Vitest. React Flow renders the graph; custom layout logic separates the four groups into progression lanes and positions prerequisites above dependent skills.
 
 ## Add a skill
 
@@ -80,15 +74,15 @@ Add one `define(...)` entry to `src/data/skills.ts`. Use a unique, stable ID; ch
 
 ```ts
 define(
-  "archer-push-up",
-  "Archer Push-up",
+  "new-push-up-variation",
+  "New Push-up Variation",
   "push",
   "fundamentals",
   3,
   "dynamic",
   ["push-up"],
   ["floor"],
-  "Shift your weight toward one hand while the other arm assists.",
+  "Describe the unassisted movement and its execution standard.",
   "6 controlled repetitions on each side",
   [
     reps(

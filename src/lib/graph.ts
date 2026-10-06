@@ -1,4 +1,4 @@
-import { categories, skillById, skills } from "@/data/skills";
+import { branches, categories, skillById, skills } from "@/data/skills";
 import type { Branch, Category, Progress, Skill } from "@/types/skill";
 
 /** Minimal outstanding dependency set, prerequisites before dependents.
@@ -68,17 +68,67 @@ export function layoutSkills(
   );
   let offset = 0;
   for (const category of activeGroups) {
-    const occupied = new Map<number, number>();
-    const items = visible.filter((skill) => skill.category === category);
-    let width = 1;
-    for (const skill of items) {
-      const depth = levels.get(skill.id)!;
-      const column = occupied.get(depth) ?? 0;
-      width = Math.max(width, column + 1);
-      occupied.set(depth, column + 1);
-      positions.set(skill.id, { x: (offset + column) * 236, y: depth * 150 });
+    // Each progression owns a lane. A new skill cannot shuffle unrelated
+    // branches across columns; shared foundations connect across lanes.
+    for (const branch of branches) {
+      const items = visible.filter(
+        (skill) => skill.category === category && skill.branch === branch,
+      );
+      if (!items.length) continue;
+      const occupied = new Map<number, number>();
+      let width = 1;
+      const ordered = [...items].sort(
+        (a, b) =>
+          levels.get(a.id)! - levels.get(b.id)! ||
+          a.difficulty - b.difficulty ||
+          a.name.localeCompare(b.name),
+      );
+      for (const skill of ordered) {
+        const depth = levels.get(skill.id)!;
+        const column = occupied.get(depth) ?? 0;
+        width = Math.max(width, column + 1);
+        occupied.set(depth, column + 1);
+        positions.set(skill.id, { x: (offset + column) * 236, y: depth * 150 });
+      }
+      offset += width;
     }
-    offset += width;
+    // Leave a little extra space between the four primary groups.
+    offset += 0.3;
   }
   return positions;
+}
+
+export function getProgressionLanes(visible: Skill[]) {
+  const positions = layoutSkills(visible);
+  return categories.flatMap((category) =>
+    branches.flatMap((branch) => {
+      const items = visible
+        .filter(
+          (skill) => skill.category === category && skill.branch === branch,
+        )
+        .sort(
+          (a, b) =>
+            positions.get(a.id)!.y - positions.get(b.id)!.y ||
+            a.name.localeCompare(b.name),
+        );
+      return items.length
+        ? [
+            {
+              category,
+              branch,
+              items,
+              position: {
+                x: Math.min(
+                  ...items.map((skill) => positions.get(skill.id)!.x),
+                ),
+                y:
+                  Math.min(
+                    ...items.map((skill) => positions.get(skill.id)!.y),
+                  ) - 55,
+              },
+            },
+          ]
+        : [];
+    }),
+  );
 }

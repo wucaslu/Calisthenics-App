@@ -48,7 +48,9 @@ export function SkillNode({ data }: NodeProps<SkillGraphNode>) {
             <Target size={15} className="node-goal" aria-label="Your goal" />
           )}
         </span>
-        <span className="node-name">{skill.name}</span>
+        <span className="node-name" title={skill.name}>
+          {skill.name}
+        </span>
         <span className="node-bottom">
           <Difficulty level={skill.difficulty} />
           <MovementBadge type={skill.movementType} />

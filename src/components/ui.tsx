@@ -88,7 +88,11 @@ export function Difficulty({
   text?: boolean;
 }) {
   return (
-    <span className="difficulty" aria-label={`Difficulty ${level} of 5`}>
+    <span
+      className="difficulty"
+      aria-label={`Difficulty ${level} of 5`}
+      title="Estimated app difficulty: Foundation, Beginner, Intermediate, Advanced, Elite. Published progression levels use their own scales."
+    >
       <span className="difficulty-bars" aria-hidden="true">
         {[1, 2, 3, 4, 5].map((value) => (
           <i key={value} className={value <= level ? "filled" : ""} />

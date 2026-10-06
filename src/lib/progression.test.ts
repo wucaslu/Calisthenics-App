@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { skillById, skills } from "@/data/skills";
-import { getGoalPath, getVisibleSkills, layoutSkills } from "@/lib/graph";
+import { researchSources } from "@/data/references";
+import {
+  getGoalPath,
+  getVisibleSkills,
+  getProgressionLanes,
+  layoutSkills,
+} from "@/lib/graph";
 import {
   getSkillState,
   hasEquipment,
@@ -11,8 +17,8 @@ import { createDemoProfile, parseProfile } from "@/lib/profile";
 import { getRecommendations } from "@/lib/recommendations";
 
 describe("skill database", () => {
-  it("contains all 80 skills with valid, acyclic dependencies and reverse links", () => {
-    expect(skills).toHaveLength(80);
+  it("contains all 103 skills with valid, acyclic dependencies and reverse links", () => {
+    expect(skills).toHaveLength(103);
     expect(new Set(skills.map((skill) => skill.id)).size).toBe(skills.length);
     const visit = (id: string, ancestors: string[] = []) => {
       expect(ancestors).not.toContain(id);
@@ -62,7 +68,7 @@ describe("skill database", () => {
       "push-up",
       "front-lever-raise",
       "handstand-push-up",
-      "wall-toe-pull",
+      "frog-stand-to-handstand",
       "dragon-flag",
       "pistol-squat",
       "skin-the-cat",
@@ -71,38 +77,70 @@ describe("skill database", () => {
     ])
       expect(skillById[id].movementType).toBe("dynamic");
   });
+  it("excludes assisted milestones and records published levels separately from app estimates", () => {
+    expect(skills.some((skill) => /assisted|band|wall/i.test(skill.name))).toBe(
+      false,
+    );
+    for (const skill of skills) {
+      expect(skill.difficulty).toBeGreaterThanOrEqual(1);
+      expect(skill.difficulty).toBeLessThanOrEqual(5);
+      for (const id of skill.references)
+        expect(researchSources[id]?.url).toMatch(/^https:\/\//);
+    }
+    expect(skillById["diamond-push-up"].referenceLevel).toBe(
+      "Pushing progression · Level 4",
+    );
+    expect(skillById["diamond-push-up"].difficulty).toBe(2);
+    expect(skillById["maltese"].referenceLevel).toBeUndefined();
+  });
+  it("keeps progression lanes separate and skill rectangles from overlapping", () => {
+    const positions = layoutSkills(skills);
+    const lanes = getProgressionLanes(skills);
+    for (const lane of lanes) {
+      expect(
+        lane.items.every(
+          (item) =>
+            item.category === lane.category && item.branch === lane.branch,
+        ),
+      ).toBe(true);
+      for (const other of lanes.filter(
+        (item) =>
+          item.category === lane.category && item.branch !== lane.branch,
+      )) {
+        const xs = lane.items.map((item) => positions.get(item.id)!.x);
+        const otherXs = other.items.map((item) => positions.get(item.id)!.x);
+        expect(
+          Math.max(...xs) + 210 <= Math.min(...otherXs) ||
+            Math.max(...otherXs) + 210 <= Math.min(...xs),
+        ).toBe(true);
+      }
+    }
+    for (let index = 0; index < skills.length; index++) {
+      const a = positions.get(skills[index].id)!;
+      for (const skill of skills.slice(index + 1)) {
+        const b = positions.get(skill.id)!;
+        expect(Math.abs(a.x - b.x) >= 210 || Math.abs(a.y - b.y) >= 104).toBe(
+          true,
+        );
+      }
+    }
+  });
 });
 
 describe("progression", () => {
-  it("unlocks the Dragon Squat branch through preparation and single-leg strength", () => {
+  it("unlocks Dragon Squat through unassisted single-leg strength and cascades resets", () => {
     let progress = createDemoProfile().progress;
-    expect(getSkillState(skillById["dragon-squat-prep"], progress)).toBe(
-      "locked",
-    );
-    for (const id of ["bodyweight-squat", "split-squat", "reverse-lunge"])
-      progress = updateSkillProgress(progress, id, "mastered");
-    expect(getSkillState(skillById["dragon-squat-prep"], progress)).toBe(
-      "available",
-    );
-    progress = updateSkillProgress(progress, "dragon-squat-prep", "mastered");
-    expect(getSkillState(skillById["assisted-dragon-squat"], progress)).toBe(
-      "locked",
-    );
-    progress = updateSkillProgress(
-      progress,
-      "assisted-pistol-squat",
-      "mastered",
-    );
-    expect(getSkillState(skillById["assisted-dragon-squat"], progress)).toBe(
-      "available",
-    );
-    progress = updateSkillProgress(
-      progress,
-      "assisted-dragon-squat",
-      "mastered",
-    );
     expect(getSkillState(skillById["dragon-squat"], progress)).toBe("locked");
-    progress = updateSkillProgress(progress, "pistol-squat", "mastered");
+    for (const id of [
+      "bodyweight-squat",
+      "split-squat",
+      "deep-step-up",
+      "pistol-squat-negative",
+      "pistol-squat",
+    ])
+      progress = updateSkillProgress(progress, id, "mastered");
+    expect(getSkillState(skillById["dragon-squat"], progress)).toBe("locked");
+    progress = updateSkillProgress(progress, "reverse-lunge", "mastered");
     expect(getSkillState(skillById["dragon-squat"], progress)).toBe(
       "available",
     );
@@ -117,7 +155,9 @@ describe("progression", () => {
       ["chest-to-bar-pull-up", "explosive-pull-up"],
       ["explosive-pull-up", "high-pull-up"],
     ]) {
-      expect(getSkillState(skillById[id], progress)).toBe("available");
+      expect(["available", "training"]).toContain(
+        getSkillState(skillById[id], progress),
+      );
       expect(getSkillState(skillById[next], progress)).toBe("locked");
       progress = updateSkillProgress(progress, id, "mastered");
       expect(getSkillState(skillById[next], progress)).toBe("available");
@@ -135,6 +175,38 @@ describe("progression", () => {
     for (const id of ["high-pull-up", "muscle-up", "strict-muscle-up"])
       expect(getSkillState(skillById[id], progress)).toBe("locked");
     expect(progress["muscle-up"]).toBeUndefined();
+  });
+  it("keeps ring muscle-ups independent of the bar muscle-up chain", () => {
+    let progress = createDemoProfile().progress;
+    for (const skill of getGoalPath("ring-muscle-up", progress)) {
+      expect(skill.id).not.toMatch(
+        /^(muscle-up|high-pull-up|explosive-pull-up|chest-to-bar-pull-up)$/,
+      );
+      progress = updateSkillProgress(progress, skill.id, "mastered");
+    }
+    expect(getSkillState(skillById["ring-muscle-up"], progress)).toBe(
+      "mastered",
+    );
+    expect(getSkillState(skillById["muscle-up"], progress)).toBe("locked");
+  });
+  it("makes every added milestone reachable through its visible prerequisite path", () => {
+    for (const goal of [
+      "one-arm-row",
+      "one-arm-push-up",
+      "advanced-tuck-front-lever-row",
+      "frog-stand-to-handstand",
+      "advanced-shrimp-squat",
+      "nordic-curl",
+      "hanging-windshield-wiper",
+      "v-sit",
+    ]) {
+      let progress = {};
+      for (const skill of getGoalPath(goal, progress)) {
+        expect(getSkillState(skill, progress)).toBe("available");
+        progress = updateSkillProgress(progress, skill.id, "mastered");
+      }
+      expect(getSkillState(skillById[goal], progress)).toBe("mastered");
+    }
   });
   it("makes advanced milestones reachable and cascades resets through shared ring foundations", () => {
     let progress = createDemoProfile().progress;
@@ -227,16 +299,15 @@ describe("progression", () => {
 });
 
 describe("goal paths", () => {
-  it("includes both Dragon Squat preparation and pistol strength once in the Legs branch", () => {
+  it("includes unassisted pistol strength and balance once in the Dragon Squat path", () => {
     const path = getGoalPath("dragon-squat", {}).map((skill) => skill.id);
     expect(path).toEqual([
       "bodyweight-squat",
       "split-squat",
-      "reverse-lunge",
-      "dragon-squat-prep",
-      "assisted-pistol-squat",
-      "assisted-dragon-squat",
+      "deep-step-up",
+      "pistol-squat-negative",
       "pistol-squat",
+      "reverse-lunge",
       "dragon-squat",
     ]);
     expect(

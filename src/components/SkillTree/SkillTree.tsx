@@ -25,6 +25,7 @@ import {
 } from "@/components/SkillNode/SkillNode";
 import {
   EmptyState,
+  Difficulty,
   MovementBadge,
   SkillIcon,
   StateBadge,
@@ -41,13 +42,24 @@ import {
   getAncestors,
   getGoalPath,
   getVisibleSkills,
+  getProgressionLanes,
   layoutSkills,
 } from "@/lib/graph";
 import { getSkillState, missingEquipment } from "@/lib/progression";
 import type { Branch, Category, UserProfile } from "@/types/skill";
 
-type GroupGraphNode = Node<{ category: Category; count: number }, "category">;
+type GroupGraphNode = Node<
+  { category: Category; count: number; branch?: Branch },
+  "category"
+>;
 function GroupNode({ data }: NodeProps<GroupGraphNode>) {
+  if (data.branch)
+    return (
+      <div className="graph-lane">
+        <strong>{branchLabels[data.branch]}</strong>
+        <span>{data.count}</span>
+      </div>
+    );
   return (
     <div className={`graph-group group-${data.category}`}>
       <SkillIcon category={data.category} size={19} />
@@ -73,7 +85,7 @@ function useFitCanvas() {
         getNodesBounds(nodes),
         width,
         height,
-        0.16,
+        0.06,
         1,
         0.2,
       );
@@ -136,19 +148,27 @@ function FitTree({
           node.type === "skill" && node.data.onPath,
       );
       const focusIds = new Set(
-        pathNodes.flatMap((node) => [node.id, ...getAncestors(node.id)]),
-      );
-      const focusGroups = new Set(
         pathNodes.flatMap((node) => [
-          node.data.skill.category,
-          ...getAncestors(node.id).map(
-            (id) => skills.find((skill) => skill.id === id)!.category,
+          node.id,
+          ...getAncestors(node.id).filter(
+            (id) => skillById[id].category === node.data.skill.category,
           ),
         ]),
       );
+      const focusGroups = new Set(
+        pathNodes.map((node) => node.data.skill.category),
+      );
       const focused = current.filter((node) =>
         node.type === "category"
-          ? focusGroups.has(node.data.category)
+          ? node.data.branch
+            ? current.some(
+                (item) =>
+                  item.type === "skill" &&
+                  focusIds.has(item.id) &&
+                  item.data.skill.category === node.data.category &&
+                  item.data.skill.branch === node.data.branch,
+              )
+            : focusGroups.has(node.data.category)
           : focusIds.has(node.id),
       );
       void fit(focusGoalPath && pathNodes.length ? focused : current);
@@ -189,6 +209,7 @@ export function SkillTree(props: Props) {
     () => getVisibleSkills(group, query, branch),
     [group, branch, query],
   );
+  const lanes = useMemo(() => getProgressionLanes(visible), [visible]);
   const { nodes, edges } = useMemo(() => {
     const positions = layoutSkills(visible);
     const goalIds = new Set(profile.goals);
@@ -227,9 +248,23 @@ export function SkillTree(props: Props) {
             x: Math.min(...items.map((skill) => positions.get(skill.id)!.x)),
             y:
               Math.min(...items.map((skill) => positions.get(skill.id)!.y)) -
-              85,
+              110,
           },
         });
+    }
+    for (const lane of lanes) {
+      const id = `lane-${lane.category}-${lane.branch}`;
+      nodes.push({
+        id,
+        measured: dimensions[id],
+        type: "category",
+        data: {
+          category: lane.category,
+          branch: lane.branch,
+          count: lane.items.length,
+        },
+        position: lane.position,
+      });
     }
     const edges: Edge[] = visible.flatMap((skill) =>
       skill.prerequisites
@@ -257,7 +292,15 @@ export function SkillTree(props: Props) {
         }),
     );
     return { nodes, edges };
-  }, [visible, profile, selectedId, onSelect, highlightPath, dimensions]);
+  }, [
+    visible,
+    lanes,
+    profile,
+    selectedId,
+    onSelect,
+    highlightPath,
+    dimensions,
+  ]);
 
   return (
     <section className="tree-card" aria-label="Interactive skill tree">
@@ -342,7 +385,7 @@ export function SkillTree(props: Props) {
                 nodesFocusable={false}
                 edgesFocusable={false}
                 elementsSelectable={false}
-                minZoom={0.16}
+                minZoom={0.06}
                 maxZoom={1.8}
                 colorMode="dark"
                 aria-label="Pannable calisthenics dependency graph"
@@ -380,29 +423,40 @@ export function SkillTree(props: Props) {
             <p className="mobile-tree-note">
               Choose a skill to explore its prerequisites and progressions.
             </p>
-            {visible.map((skill) => (
-              <button
-                key={skill.id}
-                onClick={() => onSelect(skill.id)}
-                className={`mobile-skill ${selectedId === skill.id ? "chosen" : ""}`}
+            {lanes.map((lane) => (
+              <section
+                className="mobile-progression"
+                key={`${lane.category}-${lane.branch}`}
               >
-                <span className="skill-symbol">
-                  <SkillIcon category={skill.category} />
-                </span>
-                <span>
-                  <strong>{skill.name}</strong>
-                  <span className="mobile-skill-meta">
-                    <StateBadge
-                      state={getSkillState(skill, profile.progress)}
-                    />
-                    <MovementBadge type={skill.movementType} />
-                    {missingEquipment(skill, profile.equipment).length > 0 && (
-                      <small>Equipment needed</small>
-                    )}
-                  </span>
-                </span>
-                <ArrowUpRight size={17} />
-              </button>
+                <h3>
+                  {categoryLabels[lane.category]}{" "}
+                  <span>/ {branchLabels[lane.branch]}</span>
+                </h3>
+                {lane.items.map((skill) => (
+                  <button
+                    key={skill.id}
+                    onClick={() => onSelect(skill.id)}
+                    className={`mobile-skill ${selectedId === skill.id ? "chosen" : ""}`}
+                  >
+                    <span className="skill-symbol">
+                      <SkillIcon category={skill.category} />
+                    </span>
+                    <span>
+                      <strong>{skill.name}</strong>
+                      <span className="mobile-skill-meta">
+                        <StateBadge
+                          state={getSkillState(skill, profile.progress)}
+                        />
+                        <MovementBadge type={skill.movementType} />
+                        <Difficulty level={skill.difficulty} text />
+                        {missingEquipment(skill, profile.equipment).length >
+                          0 && <small>Equipment needed</small>}
+                      </span>
+                    </span>
+                    <ArrowUpRight size={17} />
+                  </button>
+                ))}
+              </section>
             ))}
           </div>
         </>

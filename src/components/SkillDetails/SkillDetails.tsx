@@ -7,6 +7,7 @@ import {
   CheckCheck,
   ChevronRight,
   Dumbbell,
+  ExternalLink,
   Flame,
   RotateCcw,
   Sparkles,
@@ -22,6 +23,7 @@ import {
   StateIcon,
 } from "@/components/ui";
 import { branchLabels, equipmentLabels, skillById } from "@/data/skills";
+import { researchSources } from "@/data/references";
 import { getSkillState, missingEquipment } from "@/lib/progression";
 import { PERSONAL_RECORD_MAX_LENGTH } from "@/lib/profile";
 import type { Skill, UserProfile } from "@/types/skill";
@@ -272,6 +274,37 @@ export function SkillDetails({
                 </span>
               ))}
             </div>
+          </div>
+          <div className="detail-section">
+            <h3>Progression references</h3>
+            <p className="muted-copy">
+              Difficulty is an app estimate. Unlocks follow a suggested
+              preparation route.
+            </p>
+            {skill.referenceLevel && (
+              <p className="reference-level">
+                Published level: {skill.referenceLevel}
+              </p>
+            )}
+            {skill.references.length ? (
+              <div className="reference-links">
+                {skill.references.map((id) => (
+                  <a
+                    key={id}
+                    href={researchSources[id].url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {researchSources[id].title}
+                    <ExternalLink size={12} aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <p className="muted-copy">
+                Custom app progression; no published level is assigned.
+              </p>
+            )}
           </div>
           <div className="detail-section">
             <h3>Unlocks next</h3>

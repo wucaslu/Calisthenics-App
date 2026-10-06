@@ -710,6 +710,8 @@ button svg {
   font-weight: 600;
   letter-spacing: -0.2px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .node-bottom {
   margin-top: 9px;
@@ -2458,6 +2460,98 @@ button svg {
     font-size: 10px;
     min-width: 0;
   }
+}
+.graph-lane {
+  width: 210px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+.graph-lane strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+.graph-lane span {
+  font-size: 10px;
+}
+.reference-level {
+  color: var(--accent);
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 12px 0;
+}
+.reference-links {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+.reference-links a {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--accent);
+  font-size: 11px;
+  line-height: 1.6;
+  text-underline-offset: 3px;
+}
+.reference-links a:hover {
+  text-decoration: underline;
+}
+.reference-links svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.mobile-progression h3 {
+  color: var(--accent);
+  font-size: 11px;
+  margin: 20px 0 10px;
+  font-weight: 600;
+}
+.mobile-progression h3 span {
+  color: var(--muted);
+}
+.mobile-progression .mobile-skill {
+  width: 100%;
+  margin-bottom: 8px;
+}
+.archived-skills {
+  margin-top: 24px;
+}
+.archived-skills summary {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+.archived-skills summary .count-pill {
+  margin-left: 10px;
+}
+.archived-skills .muted-copy {
+  margin: 16px 0;
+}
+.archived-skill-list {
+  display: grid;
+  gap: 12px;
+}
+.archived-skill-list > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+.archived-skill-list strong {
+  font-weight: 500;
+}
+.archived-skill-list > div > span:last-child {
+  color: var(--muted);
 }
 @media (prefers-reduced-motion: reduce) {
   html {

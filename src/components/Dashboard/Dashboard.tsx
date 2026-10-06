@@ -216,6 +216,29 @@ export function Dashboard({
           </p>
         )}
       </section>
+      {Object.keys(profile.archivedSkills).length > 0 && (
+        <details className="surface-panel archived-skills">
+          <summary>
+            Previous skill records{" "}
+            <span className="count-pill">
+              {Object.keys(profile.archivedSkills).length}
+            </span>
+          </summary>
+          <p className="muted-copy">
+            Saved history for removed milestones or progress relocked by the
+            revised route. These entries do not count toward tree completion.
+          </p>
+          <div className="archived-skill-list">
+            {Object.entries(profile.archivedSkills).map(([id, item]) => (
+              <div key={id}>
+                <strong>{item.name}</strong>
+                {item.progress && <StateBadge state={item.progress} />}
+                {item.personalRecord && <span>{item.personalRecord}</span>}
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
     </>
   );
 }

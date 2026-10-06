@@ -1,10 +1,12 @@
 import { equipmentLabels, skillById } from "@/data/skills";
+import { retiredSkillNames } from "@/data/retiredSkills";
 import { normalizeProgress } from "@/lib/progression";
 import type {
   Equipment,
   PersonalRecords,
   Progress,
   UserProfile,
+  ArchivedSkill,
 } from "@/types/skill";
 
 export const STORAGE_KEY = "calisthenics-skill-tree:v1";
@@ -26,6 +28,7 @@ export function createDemoProfile(): UserProfile {
   return {
     version: 1,
     personalRecords: {},
+    archivedSkills: {},
     equipment: ["floor", "pull-up-bar", "parallettes"],
     goals: ["tuck-planche", "tuck-front-lever", "freestanding-handstand"],
     progress: {
@@ -38,7 +41,7 @@ export function createDemoProfile(): UserProfile {
       "pull-up": "mastered",
       "pike-hold": "mastered",
       "planche-lean": "training",
-      "wall-handstand": "training",
+      "chest-to-bar-pull-up": "training",
     },
   };
 }
@@ -90,12 +93,61 @@ export function parseProfile(raw: string): UserProfile | null {
           personalRecords[id] = value.slice(0, PERSONAL_RECORD_MAX_LENGTH);
       }
     }
+    const normalized = normalizeProgress(progress);
+    const archivedSkills: Record<string, ArchivedSkill> = {};
+    const archiveName = (id: string) =>
+      skillById[id]?.name ??
+      (Object.hasOwn(retiredSkillNames, id)
+        ? retiredSkillNames[id]
+        : undefined);
+    const isObject = (value: unknown): value is Record<string, unknown> =>
+      !!value && typeof value === "object" && !Array.isArray(value);
+    const recordValue = (value: unknown) =>
+      typeof value === "string" && value.trim()
+        ? value.slice(0, PERSONAL_RECORD_MAX_LENGTH)
+        : undefined;
+    const progressValue = (value: unknown) =>
+      value === "training" || value === "mastered" ? value : undefined;
+    if (isObject(candidate.archivedSkills)) {
+      for (const [id, entry] of Object.entries(candidate.archivedSkills)) {
+        const name = archiveName(id);
+        if (!name || !isObject(entry)) continue;
+        const personalRecord = recordValue(entry.personalRecord);
+        const state = progressValue(entry.progress);
+        if (personalRecord || state)
+          archivedSkills[id] = {
+            name,
+            ...(state ? { progress: state } : {}),
+            ...(personalRecord ? { personalRecord } : {}),
+          };
+      }
+    }
+    // Preserve retired milestones and progress relocked by new prerequisites.
+    for (const [id, value] of Object.entries(candidate.progress)) {
+      const name = archiveName(id);
+      const state = progressValue(value);
+      if (name && state && !normalized[id])
+        archivedSkills[id] = { ...archivedSkills[id], name, progress: state };
+    }
+    if (isObject(candidate.personalRecords)) {
+      for (const [id, value] of Object.entries(candidate.personalRecords)) {
+        const personalRecord = recordValue(value);
+        if (Object.hasOwn(retiredSkillNames, id) && personalRecord) {
+          archivedSkills[id] = {
+            ...archivedSkills[id],
+            name: retiredSkillNames[id],
+            personalRecord,
+          };
+        }
+      }
+    }
     return {
       version: 1,
-      progress: normalizeProgress(progress),
+      progress: normalized,
       personalRecords,
       goals,
       equipment,
+      archivedSkills,
     };
   } catch {
     return null;

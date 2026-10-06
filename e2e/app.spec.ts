@@ -7,9 +7,114 @@ async function openTreeSkill(page: Page, id: string, name: string) {
   await page.getByRole("button", { name: "Fit View", exact: true }).click();
   await node.click();
   await expect(
-    page.locator(".detail-panel").getByRole("heading", { name, exact: true }),
+    page
+      .locator(".detail-panel")
+      .getByRole("heading", { name, exact: true, level: 2 }),
   ).toBeVisible();
 }
+
+test("researched milestones show published levels, independent routes, and named lanes", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const panel = page.locator(".detail-panel");
+  await expect(
+    panel.getByRole("textbox", { name: "Personal Record", exact: true }),
+  ).toBeEnabled();
+  await openTreeSkill(page, "diamond-push-up", "Diamond Push-up");
+  await expect(panel.locator(".reference-level")).toContainText(
+    "Pushing progression · Level 4",
+  );
+  await expect(panel.locator(".detail-meta .difficulty")).toHaveAttribute(
+    "aria-label",
+    "Difficulty 2 of 5",
+  );
+  await expect(
+    panel.getByRole("link", {
+      name: "Recommended Routine · archived exercise levels",
+    }),
+  ).toHaveAttribute(
+    "href",
+    /github.com\/mazurio\/bodyweight-fitness-android\/blob\/19806813/,
+  );
+  await expect(
+    page.locator('[data-id="lane-push-push-up"] .graph-lane'),
+  ).toHaveText(/Push-up strength/);
+  await openTreeSkill(page, "ring-muscle-up", "Ring Muscle-up");
+  await expect(panel.locator(".prerequisite-list")).toContainText(
+    "Ring Pull-up",
+  );
+  await expect(panel.locator(".prerequisite-list")).toContainText(
+    "False-Grip Hang",
+  );
+  await expect(page.locator('[data-id="muscle-up"]')).toHaveCount(0);
+  await openTreeSkill(page, "nordic-curl", "Nordic Curl");
+  await expect(panel.locator(".detail-description")).toContainText(
+    "without pushing off with the hands",
+  );
+  await expect(
+    page.locator('[data-id="lane-legs-posterior-chain"] .graph-lane'),
+  ).toHaveText(/Posterior chain/);
+  await openTreeSkill(page, "hefesto", "Hefesto");
+  await expect(
+    panel.getByText("Custom app progression; no published level is assigned."),
+  ).toBeVisible();
+});
+
+test("reorganization keeps retired records in the overview and retained records editable after reload", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    if (localStorage.getItem("calisthenics-skill-tree:v1")) return;
+    localStorage.setItem(
+      "calisthenics-skill-tree:v1",
+      JSON.stringify({
+        version: 1,
+        goals: ["pistol-squat", "assisted-pistol-squat"],
+        equipment: ["floor"],
+        progress: {
+          "bodyweight-squat": "mastered",
+          "split-squat": "mastered",
+          "assisted-pistol-squat": "mastered",
+          "pistol-squat": "mastered",
+        },
+        personalRecords: {
+          "assisted-pistol-squat": "8 reps",
+          "pistol-squat": "4 reps",
+        },
+      }),
+    );
+  });
+  await page.goto("/");
+  const panel = page.locator(".detail-panel");
+  await expect(
+    panel.getByRole("textbox", { name: "Personal Record", exact: true }),
+  ).toBeEnabled();
+  await page.getByRole("button", { name: "Overview", exact: true }).click();
+  await page.locator(".archived-skills summary").click();
+  await expect(page.locator(".archived-skill-list")).toContainText(
+    "Assisted Pistol Squat",
+  );
+  await expect(page.locator(".archived-skill-list")).toContainText("8 reps");
+  await page.getByRole("button", { name: "Show Legs skills" }).click();
+  await expect(page.locator('[data-id="assisted-pistol-squat"]')).toHaveCount(
+    0,
+  );
+  await openTreeSkill(page, "pistol-squat", "Pistol Squat");
+  await expect(
+    panel.getByRole("textbox", { name: "Personal Record", exact: true }),
+  ).toHaveValue("4 reps");
+  await expect(
+    panel.getByRole("button", { name: "Start Training", exact: true }),
+  ).toBeDisabled();
+  await page.reload();
+  await expect(
+    panel.getByRole("textbox", { name: "Personal Record", exact: true }),
+  ).toBeEnabled();
+  await page.getByRole("button", { name: "Overview", exact: true }).click();
+  await page.locator(".archived-skills summary").click();
+  await expect(page.locator(".archived-skill-list")).toContainText("8 reps");
+});
 
 test("muscle-up follows the ordered pulling chain without band assistance", async ({
   page,
@@ -47,7 +152,7 @@ test("muscle-up follows the ordered pulling chain without band assistance", asyn
   ]) {
     await openTreeSkill(page, id, name);
     await expect(
-      panel.getByRole("button", { name: "Start Training", exact: true }),
+      panel.getByRole("button", { name: "Mark as Mastered", exact: true }),
     ).toBeEnabled();
     await panel.getByRole("button", { name: "Mark as Mastered" }).click();
   }
@@ -310,7 +415,7 @@ test("the four groups, global search, and dashboard are functional", async ({
       page.getByRole("button", { name: `Show ${name} skills` }),
     ).toBeVisible();
   await page.getByRole("button", { name: "Show Legs skills" }).click();
-  await expect(page.locator(".react-flow__node-skill")).toHaveCount(9);
+  await expect(page.locator(".react-flow__node-skill")).toHaveCount(14);
   await expect(page.getByRole("combobox", { name: "Skill group" })).toHaveValue(
     "legs",
   );
@@ -321,7 +426,7 @@ test("the four groups, global search, and dashboard are functional", async ({
     "all",
   );
   await expect(
-    page.getByRole("button", { name: "Freestanding Handstand, Locked" }),
+    page.getByRole("button", { name: "Freestanding Handstand, Available" }),
   ).toBeAttached();
   await page
     .getByRole("textbox", { name: "Search all skills" })
@@ -378,17 +483,21 @@ test("mobile lists, navigation, and skill dialog work without horizontal overflo
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Toggle navigation" }).click();
   await page.getByRole("button", { name: "Show Legs skills" }).click();
-  await expect(page.locator(".mobile-skill")).toHaveCount(9);
+  await expect(page.locator(".mobile-skill")).toHaveCount(14);
   await page
     .getByRole("combobox", { name: "Skill branch" })
     .selectOption("dragon-squat");
-  await expect(page.locator(".mobile-skill")).toHaveCount(8);
+  await expect(page.locator(".mobile-skill")).toHaveCount(7);
   const dragon = page
     .locator(".mobile-skill")
     .filter({ has: page.getByText("Dragon Squat", { exact: true }) });
   await dragon.click();
   await expect(
-    dialog.getByRole("heading", { name: "Dragon Squat", exact: true }),
+    dialog.getByRole("heading", {
+      name: "Dragon Squat",
+      exact: true,
+      level: 2,
+    }),
   ).toBeVisible();
   await expect(dialog.locator(".movement-badge")).toHaveText("Dynamic");
   await expect(dialog.locator(".detail-description")).toContainText(

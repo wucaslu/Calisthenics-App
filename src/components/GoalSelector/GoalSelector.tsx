@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { Difficulty, EmptyState, SkillIcon, StateIcon } from "@/components/ui";
-import { branchLabels, skillById, skills } from "@/data/skills";
+import { branchLabels, categoryLabels, skillById, skills } from "@/data/skills";
 import { getGoalPath } from "@/lib/graph";
 import { getSkillState, missingEquipment } from "@/lib/progression";
 import type { UserProfile } from "@/types/skill";
@@ -148,7 +148,7 @@ export function GoalSelector({
               >
                 <span>
                   <strong>{skill.name}</strong>
-                  <small>{branchLabels[skill.branch]}</small>
+                  <small>{categoryLabels[skill.category]}</small>
                 </span>
                 <span className="goal-option-check">
                   {active ? <Check size={14} /> : <Plus size={14} />}
