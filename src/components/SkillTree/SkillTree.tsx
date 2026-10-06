@@ -246,10 +246,10 @@ export function SkillTree(props: Props) {
             type: "smoothstep",
             style: {
               stroke: highlighted
-                ? "#ade7b9"
+                ? "var(--tree-path)"
                 : profile.progress[id] === "mastered"
-                  ? "#537761"
-                  : "#363e40",
+                  ? "var(--tree-edge-mastered)"
+                  : "var(--tree-edge-locked)",
               strokeWidth: highlighted ? 1.8 : 1.3,
             },
             animated: highlighted && profile.progress[id] === "training",
@@ -351,7 +351,7 @@ export function SkillTree(props: Props) {
                   variant={BackgroundVariant.Dots}
                   gap={20}
                   size={1}
-                  color="#303638"
+                  color="var(--tree-grid)"
                 />
                 <CanvasControls />
                 <FitTree

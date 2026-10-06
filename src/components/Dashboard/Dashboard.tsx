@@ -27,7 +27,7 @@ export function ProgressStats({ profile }: { profile: UserProfile }) {
           value: mastered,
           suffix: `/ ${skills.length}`,
           Icon: CheckCheck,
-          className: "mint",
+          className: "accent",
         },
         {
           label: "Currently training",
@@ -48,7 +48,7 @@ export function ProgressStats({ profile }: { profile: UserProfile }) {
           value: `${completion(profile.progress)}%`,
           suffix: "every skill counts",
           Icon: TrendingUp,
-          className: "mint",
+          className: "accent",
         },
       ].map(({ label, value, suffix, Icon, className }) => (
         <div className="stat-card" key={label}>

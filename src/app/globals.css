@@ -2,12 +2,16 @@
 
 :root {
   color-scheme: dark;
-  --background: #101415;
-  --foreground: #f0f2ef;
-  --muted: #8b9791;
-  --mint: #b4e8bd;
-  --border: #293031;
-  --surface: #171c1d;
+  --background: #111416;
+  --foreground: #f0f2f3;
+  --muted: #8f959b;
+  --accent: #cdddf0;
+  --border: #2b2f34;
+  --surface: #181b1f;
+  --tree-path: #cadbef;
+  --tree-edge-mastered: #5e7187;
+  --tree-edge-locked: #383d43;
+  --tree-grid: #32353a;
 }
 @theme inline {
   --font-sans: "Manrope Variable", Arial, Helvetica, sans-serif;
@@ -57,7 +61,7 @@ button:focus-visible,
 a:focus-visible,
 select:focus-visible,
 input:focus-visible {
-  outline: 2px solid var(--mint);
+  outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
 h1,
@@ -71,8 +75,8 @@ button svg {
   flex-shrink: 0;
 }
 ::selection {
-  color: #142217;
-  background: var(--mint);
+  color: #182028;
+  background: var(--accent);
 }
 ::-webkit-scrollbar {
   width: 5px;
@@ -83,7 +87,7 @@ button svg {
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 20px;
-  background: #38433d;
+  background: #3c4147;
 }
 .app-shell {
   min-height: 100vh;
@@ -97,7 +101,7 @@ button svg {
   display: flex;
   flex-direction: column;
   padding: 29px 20px 20px;
-  background: #131819;
+  background: #14171b;
   border-right: 1px solid var(--border);
   z-index: 20;
   overflow-y: auto;
@@ -116,7 +120,7 @@ button svg {
 }
 .brand small {
   display: block;
-  color: #95a59b;
+  color: #9ba2aa;
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 3.5px;
@@ -126,17 +130,17 @@ button svg {
   place-items: center;
   width: 34px;
   height: 42px;
-  color: var(--mint);
-  border: 1px solid #5b8662;
+  color: var(--accent);
+  border: 1px solid #687e98;
   border-radius: 10px 10px 14px 14px;
-  background: linear-gradient(145deg, #263c2d, #17211c);
+  background: linear-gradient(145deg, #2c3846, #1a1f25);
   transform: skewY(-4deg);
 }
 .sidebar-label {
   display: block;
   padding: 0 12px;
   margin-bottom: 13px;
-  color: #75837b;
+  color: #7a8088;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 1.8px;
@@ -154,30 +158,30 @@ button svg {
   border: 1px solid transparent;
   border-radius: 7px;
   background: transparent;
-  color: #9ba79f;
+  color: #9fa5ab;
   font-weight: 500;
   font-size: 12px;
   text-align: left;
 }
 .nav-item:hover,
 .group-nav:hover {
-  background: #1d2521;
-  color: #e3ece4;
+  background: #202428;
+  color: #e6eaee;
 }
 .nav-item.active {
-  border-color: #34493a;
-  background: linear-gradient(90deg, #283a2d, #1d2921);
-  color: #c8eace;
+  border-color: #3a4552;
+  background: linear-gradient(90deg, #2d3742, #21272e);
+  color: #d7e3f0;
 }
 .nav-item.active > svg {
-  color: var(--mint);
+  color: var(--accent);
 }
 .nav-active-dot {
   width: 5px;
   height: 5px;
   margin-left: auto;
   border-radius: 50%;
-  background: var(--mint);
+  background: var(--accent);
 }
 .nav-count {
   display: grid;
@@ -185,8 +189,8 @@ button svg {
   margin-left: auto;
   width: 19px;
   height: 19px;
-  color: #b6c1bb;
-  background: #2b3330;
+  color: #babfc4;
+  background: #2e3236;
   border-radius: 5px;
   font-size: 10px;
 }
@@ -199,7 +203,7 @@ button svg {
 .group-nav {
   border: 0;
   background: transparent;
-  color: #99a59d;
+  color: #9da3a9;
   padding: 11px 12px;
   display: flex;
   gap: 12px;
@@ -210,14 +214,14 @@ button svg {
 }
 .group-nav > span:last-child {
   margin-left: auto;
-  color: #687970;
+  color: #6e7680;
   font-size: 10px;
 }
 .group-nav.active {
-  color: #d2e9d8;
+  color: #dce4ee;
 }
 .group-nav.active > svg {
-  color: var(--mint);
+  color: var(--accent);
 }
 .sidebar-bottom {
   margin-top: auto;
@@ -225,13 +229,13 @@ button svg {
 }
 .journey-card {
   background:
-    radial-gradient(ellipse at top right, #27382c 0, transparent 70%), #1a2320;
-  border: 1px solid #33413a;
+    radial-gradient(ellipse at top right, #2c353f 0, transparent 70%), #1d2227;
+  border: 1px solid #373f47;
   border-radius: 9px;
   padding: 18px 15px;
 }
 .journey-card > svg {
-  color: var(--mint);
+  color: var(--accent);
   margin-bottom: 13px;
 }
 .journey-card h3 {
@@ -242,7 +246,7 @@ button svg {
   margin-top: 7px;
   font-size: 11px;
   line-height: 1.8;
-  color: #94a299;
+  color: #999fa6;
 }
 .journey-card button {
   display: flex;
@@ -252,7 +256,7 @@ button svg {
   border: 0;
   padding: 0;
   margin-top: 14px;
-  color: #c4e0ca;
+  color: #d0dae6;
   font-size: 10px;
   font-weight: 600;
 }
@@ -267,10 +271,10 @@ button svg {
   place-items: center;
   width: 33px;
   height: 33px;
-  background: #29332d;
-  border: 1px solid #405348;
+  background: #2c3137;
+  border: 1px solid #46505b;
   border-radius: 50%;
-  color: #c4daca;
+  color: #cdd6df;
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 0.5px;
@@ -286,13 +290,13 @@ button svg {
   align-items: center;
   margin-top: 5px;
   font-size: 9px;
-  color: #899990;
+  color: #8f969e;
 }
 .local-profile i {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--mint);
+  background: var(--accent);
 }
 .restore-demo {
   display: flex;
@@ -303,10 +307,10 @@ button svg {
   font-size: 9px;
   border: 0;
   background: transparent;
-  color: #7d8c83;
+  color: #828991;
 }
 .restore-demo:hover {
-  color: #c9dacd;
+  color: #cfd6de;
 }
 .app-main {
   margin-left: 224px;
@@ -318,38 +322,38 @@ button svg {
   align-items: center;
   gap: 24px;
   padding: 0 36px;
-  background: #121718;
+  background: #13161a;
 }
 .topbar-location {
   display: flex;
   align-items: center;
   gap: 14px;
-  color: #829187;
+  color: #878e96;
   font-size: 11px;
   flex-shrink: 0;
 }
 .topbar-location strong {
   font-weight: 500;
-  color: #d2dbd5;
+  color: #d5d9de;
 }
 .search-field {
   display: flex;
   gap: 9px;
   align-items: center;
-  border: 1px solid #2c3431;
+  border: 1px solid #2f3337;
   border-radius: 7px;
   padding: 9px 11px;
-  color: #86978c;
-  background: #161c1b;
+  color: #8c949c;
+  background: #181b1f;
 }
 .search-field:focus-within {
-  border-color: #789c7f;
+  border-color: #8695a6;
 }
 .search-field input {
   min-width: 0;
   width: 100%;
   background: transparent;
-  color: #e0e9e3;
+  color: #e3e7eb;
   border: 0;
   outline: none;
   font-size: 11px;
@@ -358,7 +362,7 @@ button svg {
   outline: none;
 }
 .search-field input::placeholder {
-  color: #7f8d85;
+  color: #848a92;
 }
 .global-search {
   width: 235px;
@@ -368,7 +372,7 @@ button svg {
   flex-shrink: 0;
   font-family: inherit;
   padding: 1px 4px;
-  border: 1px solid #303b34;
+  border: 1px solid #33393f;
   border-radius: 3px;
   font-size: 9px;
 }
@@ -376,12 +380,12 @@ button svg {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #93a399;
+  color: #99a0a8;
   font-size: 10px;
   white-space: nowrap;
 }
 .local-mode svg {
-  color: #a8c4ae;
+  color: #b3becb;
 }
 .menu-button {
   display: none !important;
@@ -402,7 +406,7 @@ button svg {
   display: flex;
   gap: 5px;
   align-items: center;
-  color: #94b69d;
+  color: #a1afbf;
   font-size: 9px;
   letter-spacing: 1.7px;
   font-weight: 650;
@@ -417,7 +421,7 @@ button svg {
 }
 .page-heading p {
   font-size: 12px;
-  color: #8d9c93;
+  color: #9299a1;
   line-height: 1.7;
 }
 .primary-button,
@@ -433,22 +437,22 @@ button svg {
   font-weight: 700;
 }
 .primary-button {
-  border: 1px solid var(--mint);
-  background: var(--mint);
-  color: #18251b;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #1c232b;
 }
 .primary-button:hover:not(:disabled) {
-  background: #d0f3d6;
-  border-color: #d0f3d6;
+  background: #e1ebf7;
+  border-color: #e1ebf7;
 }
 .secondary-button {
-  border: 1px solid #38463c;
-  background: #202923;
-  color: #c0d8c6;
+  border: 1px solid #3c434b;
+  background: #23272d;
+  color: #cad3de;
 }
 .secondary-button:hover:not(:disabled) {
-  background: #29372d;
-  border-color: #728d77;
+  background: #2d343d;
+  border-color: #7c8895;
 }
 .heading-goals {
   flex-shrink: 0;
@@ -463,7 +467,7 @@ button svg {
 .stat-card {
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: linear-gradient(110deg, #1b211e, #171c1b);
+  background: linear-gradient(110deg, #1d2023, #191b1e);
   padding: 18px 18px 17px;
   display: flex;
   align-items: center;
@@ -471,7 +475,7 @@ button svg {
   gap: 12px;
 }
 .stat-label {
-  color: #98a89d;
+  color: #9ea5ad;
   font-size: 10px;
 }
 .stat-value {
@@ -487,7 +491,7 @@ button svg {
 .stat-value > span {
   font-size: 9px;
   font-weight: 400;
-  color: #798b7e;
+  color: #7f8791;
   letter-spacing: 0;
 }
 .stat-icon {
@@ -497,8 +501,8 @@ button svg {
   width: 35px;
   height: 35px;
   border-radius: 9px;
-  background: #24362a;
-  color: #bbe0c2;
+  background: #29333e;
+  color: #cbd8e7;
 }
 .stat-icon.amber {
   background: #3b3023;
@@ -521,7 +525,7 @@ button svg {
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: #151b19;
+  background: #171a1e;
 }
 .tree-toolbar {
   min-height: 62px;
@@ -530,8 +534,8 @@ button svg {
   align-items: center;
   gap: 12px;
   padding: 16px 18px;
-  border-bottom: 1px solid #28312b;
-  background: #1a201d;
+  border-bottom: 1px solid #2b2f34;
+  background: #1c1f22;
 }
 .tree-heading {
   display: flex;
@@ -547,17 +551,17 @@ button svg {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--mint);
-  box-shadow: 0 0 8px #9de7ae55;
+  background: var(--accent);
+  box-shadow: 0 0 8px #c4d9f055;
 }
 .count-pill {
   display: inline-flex;
   padding: 3px 7px;
-  color: #9baea1;
+  color: #a2aab4;
   font-size: 9px;
-  border: 1px solid #364239;
+  border: 1px solid #3a4047;
   border-radius: 4px;
-  background: #202a23;
+  background: #23282e;
   font-weight: 500;
 }
 .tree-filter-controls {
@@ -565,13 +569,13 @@ button svg {
   gap: 7px;
 }
 .branch-select select {
-  color: #c4d0c8;
+  color: #c8ced4;
   font-size: 10px;
   padding: 5px 6px;
   max-width: 138px;
-  border: 1px solid #344138;
+  border: 1px solid #383f46;
   border-radius: 5px;
-  background: #242d27;
+  background: #272b31;
   cursor: pointer;
 }
 .tree-subtoolbar {
@@ -580,8 +584,8 @@ button svg {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  border-bottom: 1px solid #27312a;
-  background: #171e19;
+  border-bottom: 1px solid #2a2f35;
+  background: #191d21;
 }
 .tree-legend {
   display: flex;
@@ -597,23 +601,23 @@ button svg {
   white-space: nowrap;
 }
 .state-mastered {
-  color: #b5e4c0;
+  color: #cbdaec;
 }
 .state-training {
   color: #ebc181;
 }
 .state-available {
-  color: #aec0bd;
+  color: #b5bdc6;
 }
 .state-locked {
-  color: #82938a;
+  color: #889098;
 }
 .path-toggle {
   display: flex;
   gap: 5px;
   align-items: center;
   padding: 4px 6px;
-  color: #92a49b;
+  color: #99a1aa;
   background: transparent;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -621,14 +625,14 @@ button svg {
   white-space: nowrap;
 }
 .path-toggle.active {
-  color: #bbe4c3;
-  border-color: #3c5441;
-  background: #24392a;
+  color: #cedbeb;
+  border-color: #43505e;
+  background: #2a3542;
 }
 .tree-canvas {
   height: 592px;
   position: relative;
-  background: radial-gradient(ellipse at 45% 50%, #20302488 0, #101915 85%);
+  background: radial-gradient(ellipse at 45% 50%, #252d3788 0, #13181d 85%);
 }
 .react-flow__node {
   border-radius: 9px;
@@ -637,44 +641,44 @@ button svg {
   display: block;
   width: 210px;
   height: 104px;
-  border: 1px solid #46514b;
+  border: 1px solid #4a4f55;
   border-radius: 9px;
   padding: 12px 13px;
-  background: #1c2420;
+  background: #1f2327;
   box-shadow: 0 3px 12px #0002;
   text-align: left;
-  color: #d8e2db;
+  color: #dce0e5;
   position: relative;
 }
 .skill-node:hover {
-  border-color: #aad0b4;
-  background: #28332c;
+  border-color: #bac8d9;
+  background: #2b3137;
   box-shadow: 0 4px 16px #0003;
 }
 .node-locked {
-  background: #1a211e;
+  background: #1c2024;
   border-style: dashed;
-  border-color: #38463c;
-  color: #9eafa4;
+  border-color: #3c434b;
+  color: #a4acb4;
 }
 .node-mastered {
-  border-color: #60856c;
-  background: #253b2c;
+  border-color: #6b7e94;
+  background: #2b3745;
 }
 .node-training {
   border-color: #99845b;
   background: #302e22;
 }
 .node-on-path {
-  border-color: #87b991;
+  border-color: #9cafc5;
 }
 .node-selected {
-  border-color: #bde8c4;
+  border-color: #d1dfef;
   border-style: solid;
   box-shadow:
-    0 0 0 3px #a0d2aa20,
+    0 0 0 3px #b6c8dc20,
     0 6px 22px #0004;
-  background: #2b3c2e;
+  background: #303943;
 }
 .node-top {
   display: flex;
@@ -683,12 +687,12 @@ button svg {
   margin-bottom: 7px;
 }
 .node-category-icon {
-  color: #b5c6bc;
+  color: #bbc3cb;
   line-height: 0;
   margin-right: auto;
 }
 .node-mastered .node-category-icon {
-  color: #b9e6c3;
+  color: #ceddee;
 }
 .node-state {
   display: flex;
@@ -697,7 +701,7 @@ button svg {
   font-size: 9px;
 }
 .node-goal {
-  color: #bbe7c2;
+  color: #cfdeee;
   margin-left: 3px;
 }
 .node-name {
@@ -720,9 +724,9 @@ button svg {
   gap: 4px;
   padding: 3px 6px;
   border-radius: 4px;
-  border: 1px solid #41584a;
-  color: #b8d5c2;
-  background: #25362c;
+  border: 1px solid #485462;
+  color: #c4cfdc;
+  background: #2a333d;
   font-size: 9px;
   font-weight: 500;
   white-space: nowrap;
@@ -730,7 +734,7 @@ button svg {
 .movement-static {
   color: #b8cbdc;
   border-color: #425563;
-  background: #243139;
+  background: #26303c;
 }
 .node-bottom .movement-badge {
   padding: 0;
@@ -747,7 +751,7 @@ button svg {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #8fa397;
+  color: #969fa9;
   font-size: 9px;
   font-weight: 500;
   white-space: nowrap;
@@ -761,14 +765,14 @@ button svg {
   display: block;
   width: 4px;
   height: 7px;
-  background: #3b493f;
+  background: #3f464e;
   border-radius: 1px;
 }
 .difficulty-bars i.filled {
-  background: #a3b8aa;
+  background: #abb4be;
 }
 .node-mastered .difficulty-bars i.filled {
-  background: #aed5b8;
+  background: #bfcdde;
 }
 .node-equipment {
   display: flex;
@@ -780,29 +784,29 @@ button svg {
 .react-flow__handle {
   width: 5px !important;
   height: 5px !important;
-  background: #6d8b75 !important;
-  border: 1px solid #27362b !important;
+  background: #788595 !important;
+  border: 1px solid #2b333c !important;
   min-width: 5px !important;
   min-height: 5px !important;
   pointer-events: none;
 }
 .react-flow__controls {
   box-shadow: none !important;
-  border: 1px solid #3e5043;
+  border: 1px solid #444d57;
   border-radius: 6px;
   overflow: hidden;
   margin: 0 0 42px 17px !important;
 }
 .react-flow__controls-button {
   border: 0 !important;
-  border-bottom: 1px solid #334439 !important;
-  background: #202c24 !important;
-  color: #bed2c4 !important;
+  border-bottom: 1px solid #38414b !important;
+  background: #242a31 !important;
+  color: #c6ced7 !important;
   width: 29px !important;
   height: 29px !important;
 }
 .react-flow__controls-button:hover {
-  background: #354d3d !important;
+  background: #3c4957 !important;
 }
 .react-flow__controls-button:last-child {
   border-bottom: 0 !important;
@@ -812,11 +816,11 @@ button svg {
   max-height: 12px !important;
 }
 .react-flow__attribution {
-  background: #19261d !important;
+  background: #1d242c !important;
   border-radius: 4px 0 0 0;
 }
 .react-flow__attribution a {
-  color: #9cbaa5 !important;
+  color: #a8b4c2 !important;
   font-size: 8px;
 }
 .graph-group {
@@ -826,8 +830,8 @@ button svg {
   width: 210px;
   height: 45px;
   padding: 10px 0;
-  border-bottom: 1px solid #536b5877;
-  color: #bdd3c3;
+  border-bottom: 1px solid #5a667477;
+  color: #c6cfd9;
 }
 .graph-group strong {
   text-transform: uppercase;
@@ -837,7 +841,7 @@ button svg {
 }
 .graph-group > span {
   margin-left: auto;
-  color: #7e9887;
+  color: #8893a0;
   font-size: 10px;
 }
 .canvas-note {
@@ -847,7 +851,7 @@ button svg {
   position: absolute;
   left: 17px;
   bottom: 14px;
-  color: #76907f;
+  color: #808b98;
   font-size: 9px;
   pointer-events: none;
 }
@@ -858,7 +862,7 @@ button svg {
   position: absolute;
   top: 13px;
   right: 17px;
-  color: #6e8a77;
+  color: #788593;
   font-size: 8px;
   letter-spacing: 1.2px;
   font-weight: 500;
@@ -870,10 +874,10 @@ button svg {
   align-items: center;
   gap: 15px;
   padding: 12px 16px;
-  border-top: 1px solid #29352c;
-  color: #84998b;
+  border-top: 1px solid #2d333a;
+  color: #8c959f;
   font-size: 8px;
-  background: #19211c;
+  background: #1b2024;
 }
 .tree-footer > span:first-child {
   display: flex;
@@ -881,7 +885,7 @@ button svg {
   align-items: center;
 }
 .tree-footer > span:last-child {
-  color: #73877a;
+  color: #7a838e;
   font-size: 8px;
 }
 .mobile-skill-list {
@@ -891,9 +895,9 @@ button svg {
   display: flex;
   flex-direction: column;
   height: 757px;
-  border: 1px solid #323d36;
+  border: 1px solid #353b41;
   border-radius: 9px;
-  background: #1a211d;
+  background: #1c2024;
   overflow: hidden;
 }
 .detail-panel-top {
@@ -903,8 +907,8 @@ button svg {
   height: 48px;
   flex-shrink: 0;
   padding: 0 19px;
-  color: #90a498;
-  border-bottom: 1px solid #2f3d32;
+  color: #98a0aa;
+  border-bottom: 1px solid #333a43;
   font-size: 8px;
   letter-spacing: 1.4px;
   font-weight: 600;
@@ -919,11 +923,11 @@ button svg {
   border: 0;
   border-radius: 4px;
   background: transparent;
-  color: #8c9e92;
+  color: #939aa4;
 }
 .icon-button:hover {
-  color: #d3e9da;
-  background: #2b3d31;
+  color: #dce4ee;
+  background: #303a45;
 }
 .detail-scroll {
   overflow-y: auto;
@@ -937,22 +941,22 @@ button svg {
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  color: #c1e2c8;
-  background: radial-gradient(circle, #364e3c 0, #22342a 65%);
-  border: 1px solid #496450;
+  color: #cfdbe9;
+  background: radial-gradient(circle, #3d4a58 0, #27313c 65%);
+  border: 1px solid #515f6f;
   margin: 0 auto 23px;
   position: relative;
 }
 .emblem-orbit {
   position: absolute;
   inset: -7px;
-  border: 1px dashed #536b5577;
+  border: 1px dashed #5a667477;
   border-radius: 50%;
 }
 .detail-scroll > .eyebrow {
   font-size: 8px;
   margin-bottom: 7px;
-  color: #91a899;
+  color: #9aa4af;
 }
 .detail-scroll > h2 {
   font-size: 22px;
@@ -971,21 +975,21 @@ button svg {
 .detail-meta .state-badge {
   padding: 4px 6px;
   border-radius: 4px;
-  background: #273329;
-  border: 1px solid #35493b;
+  background: #2b3138;
+  border: 1px solid #3b4551;
 }
 .detail-description {
   margin-top: 15px;
-  color: #a0aea5;
+  color: #a5abb2;
   font-size: 11px;
   line-height: 1.85;
 }
 .personal-record-card {
   margin-top: 17px;
   padding: 12px;
-  border: 1px solid #405647;
+  border: 1px solid #47525f;
   border-radius: 7px;
-  background: #223329;
+  background: #27303b;
 }
 .personal-record-heading {
   display: flex;
@@ -1000,7 +1004,7 @@ button svg {
   gap: 7px;
   font-size: 11px;
   font-weight: 600;
-  color: #d0e3d5;
+  color: #d8dfe8;
 }
 .personal-record-heading svg {
   color: #c5b98e;
@@ -1009,11 +1013,11 @@ button svg {
   padding: 3px 5px;
   border: 0;
   background: transparent;
-  color: #b8cbbf;
+  color: #bfc7d0;
   font-size: 10px;
 }
 .personal-record-clear:hover:not(:disabled) {
-  color: #edf5ef;
+  color: #f0f3f7;
 }
 .personal-record-card input {
   display: block;
@@ -1021,28 +1025,28 @@ button svg {
   min-width: 0;
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #4b6252;
-  background: #17251d;
-  color: #e0ede4;
+  border: 1px solid #525e6b;
+  background: #1b232b;
+  color: #e5eaf0;
   font-size: 13px;
 }
 .personal-record-card input::placeholder {
-  color: #8fa296;
+  color: #969ea8;
 }
 .personal-record-card input:focus-visible {
-  outline: 2px solid #b9dfc2;
+  outline: 2px solid #cad7e7;
   outline-offset: 2px;
 }
 .personal-record-card p {
   margin-top: 9px;
-  color: #b3c8ba;
+  color: #bbc4ce;
   font-size: 10px;
   line-height: 1.6;
 }
 .personal-record-card small {
   display: block;
   margin-top: 3px;
-  color: #90a999;
+  color: #9aa4b0;
   font-size: 9px;
   line-height: 1.6;
 }
@@ -1054,16 +1058,16 @@ button svg {
   padding: 6px 9px;
   width: 100%;
   text-align: left;
-  background: #242b26;
-  border: 1px solid #394a3d;
-  color: #b5c5ba;
+  background: #262a2e;
+  border: 1px solid #3e4751;
+  color: #bbc2ca;
   font-size: 10px;
   border-radius: 5px;
 }
 .goal-button.is-goal {
-  background: #253629;
-  color: #c5dfca;
-  border-color: #405b45;
+  background: #2a333d;
+  color: #d0dae5;
+  border-color: #485666;
 }
 .goal-button > svg:last-child:not(:first-child) {
   margin-left: auto;
@@ -1081,7 +1085,7 @@ button svg {
 }
 .detail-section h3 > span {
   font-size: 9px;
-  color: #90a895;
+  color: #99a3af;
   font-weight: 400;
 }
 .prerequisite-list {
@@ -1092,58 +1096,58 @@ button svg {
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #c4d2c8;
-  border: 1px solid #334438;
-  background: #202c23;
+  color: #c9cfd6;
+  border: 1px solid #38414b;
+  background: #242a31;
   border-radius: 5px;
   padding: 9px;
   font-size: 10px;
   text-align: left;
 }
 .prerequisite-list button:hover {
-  background: #2e4033;
-  border-color: #637f6a;
+  background: #333d47;
+  border-color: #6c7a8a;
 }
 .prerequisite-check {
   display: grid;
   place-items: center;
   width: 18px;
   height: 18px;
-  background: #304034;
+  background: #353d46;
   border-radius: 50%;
 }
 .prerequisite-list button > svg:last-child {
   margin-left: auto;
-  color: #6e8a77;
+  color: #788593;
 }
 .criteria-card {
   display: flex;
   gap: 9px;
   padding: 12px;
-  border: 1px solid #3d503f;
+  border: 1px solid #434c57;
   border-radius: 6px;
   margin-top: 18px;
-  background: #28362a;
+  background: #2c333c;
 }
 .criteria-card > svg {
   flex-shrink: 0;
   margin-top: 1px;
-  color: #bfdabb;
+  color: #c8d4e1;
 }
 .criteria-card h3 {
   font-size: 10px;
   margin-bottom: 6px;
   font-weight: 600;
-  color: #d1dfcd;
+  color: #d5dce4;
 }
 .criteria-card p {
-  color: #b4c5b3;
+  color: #bac1ca;
   font-size: 10px;
   line-height: 1.7;
 }
 .criteria-card small {
   display: block;
-  color: #8da28d;
+  color: #949da8;
   font-size: 8px;
   line-height: 1.7;
   margin-top: 5px;
@@ -1159,10 +1163,10 @@ button svg {
 .exercise-index {
   flex-shrink: 0;
   font-size: 8px;
-  color: #89a091;
+  color: #929ca7;
   margin-top: 2px;
-  border: 1px solid #3d4c40;
-  background: #252d26;
+  border: 1px solid #424952;
+  background: #272b30;
   border-radius: 4px;
   height: 20px;
   width: 20px;
@@ -1171,18 +1175,18 @@ button svg {
 }
 .exercise h4 {
   font-size: 10px;
-  color: #c4d1c7;
+  color: #c9ced5;
   font-weight: 600;
   line-height: 1.5;
 }
 .exercise-dose {
   display: block;
-  color: #b6ccbc;
+  color: #bec8d2;
   font-size: 9px;
   margin-top: 4px;
 }
 .exercise p {
-  color: #819789;
+  color: #89939e;
   font-size: 9px;
   margin-top: 6px;
   line-height: 1.75;
@@ -1198,10 +1202,10 @@ button svg {
   gap: 5px;
   border-radius: 4px;
   padding: 5px 7px;
-  background: #252e27;
-  border: 1px solid #3b4c3e;
+  background: #282c31;
+  border: 1px solid #404953;
   font-size: 9px;
-  color: #afc2b5;
+  color: #b6bec7;
 }
 .equipment-chips span.missing {
   background: #332e20;
@@ -1220,23 +1224,23 @@ button svg {
   background: transparent;
   border: 0;
   padding: 6px 0;
-  color: #a4b6a9;
+  color: #abb2bb;
   font-size: 10px;
   text-align: left;
 }
 .unlock-list button:hover {
-  color: var(--mint);
+  color: var(--accent);
 }
 .detail-actions {
   flex-shrink: 0;
-  border-top: 1px solid #334436;
+  border-top: 1px solid #38414b;
   padding: 12px 18px 11px;
-  background: #1d2720;
+  background: #20252b;
   display: grid;
   gap: 7px;
 }
 .detail-actions > p {
-  color: #90a492;
+  color: #97a0aa;
   text-align: center;
   font-size: 9px;
   line-height: 1.5;
@@ -1249,9 +1253,9 @@ button svg {
   font-size: 10px;
 }
 .detail-actions .primary-button:disabled {
-  background: #52664e;
-  border-color: #63765c;
-  color: #bfcdb8;
+  background: #566270;
+  border-color: #657281;
+  color: #c1cad3;
   opacity: 0.55;
 }
 .reset-button {
@@ -1262,14 +1266,14 @@ button svg {
   padding: 5px;
   border: 0;
   background: transparent;
-  color: #869b8b;
+  color: #8e97a1;
   font-size: 9px;
 }
 .reset-button:hover:not(:disabled) {
-  color: #d5e7d8;
+  color: #dce3eb;
 }
 .detail-actions > small {
-  color: #839686;
+  color: #8a929c;
   font-size: 8px;
   text-align: center;
 }
@@ -1292,7 +1296,7 @@ button svg {
 .section-heading p {
   margin-top: 7px;
   font-size: 11px;
-  color: #899c8f;
+  color: #9098a2;
   line-height: 1.7;
 }
 .section-heading .eyebrow {
@@ -1307,13 +1311,13 @@ button svg {
   padding: 3px 0;
   border: 0;
   background: transparent;
-  color: #adccb5;
+  color: #bac6d4;
   font-size: 10px;
   font-weight: 500;
   white-space: nowrap;
 }
 .text-button:hover {
-  color: #d3f1da;
+  color: #e1ebf5;
 }
 .recommendation-grid {
   display: grid;
@@ -1326,13 +1330,13 @@ button svg {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 15px 16px;
-  background: #191f1c;
-  color: #c8d4cd;
+  background: #1b1e21;
+  color: #cdd2d8;
   text-align: left;
 }
 .recommendation-card:hover {
-  border-color: #6b8e75;
-  background: #202b23;
+  border-color: #788799;
+  background: #23292f;
 }
 .recommendation-top {
   display: flex;
@@ -1348,13 +1352,13 @@ button svg {
   flex-shrink: 0;
   width: 34px;
   height: 34px;
-  border: 1px solid #405546;
+  border: 1px solid #46515e;
   border-radius: 7px;
-  background: #26372a;
-  color: #b4d4bd;
+  background: #2b343e;
+  color: #c1cedc;
 }
 .recommendation-number {
-  color: #6b8473;
+  color: #737f8e;
   font-size: 9px;
 }
 .recommendation-card h3 {
@@ -1367,21 +1371,21 @@ button svg {
   width: 100%;
 }
 .recommendation-card h3 > svg {
-  color: #8da997;
+  color: #98a4b1;
 }
 .recommendation-card p {
   font-size: 11px;
-  color: #889e8f;
+  color: #909aa5;
   line-height: 1.8;
   margin-top: 8px;
   flex: 1;
 }
 .recommendation-dose {
   font-size: 9px;
-  color: #abc6b2;
+  color: #b6c1cd;
   margin-top: 14px;
   padding-top: 11px;
-  border-top: 1px solid #2d3b30;
+  border-top: 1px solid #313841;
   width: 100%;
 }
 .page-footer {
@@ -1390,8 +1394,8 @@ button svg {
   gap: 15px;
   margin-top: 27px;
   padding-top: 16px;
-  border-top: 1px solid #28332b;
-  color: #7a8f81;
+  border-top: 1px solid #2b3137;
+  color: #828b96;
   font-size: 9px;
 }
 .page-footer > span:first-child {
@@ -1401,8 +1405,8 @@ button svg {
 }
 .surface-panel {
   padding: 22px;
-  background: #19201c;
-  border: 1px solid #2d3a30;
+  background: #1b1f23;
+  border: 1px solid #31383f;
   border-radius: 9px;
 }
 .panel-heading {
@@ -1418,10 +1422,10 @@ button svg {
   letter-spacing: -0.2px;
 }
 .panel-heading > svg {
-  color: #96bba0;
+  color: #a5b4c5;
 }
 .subtle-label {
-  color: #789281;
+  color: #828d9a;
   font-size: 8px;
   letter-spacing: 1.2px;
 }
@@ -1438,9 +1442,9 @@ button svg {
   width: 100%;
   padding: 14px 0;
   border: 0;
-  border-bottom: 1px solid #2f3c32;
+  border-bottom: 1px solid #333a41;
   background: transparent;
-  color: #cbdace;
+  color: #d1d7de;
 }
 .overview-goal:last-child {
   border-bottom: 0;
@@ -1458,14 +1462,14 @@ button svg {
   display: block;
   margin-top: 6px;
   font-size: 10px;
-  color: #8aa391;
+  color: #939eaa;
 }
 .overview-goal > svg {
   margin-left: auto;
-  color: #a5c4ac;
+  color: #b1becc;
 }
 .overview-goal:hover strong {
-  color: var(--mint);
+  color: var(--accent);
 }
 .category-progress {
   display: grid;
@@ -1476,7 +1480,7 @@ button svg {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
-  color: #d2ded5;
+  color: #d6dce1;
   font-size: 11px;
 }
 .category-progress-label > span:first-child {
@@ -1485,23 +1489,23 @@ button svg {
   gap: 8px;
 }
 .category-progress-label svg {
-  color: #99baa2;
+  color: #a6b4c3;
 }
 .category-progress-label small {
   font-size: 10px;
-  color: #7b9483;
+  color: #848f9c;
 }
 .progress-track {
   height: 5px;
   border-radius: 5px;
-  background: #2b3b2f;
+  background: #303842;
   overflow: hidden;
 }
 .progress-track > span {
   display: block;
   height: 100%;
   border-radius: 5px;
-  background: var(--mint);
+  background: var(--accent);
   transition: width 200ms;
 }
 .training-panel,
@@ -1549,15 +1553,15 @@ button svg {
   display: flex;
   align-items: center;
   gap: 7px;
-  border: 1px solid #3e5944;
+  border: 1px solid #465464;
   border-radius: 5px;
-  background: #25382b;
-  color: #bedcc4;
+  background: #2b3540;
+  color: #cad6e3;
   padding: 8px 12px;
   font-size: 11px;
 }
 .mastered-grid button:hover {
-  border-color: #91bb9b;
+  border-color: #a2b3c6;
 }
 .goals-layout {
   display: grid;
@@ -1594,10 +1598,10 @@ button svg {
   display: flex;
   justify-content: space-between;
   padding: 14px 0;
-  color: #9db4a4;
+  color: #a6afbb;
   font-size: 10px;
   margin-top: 6px;
-  border-bottom: 1px solid #334638;
+  border-bottom: 1px solid #39434e;
 }
 .path-steps {
   display: grid;
@@ -1611,14 +1615,14 @@ button svg {
   background: transparent;
   border: 0;
   padding: 10px 6px;
-  color: #bdcec2;
+  color: #c3cbd3;
   font-size: 11px;
   border-radius: 5px;
   text-align: left;
 }
 .path-steps button:hover {
-  background: #25392b;
-  color: #def2e2;
+  background: #2b3642;
+  color: #e7eef5;
 }
 .path-step-icon {
   display: grid;
@@ -1626,14 +1630,14 @@ button svg {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-  background: #2e3c31;
-  border: 1px solid #4e6253;
+  background: #323942;
+  border: 1px solid #545e6a;
   border-radius: 50%;
 }
 .path-steps button > svg:last-child,
 .path-step-number {
   margin-left: auto;
-  color: #a6caae;
+  color: #b5c3d3;
 }
 .path-step-number {
   font-size: 9px;
@@ -1648,7 +1652,7 @@ button svg {
   display: flex;
   align-items: center;
   gap: 11px;
-  color: #c2e5c9;
+  color: #d1deec;
   padding: 20px 0;
   font-size: 11px;
 }
@@ -1673,15 +1677,15 @@ button svg {
   gap: 12px;
   padding: 12px;
   text-align: left;
-  border: 1px solid #334637;
+  border: 1px solid #39424e;
   border-radius: 6px;
-  background: #202c23;
-  color: #c1d0c5;
+  background: #242a31;
+  color: #c7cdd4;
 }
 .goal-option:hover,
 .goal-option.selected {
-  border-color: #789d80;
-  background: #2c4031;
+  border-color: #8696a7;
+  background: #323c48;
 }
 .goal-option strong {
   display: block;
@@ -1691,7 +1695,7 @@ button svg {
 .goal-option small {
   display: block;
   font-size: 9px;
-  color: #86a38d;
+  color: #919dab;
   margin-top: 4px;
 }
 .goal-option-check {
@@ -1700,22 +1704,22 @@ button svg {
   width: 22px;
   height: 22px;
   flex-shrink: 0;
-  border: 1px solid #4b6652;
+  border: 1px solid #536171;
   border-radius: 5px;
-  color: #9bc5a5;
+  color: #adbdcf;
 }
 .goal-option.selected .goal-option-check {
-  border-color: var(--mint);
-  background: var(--mint);
-  color: #1c3723;
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #233244;
 }
 .equipment-intro {
   display: flex;
   gap: 17px;
   align-items: center;
   background:
-    radial-gradient(ellipse at top right, #30483366, transparent 70%), #1b2920;
-  border-color: #45644c;
+    radial-gradient(ellipse at top right, #37445266, transparent 70%), #1f272f;
+  border-color: #4e5e71;
 }
 .equipment-intro-icon {
   display: grid;
@@ -1723,10 +1727,10 @@ button svg {
   width: 48px;
   height: 48px;
   flex-shrink: 0;
-  border: 1px solid #587b5e;
+  border: 1px solid #627589;
   border-radius: 10px;
-  color: var(--mint);
-  background: #2b4330;
+  color: var(--accent);
+  background: #323f4e;
 }
 .equipment-intro h2 {
   font-size: 17px;
@@ -1734,13 +1738,13 @@ button svg {
 }
 .equipment-intro p {
   margin-top: 7px;
-  color: #9bb3a1;
+  color: #a4aeba;
   font-size: 11px;
   line-height: 1.8;
 }
 .equipment-intro strong {
   font-weight: 600;
-  color: #d1e4d4;
+  color: #d9e0e8;
 }
 .equipment-grid {
   display: grid;
@@ -1753,15 +1757,15 @@ button svg {
   text-align: left;
   display: flex;
   flex-direction: column;
-  border: 1px solid #344b3b;
+  border: 1px solid #3b4755;
   border-radius: 8px;
-  background: #1b251e;
-  color: #d0e0d4;
+  background: #1e2329;
+  color: #d6dde4;
 }
 .equipment-card:hover:not(:disabled),
 .equipment-card.selected {
-  background: #26372a;
-  border-color: #89b693;
+  background: #2b343e;
+  border-color: #9cadc1;
 }
 .equipment-card:disabled {
   opacity: 1;
@@ -1774,20 +1778,20 @@ button svg {
   width: 100%;
 }
 .equipment-icon {
-  color: #b3d2bc;
+  color: #c0ccda;
 }
 .equipment-check {
   width: 23px;
   height: 23px;
   display: grid;
   place-items: center;
-  border: 1px solid #536d5a;
+  border: 1px solid #5b6877;
   border-radius: 6px;
-  color: #233c29;
+  color: #2a3848;
 }
 .equipment-card.selected .equipment-check {
-  background: var(--mint);
-  border-color: var(--mint);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 .equipment-card h3 {
   margin-top: 24px;
@@ -1796,7 +1800,7 @@ button svg {
 }
 .equipment-card p {
   margin-top: 9px;
-  color: #94b29d;
+  color: #a0acba;
   font-size: 10px;
   line-height: 1.9;
   flex: 1;
@@ -1806,15 +1810,15 @@ button svg {
   width: 100%;
   margin-top: 21px;
   padding-top: 12px;
-  border-top: 1px solid #3a5341;
-  color: #a8ccb2;
+  border-top: 1px solid #414f5e;
+  color: #b7c5d5;
   font-size: 9px;
 }
 .equipment-note {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  color: #879e8d;
+  color: #8f99a5;
   margin-top: 20px;
   font-size: 10px;
   line-height: 1.8;
@@ -1828,23 +1832,23 @@ button svg {
   justify-items: center;
   padding: 60px 25px;
   text-align: center;
-  color: #8caf96;
+  color: #9aa8b9;
 }
 .empty-state h3 {
-  color: #ccdacf;
+  color: #d1d7de;
   font-size: 15px;
   margin-top: 15px;
   font-weight: 600;
 }
 .empty-state p {
   margin-top: 8px;
-  color: #90a998;
+  color: #99a4b0;
   max-width: 400px;
   line-height: 1.8;
   font-size: 11px;
 }
 .muted-copy {
-  color: #8ba593;
+  color: #95a0ad;
   font-size: 10px;
   line-height: 1.8;
 }
@@ -1861,9 +1865,9 @@ button svg {
   align-items: center;
   gap: 11px;
   padding: 13px 16px;
-  background: #2a4632;
-  border: 1px solid #82b38b;
-  color: #d9efde;
+  background: #324153;
+  border: 1px solid #96a9bf;
+  color: #e3eaf3;
   border-radius: 8px;
   box-shadow: 0 5px 30px #0005;
   font-size: 11px;
@@ -2204,11 +2208,11 @@ button svg {
     display: grid;
     gap: 8px;
     padding: 15px;
-    background-image: radial-gradient(#3a4e3e99 0.6px, transparent 0.6px);
+    background-image: radial-gradient(#404a5699 0.6px, transparent 0.6px);
     background-size: 15px 15px;
   }
   .mobile-tree-note {
-    color: #9bb6a4;
+    color: #a5b1be;
     font-size: 9px;
     line-height: 1.9;
     margin-bottom: 6px;
@@ -2219,15 +2223,15 @@ button svg {
     align-items: center;
     gap: 13px;
     padding: 13px;
-    background: #202d24;
-    border: 1px solid #3a5141;
+    background: #242b32;
+    border: 1px solid #414d5b;
     border-radius: 7px;
-    color: #d7e5da;
+    color: #dce2e9;
     text-align: left;
   }
   .mobile-skill.chosen {
-    border-color: #aedbb8;
-    background: #2b4332;
+    border-color: #c2d2e4;
+    background: #323f4e;
   }
   .mobile-skill strong {
     font-size: 11px;
@@ -2255,7 +2259,7 @@ button svg {
   }
   .mobile-skill > svg {
     margin-left: auto;
-    color: #93b69e;
+    color: #a1afbf;
   }
   .tree-footer {
     padding: 12px 15px;
@@ -2275,7 +2279,7 @@ button svg {
     z-index: 50;
     height: auto;
     max-height: calc(100dvh - 77px);
-    background: #1b261e;
+    background: #1e242b;
     box-shadow: 0 0 30px #0006;
   }
   .detail-panel-top {
