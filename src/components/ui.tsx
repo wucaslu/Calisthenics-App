@@ -11,6 +11,11 @@ import {
   Timer,
   Zap,
 } from "lucide-react";
+import {
+  DIFFICULTY_EXPLANATION,
+  getDifficultyTier,
+  MAX_DIFFICULTY,
+} from "@/lib/difficulty";
 import type { Category, MovementType, SkillState } from "@/types/skill";
 
 export const movementLabels: Record<MovementType, string> = {
@@ -89,23 +94,25 @@ export function Difficulty({
 }) {
   return (
     <span
-      className="difficulty"
-      aria-label={`Difficulty ${level} of 5`}
-      title="Estimated app difficulty: Foundation, Beginner, Intermediate, Advanced, Elite. Published progression levels use their own scales."
+      className={`difficulty ${text ? "difficulty-detailed" : "difficulty-compact"}`}
+      aria-label={`Difficulty ${level} of ${MAX_DIFFICULTY}`}
+      title={`App difficulty: ${level}/${MAX_DIFFICULTY} · ${getDifficultyTier(level)}. ${DIFFICULTY_EXPLANATION} Published progression levels use their own scales.`}
     >
-      <span className="difficulty-bars" aria-hidden="true">
-        {[1, 2, 3, 4, 5].map((value) => (
-          <i key={value} className={value <= level ? "filled" : ""} />
-        ))}
+      <span className="difficulty-score">
+        {level}/{MAX_DIFFICULTY}
       </span>
       {text && (
-        <span>
-          {
-            ["", "Foundation", "Beginner", "Intermediate", "Advanced", "Elite"][
-              level
-            ]
-          }
-        </span>
+        <>
+          <span className="difficulty-bars" aria-hidden="true">
+            {Array.from(
+              { length: MAX_DIFFICULTY },
+              (_, index) => index + 1,
+            ).map((value) => (
+              <i key={value} className={value <= level ? "filled" : ""} />
+            ))}
+          </span>
+          <span>{getDifficultyTier(level)}</span>
+        </>
       )}
     </span>
   );

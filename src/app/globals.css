@@ -752,26 +752,34 @@ button svg {
 .difficulty {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   color: #969fa9;
   font-size: 9px;
   font-weight: 500;
   white-space: nowrap;
 }
+.difficulty-score {
+  color: var(--accent);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.difficulty-compact {
+  flex-shrink: 0;
+}
 .difficulty-bars {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
 }
 .difficulty-bars i {
   display: block;
-  width: 4px;
+  width: 2px;
   height: 7px;
   background: #3f464e;
   border-radius: 1px;
 }
 .difficulty-bars i.filled {
-  background: #abb4be;
+  background: #b4c8df;
 }
 .node-mastered .difficulty-bars i.filled {
   background: #bfcdde;
@@ -1598,7 +1606,10 @@ button svg {
 }
 .goal-path-meta {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
+  gap: 8px;
   padding: 14px 0;
   color: #a6afbb;
   font-size: 10px;
@@ -2486,6 +2497,9 @@ button svg {
   font-size: 11px;
   line-height: 1.6;
   margin: 12px 0;
+}
+.difficulty-reference-note {
+  margin-top: 8px;
 }
 .reference-links {
   display: grid;

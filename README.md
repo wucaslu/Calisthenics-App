@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **103 skills grouped into Pull, Push, Legs, and Core**. No account, external database, API key, or backend service is needed.
+A local-first MVP built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **105 skills grouped into Pull, Push, Legs, and Core**: Pull 42, Push 37, Legs 14, and Core 12. No account, external database, API key, or backend service is needed.
 
 ## Run locally
 
@@ -24,6 +24,7 @@ All fonts are bundled locally; the app makes no external application requests. I
 
 - Pannable, zoomable dependency graph with four skill groups, named progression lanes, and optional progression filters. Mobile lists use the same families.
 - Skill details with prerequisites, estimated difficulty, drills, example mastery criteria, equipment, unlock links, and reviewed reference links. Published source levels appear separately from app difficulty.
+- Individually calibrated difficulty scores from 1 to 10, shown with five shared tiers: Foundation, Developing, Intermediate, Advanced, and Elite. Scores reflect the overall strength, balance, control, and mobility demands of each skill's benchmark.
 - Dynamic/Static badges on every tree node, mobile skill card, and details panel. Static skills hold a position; dynamic skills move through repetitions.
 - Click a skill to read its description and edit its Personal Record (for example, `25 seconds` or `12 reps + 10 kg`). Records save automatically, can be cleared, and stay intact when resetting skill progress.
 - Locked, available, training, and mastered states with labels and icons. All prerequisites must be mastered before a skill becomes available.
@@ -38,11 +39,15 @@ The demo starts with eight mastered fundamentals, two skills in training, and go
 
 The bar pulling progression is Pull-up → Chest-to-Bar Pull-up → Explosive Pull-up → High Pull-up → Muscle-up → Strict Muscle-up. Muscle-up also requires Straight-Bar Dip. Ring Muscle-up has an independent route through False-Grip Hang, Ring Pull-up, and Ring Dip.
 
-The researched reorganization adds 34 movements and removes 10 assisted milestones plus one duplicate tuck-row entry. Highlights include L-Sit Pull-up, Pull Over, Archer/One-Arm Row, Tuck Front Lever Row, Diamond/Archer/One-Arm Push-up, Elbow Lever, Frog Stand to Handstand, Ring L-Sit Dip, Shrimp Squat, Nordic Curl, Tuck/One-Leg L-Sit, Toes-to-Bar, and Hanging Windshield Wiper. Back Lever, Maltese, Pelican Press, Hefesto, Iron Cross, and Dragon Squat remain in the catalog.
+The earlier researched reorganization added 34 movements and removed 10 assisted milestones plus one duplicate tuck-row entry. Highlights include L-Sit Pull-up, Pull Over, Archer/One-Arm Row, Tuck Front Lever Row, Diamond/Archer/One-Arm Push-up, Elbow Lever, Frog Stand to Handstand, Ring L-Sit Dip, Shrimp Squat, Nordic Curl, Tuck/One-Leg L-Sit, Toes-to-Bar, and Hanging Windshield Wiper. Back Lever, Maltese, Pelican Press, Hefesto, Iron Cross, and Dragon Squat remain in the catalog.
+
+The latest additions are **90 Degree Hold**, a static bent-arm planche with the elbows unbraced against the abdomen, and **Pelican Planche**, a dynamic ring transition from planche to back lever and back to planche. Their estimated difficulties are 7/10 and 10/10 respectively. Existing skills are scored individually rather than multiplying their old ratings: Back Lever is 6/10, Full Front Lever 8/10, Full Planche 9/10, and Maltese 10/10.
 
 Assisted, band, and wall milestones are excluded. Tuck/straddle shapes and unassisted eccentric negatives remain. Legs now has Pistol, Shrimp, Dragon Squat, and posterior-chain routes. The Dragon route uses unassisted pistol strength and reverse-lunge balance. Ring muscle-ups and floor L-sits no longer require unrelated bar skills.
 
-See [progression research and route decisions](docs/progressions.md) for the reviewed sources, full route table, difficulty bands, and research limits. Research used accessible archived/community references; direct coaching sites were blocked by the cloud network proxy. The five app difficulty bands are estimates, and published levels apply within their source's named progression. Custom routes without published ratings are identified in skill details.
+See [progression research and route decisions](docs/progressions.md) for the reviewed sources, full route table, difficulty scale, and research limits. Research used accessible archived/community references; direct coaching sites were blocked by the cloud network proxy. App difficulty scores are estimates rather than universal grades, and published levels apply within their source's named progression. Body proportions and execution standards can change an athlete's personal ordering. Custom routes without published ratings are identified in skill details.
+
+The two additions and difficulty update preserve every existing skill ID and prerequisite. Existing progress, goals, and Personal Records keep their associations; changing a difficulty score does not reset or relocate saved data.
 
 Retained skill IDs and Personal Records stay intact. The old generic Front Lever Row described a tuck variation; its records are archived, and Full Front Lever Row has a new ID so old tuck records are not mislabeled. Removed milestone records and prior progress relocked by new prerequisites appear under **Overview → Previous skill records** and persist in the profile archive. The app does not grant mastery for new prerequisites automatically. Retired goals leave the active list; archived progress does not count toward tree completion.
 
@@ -58,6 +63,7 @@ src/
   data/references.ts      Reviewed sources and published per-progression levels
   data/retiredSkills.ts   Names used to preserve removed milestone records
   lib/progression.ts      Skill states, equipment checks, and cascading resets
+  lib/difficulty.ts       Shared 1–10 scale, tier labels, and explanatory text
   lib/graph.ts            Dependency paths, filtering, and graph layout
   lib/recommendations.ts  Pure deterministic recommendation rules
   lib/profile.ts          Demo profile and stored-data validation
@@ -70,7 +76,7 @@ The data and algorithms are independent of the React components. The UI derives 
 
 ## Add a skill
 
-Add one `define(...)` entry to `src/data/skills.ts`. Use a unique, stable ID; choose `pull`, `push`, `legs`, or `core`; give the skill a difficulty from 1 to 5 and a movement type (`dynamic` or `static`); and reference existing prerequisite IDs. Add a description, required equipment, a mastery benchmark, and practice exercises. For example:
+Add one `define(...)` entry to `src/data/skills.ts`. Use a unique, stable ID; choose `pull`, `push`, `legs`, or `core`; give the skill an individually estimated integer difficulty from 1 to 10 and a movement type (`dynamic` or `static`); and reference existing prerequisite IDs. Calibrate against the examples in [the difficulty scale](docs/progressions.md#difficulty-and-progression-levels), using the skill's actual execution standard rather than its prerequisite depth or a published family's level. Add a description, required equipment, a mastery benchmark, and practice exercises. For example:
 
 ```ts
 define(

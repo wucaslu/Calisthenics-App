@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { getGoalPath } from "@/lib/graph";
+import { updateSkillProgress } from "@/lib/progression";
 import {
   createDemoProfile,
   parseProfile,
@@ -7,6 +9,29 @@ import {
 } from "@/lib/profile";
 
 describe("personal records", () => {
+  it("retains existing advanced mastery and records when ratings change and new skills are added", () => {
+    const profile = createDemoProfile();
+    for (const goal of ["full-planche", "pelican-press"])
+      for (const skill of getGoalPath(goal, profile.progress))
+        profile.progress = updateSkillProgress(
+          profile.progress,
+          skill.id,
+          "mastered",
+        );
+    profile.personalRecords = {
+      "full-planche": "5 seconds",
+      "pelican-press": "2 reps",
+      "90-degree-hold": "3 seconds",
+      "pelican-planche": "1 cycle",
+    };
+    profile.goals = ["90-degree-hold", "pelican-planche"];
+    const parsed = parseProfile(JSON.stringify(profile))!;
+    expect(parsed).toEqual(profile);
+    expect(parsed.progress["full-planche"]).toBe("mastered");
+    expect(parsed.progress["90-degree-hold"]).toBeUndefined();
+    expect(parsed.progress["pelican-planche"]).toBeUndefined();
+    expect(parsed.archivedSkills).toEqual({});
+  });
   it("removes retired band entries while preserving records through revised prerequisites", () => {
     const parsed = parseProfile(
       JSON.stringify({

@@ -13,6 +13,111 @@ async function openTreeSkill(page: Page, id: string, name: string) {
   ).toBeVisible();
 }
 
+for (const mobile of [false, true]) {
+  test(`new planche skills show calibrated scores and preserve records on ${mobile ? "mobile" : "desktop"}`, async ({
+    page,
+  }) => {
+    if (mobile) await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    const entries = [
+      {
+        id: "90-degree-hold",
+        name: "90 Degree Hold",
+        score: 7,
+        movement: "Static",
+        record: "4 seconds",
+      },
+      {
+        id: "pelican-planche",
+        name: "Pelican Planche",
+        score: 10,
+        movement: "Dynamic",
+        record: "1 full cycle",
+      },
+    ];
+    const open = async (entry: (typeof entries)[number]) => {
+      if (mobile) {
+        await page
+          .getByRole("textbox", { name: "Search all skills" })
+          .fill(entry.name);
+        const card = page.locator(".mobile-skill").filter({
+          has: page.getByText(entry.name, { exact: true }),
+        });
+        await expect(card.locator(".difficulty-score")).toHaveText(
+          `${entry.score}/10`,
+        );
+        await card.click();
+      } else {
+        await openTreeSkill(page, entry.id, entry.name);
+        await expect(
+          page.locator(`[data-id="${entry.id}"] .difficulty-score`),
+        ).toHaveText(`${entry.score}/10`);
+      }
+      return mobile ? page.getByRole("dialog") : page.locator(".detail-panel");
+    };
+    for (const entry of entries) {
+      const panel = await open(entry);
+      await expect(panel.locator(".movement-badge")).toHaveText(entry.movement);
+      const score = panel.locator(".detail-meta .difficulty");
+      await expect(score).toHaveAttribute(
+        "aria-label",
+        `Difficulty ${entry.score} of 10`,
+      );
+      await expect(score.locator(".difficulty-score")).toHaveText(
+        `${entry.score}/10`,
+      );
+      await expect(score.locator(".difficulty-bars i.filled")).toHaveCount(
+        entry.score,
+      );
+      await expect(panel.locator(".detail-description")).toContainText(
+        entry.id === "90-degree-hold"
+          ? "elbows free of the abdomen"
+          : "Transition on rings from a planche to a back lever and return",
+      );
+      await expect(
+        panel.getByRole("button", { name: "Start Training", exact: true }),
+      ).toBeDisabled();
+      await panel
+        .getByRole("textbox", { name: "Personal Record", exact: true })
+        .fill(entry.record);
+      await panel
+        .getByRole("button", { name: "Add to my goals", exact: true })
+        .click();
+      if (mobile) await page.keyboard.press("Escape");
+    }
+    await page.reload();
+    for (const entry of entries) {
+      const panel = await open(entry);
+      await expect(
+        panel.getByRole("textbox", { name: "Personal Record", exact: true }),
+      ).toHaveValue(entry.record);
+      await expect(
+        panel.getByRole("button", { name: "One of your goals", exact: true }),
+      ).toHaveAttribute("aria-pressed", "true");
+      if (mobile) await page.keyboard.press("Escape");
+    }
+    if (!mobile) {
+      await page
+        .getByRole("button", { name: "My goals", exact: false })
+        .first()
+        .click();
+      for (const entry of entries) {
+        const card = page.locator(".goal-path-card").filter({
+          has: page.getByRole("heading", { name: entry.name, exact: true }),
+        });
+        await expect(card.locator(".difficulty-score")).toHaveText(
+          `${entry.score}/10`,
+        );
+      }
+    }
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+  });
+}
+
 test("researched milestones show published levels, independent routes, and named lanes", async ({
   page,
 }) => {
@@ -27,7 +132,7 @@ test("researched milestones show published levels, independent routes, and named
   );
   await expect(panel.locator(".detail-meta .difficulty")).toHaveAttribute(
     "aria-label",
-    "Difficulty 2 of 5",
+    "Difficulty 3 of 10",
   );
   await expect(
     panel.getByRole("link", {

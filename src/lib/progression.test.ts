@@ -15,10 +15,11 @@ import {
 } from "@/lib/progression";
 import { createDemoProfile, parseProfile } from "@/lib/profile";
 import { getRecommendations } from "@/lib/recommendations";
+import { getDifficultyTier, MAX_DIFFICULTY } from "@/lib/difficulty";
 
 describe("skill database", () => {
-  it("contains all 103 skills with valid, acyclic dependencies and reverse links", () => {
-    expect(skills).toHaveLength(103);
+  it("contains all 105 skills with valid, acyclic dependencies and reverse links", () => {
+    expect(skills).toHaveLength(105);
     expect(new Set(skills.map((skill) => skill.id)).size).toBe(skills.length);
     const visit = (id: string, ancestors: string[] = []) => {
       expect(ancestors).not.toContain(id);
@@ -62,6 +63,7 @@ describe("skill database", () => {
       "back-lever",
       "maltese",
       "iron-cross",
+      "90-degree-hold",
     ])
       expect(skillById[id].movementType).toBe("static");
     for (const id of [
@@ -73,6 +75,7 @@ describe("skill database", () => {
       "pistol-squat",
       "skin-the-cat",
       "pelican-press",
+      "pelican-planche",
       "hefesto",
     ])
       expect(skillById[id].movementType).toBe("dynamic");
@@ -83,15 +86,35 @@ describe("skill database", () => {
     );
     for (const skill of skills) {
       expect(skill.difficulty).toBeGreaterThanOrEqual(1);
-      expect(skill.difficulty).toBeLessThanOrEqual(5);
+      expect(skill.difficulty).toBeLessThanOrEqual(MAX_DIFFICULTY);
+      expect(Number.isInteger(skill.difficulty)).toBe(true);
       for (const id of skill.references)
         expect(researchSources[id]?.url).toMatch(/^https:\/\//);
     }
     expect(skillById["diamond-push-up"].referenceLevel).toBe(
       "Pushing progression · Level 4",
     );
-    expect(skillById["diamond-push-up"].difficulty).toBe(2);
+    expect(skillById["diamond-push-up"].difficulty).toBe(3);
     expect(skillById["maltese"].referenceLevel).toBeUndefined();
+  });
+  it("distinguishes advanced skill demands on the 10-point scale", () => {
+    const ordered = [
+      "back-lever",
+      "90-degree-hold",
+      "full-front-lever",
+      "full-planche",
+      "maltese",
+    ].map((id) => skillById[id].difficulty);
+    expect(ordered).toEqual([6, 7, 8, 9, 10]);
+    expect(skillById["full-front-lever-row"].difficulty).toBeGreaterThan(
+      skillById["full-front-lever"].difficulty,
+    );
+    expect(skillById["pelican-planche"].difficulty).toBeGreaterThan(
+      skillById["pelican-press"].difficulty,
+    );
+    expect(getDifficultyTier(6)).toBe("Intermediate");
+    expect(getDifficultyTier(7)).toBe("Advanced");
+    expect(getDifficultyTier(9)).toBe("Elite");
   });
   it("keeps progression lanes separate and skill rectangles from overlapping", () => {
     const positions = layoutSkills(skills);
@@ -128,6 +151,39 @@ describe("skill database", () => {
 });
 
 describe("progression", () => {
+  it("prepares both new skills through unassisted routes without changing existing planche unlocks", () => {
+    for (const id of ["90-degree-hold", "pelican-planche"]) {
+      let progress = createDemoProfile().progress;
+      expect(getSkillState(skillById[id], progress)).toBe("locked");
+      for (const skill of getGoalPath(id, progress)) {
+        expect(["available", "training"]).toContain(
+          getSkillState(skill, progress),
+        );
+        progress = updateSkillProgress(progress, skill.id, "mastered");
+      }
+      expect(getSkillState(skillById[id], progress)).toBe("mastered");
+      const reset = updateSkillProgress(
+        progress,
+        id === "90-degree-hold" ? "tuck-planche-push-up" : "back-lever",
+        "reset",
+      );
+      expect(getSkillState(skillById[id], reset)).toBe("locked");
+    }
+    const pelicanPath = getGoalPath("pelican-planche", {}).map(
+      (skill) => skill.id,
+    );
+    expect(pelicanPath).toContain("full-planche");
+    expect(pelicanPath).toContain("back-lever");
+    expect(pelicanPath).toContain("pelican-press");
+    expect(
+      getGoalPath("full-planche", {}).map((skill) => skill.id),
+    ).not.toContain("90-degree-hold");
+    expect(hasEquipment(skillById["90-degree-hold"], [])).toBe(true);
+    expect(hasEquipment(skillById["pelican-planche"], ["pull-up-bar"])).toBe(
+      false,
+    );
+    expect(hasEquipment(skillById["pelican-planche"], ["rings"])).toBe(true);
+  });
   it("unlocks Dragon Squat through unassisted single-leg strength and cascades resets", () => {
     let progress = createDemoProfile().progress;
     expect(getSkillState(skillById["dragon-squat"], progress)).toBe("locked");

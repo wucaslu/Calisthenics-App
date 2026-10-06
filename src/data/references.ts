@@ -19,6 +19,10 @@ export const researchSources: Record<string, { title: string; url: string }> = {
     title: "Training catalog · advanced static skills",
     url: "https://github.com/nobody-qwert/training/blob/234166a762f0a3d474be55e1d3c6013b4f1cb2a8/all_exercises_data.js",
   },
+  pelican: {
+    title: "Community skill catalog · Pelican transition",
+    url: "https://github.com/G0RB-SMG/Calisthenics-Skill-Tree/blob/0217535ccb58ec5ee897e3c852afef99724f3282/skills.js",
+  },
 };
 
 export const skillReferences: Record<
@@ -117,6 +121,7 @@ reference(
   ["levers"],
 );
 reference(["full-planche", "iron-cross", "maltese", "v-sit"], ["statics"]);
+reference(["pelican-planche"], ["pelican"]);
 
 // Published levels apply only inside the named progression. They are not app difficulty bands.
 const publishedLevels: Record<string, string> = {

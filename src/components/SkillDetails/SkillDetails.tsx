@@ -24,6 +24,7 @@ import {
 } from "@/components/ui";
 import { branchLabels, equipmentLabels, skillById } from "@/data/skills";
 import { researchSources } from "@/data/references";
+import { DIFFICULTY_EXPLANATION, MAX_DIFFICULTY } from "@/lib/difficulty";
 import { getSkillState, missingEquipment } from "@/lib/progression";
 import { PERSONAL_RECORD_MAX_LENGTH } from "@/lib/profile";
 import type { Skill, UserProfile } from "@/types/skill";
@@ -278,8 +279,12 @@ export function SkillDetails({
           <div className="detail-section">
             <h3>Progression references</h3>
             <p className="muted-copy">
-              Difficulty is an app estimate. Unlocks follow a suggested
-              preparation route.
+              App difficulty uses a 1–{MAX_DIFFICULTY} scale.{" "}
+              {DIFFICULTY_EXPLANATION}
+            </p>
+            <p className="muted-copy difficulty-reference-note">
+              Published progression levels use their own scales. Unlocks follow
+              a suggested preparation route.
             </p>
             {skill.referenceLevel && (
               <p className="reference-level">
