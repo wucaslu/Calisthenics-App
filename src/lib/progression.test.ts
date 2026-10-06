@@ -41,6 +41,30 @@ describe("skill database", () => {
       getVisibleSkills("legs").every((skill) => skill.category === "legs"),
     ).toBe(true);
   });
+  it("classifies holds as static and repetition-based skills as dynamic", () => {
+    expect(
+      skills.every((skill) =>
+        ["static", "dynamic"].includes(skill.movementType),
+      ),
+    ).toBe(true);
+    for (const id of [
+      "dead-hang",
+      "full-planche",
+      "full-front-lever",
+      "freestanding-handstand",
+      "l-sit",
+    ])
+      expect(skillById[id].movementType).toBe("static");
+    for (const id of [
+      "push-up",
+      "front-lever-raise",
+      "handstand-push-up",
+      "wall-toe-pull",
+      "dragon-flag",
+      "pistol-squat",
+    ])
+      expect(skillById[id].movementType).toBe("dynamic");
+  });
 });
 
 describe("progression", () => {

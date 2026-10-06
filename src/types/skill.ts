@@ -17,6 +17,8 @@ export type Equipment =
   | "gym";
 export type SkillState = "locked" | "available" | "training" | "mastered";
 export type Progress = Record<string, "training" | "mastered">;
+export type MovementType = "dynamic" | "static";
+export type PersonalRecords = Record<string, string>;
 
 export interface Skill {
   id: string;
@@ -24,6 +26,7 @@ export interface Skill {
   category: Category;
   branch: Branch;
   difficulty: number;
+  movementType: MovementType;
   description: string;
   prerequisites: string[];
   progressionTo: string[];
@@ -41,6 +44,7 @@ export interface Skill {
 export interface UserProfile {
   version: 1;
   progress: Progress;
+  personalRecords: PersonalRecords;
   goals: string[];
   equipment: Equipment[];
 }

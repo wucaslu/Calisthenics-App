@@ -1,7 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { createDemoProfile, parseProfile, STORAGE_KEY } from "@/lib/profile";
+import {
+  createDemoProfile,
+  parseProfile,
+  STORAGE_KEY,
+  updatePersonalRecord,
+} from "@/lib/profile";
 import { updateSkillProgress } from "@/lib/progression";
 import { skillById } from "@/data/skills";
 import type { Equipment, UserProfile } from "@/types/skill";
@@ -65,6 +70,16 @@ export function useProgress() {
         : [...previous.goals, id],
     }));
   }, []);
+  const setPersonalRecord = useCallback((id: string, value: string) => {
+    setProfile((previous) => ({
+      ...previous,
+      personalRecords: updatePersonalRecord(
+        previous.personalRecords,
+        id,
+        value,
+      ),
+    }));
+  }, []);
   const toggleEquipment = useCallback((item: Equipment) => {
     if (item === "floor") return;
     setProfile((previous) => ({
@@ -80,6 +95,7 @@ export function useProgress() {
     hydrated,
     storageAvailable,
     setSkillProgress,
+    setPersonalRecord,
     toggleGoal,
     toggleEquipment,
     restoreDemo,

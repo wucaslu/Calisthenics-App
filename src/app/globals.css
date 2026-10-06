@@ -714,6 +714,35 @@ button svg {
   justify-content: space-between;
   gap: 5px;
 }
+.movement-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px solid #41584a;
+  color: #b8d5c2;
+  background: #25362c;
+  font-size: 9px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.movement-static {
+  color: #b8cbdc;
+  border-color: #425563;
+  background: #243139;
+}
+.node-bottom .movement-badge {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 8px;
+  gap: 3px;
+}
+.node-bottom .movement-badge svg {
+  width: 11px;
+  height: 11px;
+}
 .difficulty {
   display: inline-flex;
   align-items: center;
@@ -934,6 +963,7 @@ button svg {
 }
 .detail-meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 7px;
@@ -949,6 +979,72 @@ button svg {
   color: #a0aea5;
   font-size: 11px;
   line-height: 1.85;
+}
+.personal-record-card {
+  margin-top: 17px;
+  padding: 12px;
+  border: 1px solid #405647;
+  border-radius: 7px;
+  background: #223329;
+}
+.personal-record-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.personal-record-heading label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #d0e3d5;
+}
+.personal-record-heading svg {
+  color: #c5b98e;
+}
+.personal-record-clear {
+  padding: 3px 5px;
+  border: 0;
+  background: transparent;
+  color: #b8cbbf;
+  font-size: 10px;
+}
+.personal-record-clear:hover:not(:disabled) {
+  color: #edf5ef;
+}
+.personal-record-card input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #4b6252;
+  background: #17251d;
+  color: #e0ede4;
+  font-size: 13px;
+}
+.personal-record-card input::placeholder {
+  color: #8fa296;
+}
+.personal-record-card input:focus-visible {
+  outline: 2px solid #b9dfc2;
+  outline-offset: 2px;
+}
+.personal-record-card p {
+  margin-top: 9px;
+  color: #b3c8ba;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.personal-record-card small {
+  display: block;
+  margin-top: 3px;
+  color: #90a999;
+  font-size: 9px;
+  line-height: 1.6;
 }
 .goal-button {
   display: flex;
@@ -2142,11 +2238,20 @@ button svg {
   .mobile-skill .state-badge {
     font-size: 9px;
   }
+  .mobile-skill-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+  }
   .mobile-skill small {
     display: inline-block;
     color: #c4ab7e;
     font-size: 8px;
-    margin-left: 8px;
+    margin-left: 0;
+  }
+  .personal-record-card input {
+    font-size: 16px;
   }
   .mobile-skill > svg {
     margin-left: auto;

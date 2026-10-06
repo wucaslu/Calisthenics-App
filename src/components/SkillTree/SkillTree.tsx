@@ -23,7 +23,12 @@ import {
   SkillNode,
   type SkillGraphNode,
 } from "@/components/SkillNode/SkillNode";
-import { EmptyState, SkillIcon, StateBadge } from "@/components/ui";
+import {
+  EmptyState,
+  MovementBadge,
+  SkillIcon,
+  StateBadge,
+} from "@/components/ui";
 import {
   branchLabels,
   branches,
@@ -196,6 +201,8 @@ export function SkillTree(props: Props) {
       id: skill.id,
       measured: dimensions[skill.id],
       type: "skill",
+      // Custom buttons must accept clicks even when graph selection is disabled.
+      style: { pointerEvents: "auto" },
       position: positions.get(skill.id)!,
       data: {
         skill,
@@ -377,10 +384,15 @@ export function SkillTree(props: Props) {
                 </span>
                 <span>
                   <strong>{skill.name}</strong>
-                  <StateBadge state={getSkillState(skill, profile.progress)} />
-                  {missingEquipment(skill, profile.equipment).length > 0 && (
-                    <small>Equipment needed</small>
-                  )}
+                  <span className="mobile-skill-meta">
+                    <StateBadge
+                      state={getSkillState(skill, profile.progress)}
+                    />
+                    <MovementBadge type={skill.movementType} />
+                    {missingEquipment(skill, profile.equipment).length > 0 && (
+                      <small>Equipment needed</small>
+                    )}
+                  </span>
                 </span>
                 <ArrowUpRight size={17} />
               </button>

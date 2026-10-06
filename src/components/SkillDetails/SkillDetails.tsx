@@ -11,11 +11,19 @@ import {
   RotateCcw,
   Sparkles,
   Target,
+  Trophy,
   X,
 } from "lucide-react";
-import { Difficulty, SkillIcon, StateBadge, StateIcon } from "@/components/ui";
+import {
+  Difficulty,
+  MovementBadge,
+  SkillIcon,
+  StateBadge,
+  StateIcon,
+} from "@/components/ui";
 import { branchLabels, equipmentLabels, skillById } from "@/data/skills";
 import { getSkillState, missingEquipment } from "@/lib/progression";
+import { PERSONAL_RECORD_MAX_LENGTH } from "@/lib/profile";
 import type { Skill, UserProfile } from "@/types/skill";
 
 function subscribeMobile(callback: () => void) {
@@ -32,7 +40,9 @@ interface Props {
   onSelect: (id: string) => void;
   onProgress: (id: string, action: "training" | "mastered" | "reset") => void;
   onToggleGoal: (id: string) => void;
+  onPersonalRecord: (id: string, value: string) => void;
   hydrated: boolean;
+  storageAvailable: boolean;
 }
 
 export function SkillDetails({
@@ -42,7 +52,9 @@ export function SkillDetails({
   onSelect,
   onProgress,
   onToggleGoal,
+  onPersonalRecord,
   hydrated,
+  storageAvailable,
 }: Props) {
   const state = getSkillState(skill, profile.progress);
   const missing = missingEquipment(skill, profile.equipment);
@@ -62,12 +74,12 @@ export function SkillDetails({
     const keyboard = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
       if (event.key !== "Tab") return;
-      const buttons = panel.current?.querySelectorAll<HTMLElement>(
-        'button:not(:disabled), a[href], [tabindex="0"]',
+      const controls = panel.current?.querySelectorAll<HTMLElement>(
+        'button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled), a[href], [tabindex="0"]',
       );
-      if (!buttons?.length) return;
-      const first = buttons[0],
-        last = buttons[buttons.length - 1];
+      if (!controls?.length) return;
+      const first = controls[0],
+        last = controls[controls.length - 1];
       if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
@@ -122,9 +134,52 @@ export function SkillDetails({
           <h2 id="detail-title">{skill.name}</h2>
           <div className="detail-meta">
             <StateBadge state={state} />
+            <MovementBadge type={skill.movementType} />
             <Difficulty level={skill.difficulty} text />
           </div>
           <p className="detail-description">{skill.description}</p>
+          <div className="personal-record-card">
+            <div className="personal-record-heading">
+              <label htmlFor="personal-record">
+                <Trophy size={14} aria-hidden="true" />
+                Personal Record
+              </label>
+              <button
+                type="button"
+                className="personal-record-clear"
+                onClick={() => onPersonalRecord(skill.id, "")}
+                disabled={!hydrated || !profile.personalRecords[skill.id]}
+                aria-label={`Clear personal record for ${skill.name}`}
+              >
+                Clear
+              </button>
+            </div>
+            <input
+              id="personal-record"
+              type="text"
+              value={profile.personalRecords[skill.id] ?? ""}
+              onChange={(event) =>
+                onPersonalRecord(skill.id, event.target.value)
+              }
+              placeholder={
+                skill.movementType === "static"
+                  ? "e.g. 25 seconds"
+                  : "e.g. 12 reps + 10 kg"
+              }
+              maxLength={PERSONAL_RECORD_MAX_LENGTH}
+              disabled={!hydrated}
+              autoComplete="off"
+              aria-describedby="personal-record-hint personal-record-storage"
+            />
+            <p id="personal-record-hint">
+              Your best time, reps, or added weight.
+            </p>
+            <small id="personal-record-storage">
+              {storageAvailable
+                ? "Saved automatically on this device."
+                : "Kept for this session; browser storage is unavailable."}
+            </small>
+          </div>
           <button
             className={`goal-button ${isGoal ? "is-goal" : ""}`}
             onClick={() => onToggleGoal(skill.id)}

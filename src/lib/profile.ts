@@ -1,11 +1,31 @@
 import { equipmentLabels, skillById } from "@/data/skills";
 import { normalizeProgress } from "@/lib/progression";
-import type { Equipment, Progress, UserProfile } from "@/types/skill";
+import type {
+  Equipment,
+  PersonalRecords,
+  Progress,
+  UserProfile,
+} from "@/types/skill";
 
 export const STORAGE_KEY = "calisthenics-skill-tree:v1";
+export const PERSONAL_RECORD_MAX_LENGTH = 160;
+
+export function updatePersonalRecord(
+  records: PersonalRecords,
+  id: string,
+  value: string,
+): PersonalRecords {
+  if (!skillById[id]) return records;
+  const next = { ...records };
+  if (value.trim()) next[id] = value.slice(0, PERSONAL_RECORD_MAX_LENGTH);
+  else delete next[id];
+  return next;
+}
+
 export function createDemoProfile(): UserProfile {
   return {
     version: 1,
+    personalRecords: {},
     equipment: ["floor", "pull-up-bar", "parallettes", "resistance-bands"],
     goals: ["tuck-planche", "tuck-front-lever", "freestanding-handstand"],
     progress: {
@@ -58,9 +78,22 @@ export function parseProfile(raw: string): UserProfile | null {
         ),
       ]),
     ];
+    // Older profiles did not have records. Keep their progress and preferences.
+    const personalRecords: PersonalRecords = {};
+    if (
+      candidate.personalRecords &&
+      typeof candidate.personalRecords === "object" &&
+      !Array.isArray(candidate.personalRecords)
+    ) {
+      for (const [id, value] of Object.entries(candidate.personalRecords)) {
+        if (skillById[id] && typeof value === "string" && value.trim())
+          personalRecords[id] = value.slice(0, PERSONAL_RECORD_MAX_LENGTH);
+      }
+    }
     return {
       version: 1,
       progress: normalizeProgress(progress),
+      personalRecords,
       goals,
       equipment,
     };

@@ -80,6 +80,7 @@ export function AppShell() {
     hydrated,
     storageAvailable,
     setSkillProgress,
+    setPersonalRecord,
     toggleGoal,
     toggleEquipment,
     restoreDemo,
@@ -247,7 +248,7 @@ export function AppShell() {
             onClick={() => {
               if (
                 window.confirm(
-                  "Restore the demo profile? This replaces your saved progress, goals, and equipment on this device.",
+                  "Restore the demo profile? This replaces your saved progress, personal records, goals, and equipment on this device.",
                 )
               ) {
                 restoreDemo();
@@ -353,6 +354,8 @@ export function AppShell() {
                     onSelect={onSelect}
                     onProgress={onProgress}
                     onToggleGoal={toggleGoal}
+                    onPersonalRecord={setPersonalRecord}
+                    storageAvailable={storageAvailable}
                     hydrated={hydrated}
                   />
                 )}

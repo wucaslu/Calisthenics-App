@@ -6,10 +6,34 @@ import {
   Flame,
   LockKeyhole,
   PersonStanding,
+  Repeat2,
   Target,
+  Timer,
   Zap,
 } from "lucide-react";
-import type { Category, SkillState } from "@/types/skill";
+import type { Category, MovementType, SkillState } from "@/types/skill";
+
+export const movementLabels: Record<MovementType, string> = {
+  dynamic: "Dynamic",
+  static: "Static",
+};
+
+export function MovementBadge({ type }: { type: MovementType }) {
+  const Icon = type === "static" ? Timer : Repeat2;
+  return (
+    <span
+      className={`movement-badge movement-${type}`}
+      title={
+        type === "static"
+          ? "Static: hold a position"
+          : "Dynamic: move through repetitions"
+      }
+    >
+      <Icon size={12} aria-hidden="true" />
+      {movementLabels[type]}
+    </span>
+  );
+}
 
 export const stateLabels: Record<SkillState, string> = {
   locked: "Locked",

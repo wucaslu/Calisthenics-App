@@ -14,6 +14,15 @@ test("blocked storage reports session-only progress and keeps training usable", 
   );
   const panel = page.locator(".detail-panel");
   await panel
+    .getByRole("textbox", { name: "Personal Record", exact: true })
+    .fill("15 seconds");
+  await expect(
+    panel.getByRole("textbox", { name: "Personal Record", exact: true }),
+  ).toHaveValue("15 seconds");
+  await expect(panel.locator("#personal-record-storage")).toContainText(
+    "Kept for this session",
+  );
+  await panel
     .getByRole("button", { name: "Planche Lean", exact: true })
     .click();
   await panel.getByRole("button", { name: "Mark as Mastered" }).click();
@@ -234,8 +243,28 @@ test("mobile lists, navigation, and skill dialog work without horizontal overflo
   await expect(
     dialog.getByRole("button", { name: "Close skill details" }),
   ).toBeFocused();
+  await expect(dialog.locator(".movement-badge")).toHaveText("Static");
+  const record = dialog.getByRole("textbox", {
+    name: "Personal Record",
+    exact: true,
+  });
+  await record.fill("32 seconds");
+  await record.press("Shift+Tab");
+  await expect(
+    dialog.getByRole("button", {
+      name: "Clear personal record for Planche Lean",
+    }),
+  ).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(record).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
+  await page
+    .locator(".mobile-skill")
+    .filter({ hasText: "Planche Lean" })
+    .click();
+  await expect(record).toHaveValue("32 seconds");
+  await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Toggle navigation" }).click();
   await page.getByRole("button", { name: "Show Legs skills" }).click();
   await expect(page.locator(".mobile-skill")).toHaveCount(6);
@@ -244,6 +273,73 @@ test("mobile lists, navigation, and skill dialog work without horizontal overflo
       () => document.documentElement.scrollWidth <= window.innerWidth,
     ),
   ).toBe(true);
+});
+
+test("clicking tree nodes shows descriptions and saves independent personal records", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const panel = page.locator(".detail-panel");
+  const record = panel.getByRole("textbox", {
+    name: "Personal Record",
+    exact: true,
+  });
+  const lean = page.locator('[data-id="planche-lean"] button');
+  await expect(lean.locator(".movement-badge")).toHaveText("Static");
+  await lean.click();
+  await expect(
+    panel.getByRole("heading", { name: "Planche Lean", exact: true }),
+  ).toBeVisible();
+  await expect(panel.locator(".detail-description")).toContainText(
+    "leaning your shoulders ahead of your wrists",
+  );
+  await record.fill("25 seconds");
+  await page.locator('[data-id="tuck-planche"] button').click();
+  await expect(record).toHaveValue("");
+  await expect(
+    panel.getByRole("button", { name: "Start Training", exact: true }),
+  ).toBeDisabled();
+  await record.fill("8 seconds");
+  await page.reload();
+  await expect(record).toHaveValue("8 seconds");
+  await page.locator('[data-id="planche-lean"] button').click();
+  await expect(record).toHaveValue("25 seconds");
+  await panel
+    .getByRole("button", { name: "Reset Progress", exact: true })
+    .click();
+  await expect(record).toHaveValue("25 seconds");
+  await page
+    .getByRole("textbox", { name: "Search all skills" })
+    .fill("Bodyweight Squat");
+  const squat = page.locator('[data-id="bodyweight-squat"] button');
+  await expect(squat.locator(".movement-badge")).toHaveText("Dynamic");
+  await squat.click();
+  await expect(
+    panel.getByRole("heading", { name: "Bodyweight Squat", exact: true }),
+  ).toBeVisible();
+  await expect(panel.locator(".movement-badge")).toHaveText("Dynamic");
+  await expect(record).toHaveValue("");
+  await record.fill("20 reps + 5 kg");
+  await page.reload();
+  await page
+    .getByRole("textbox", { name: "Search all skills" })
+    .fill("Bodyweight Squat");
+  await squat.click();
+  await expect(record).toHaveValue("20 reps + 5 kg");
+  await panel
+    .getByRole("button", { name: "Clear personal record for Bodyweight Squat" })
+    .click();
+  await expect(record).toHaveValue("");
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const saved = JSON.parse(
+          localStorage.getItem("calisthenics-skill-tree:v1")!,
+        );
+        return saved.personalRecords;
+      }),
+    )
+    .toEqual({ "planche-lean": "25 seconds", "tuck-planche": "8 seconds" });
 });
 
 test("corrupt local storage falls back to the demo without breaking the app", async ({

@@ -24,13 +24,15 @@ All fonts are bundled locally; the app makes no external application requests. I
 
 - Pannable, zoomable dependency graph with the four skill groups and optional progression filters.
 - Skill details with prerequisites, difficulty, drills, example mastery criteria, equipment, and unlock links.
+- Dynamic/Static badges on every tree node, mobile skill card, and details panel. Static skills hold a position; dynamic skills move through repetitions.
+- Click a skill to read its description and edit its Personal Record (for example, `25 seconds` or `12 reps + 10 kg`). Records save automatically, can be cleared, and stay intact when resetting skill progress.
 - Locked, available, training, and mastered states with labels and icons. All prerequisites must be mastered before a skill becomes available.
 - Start training, mark mastery, and reset progress. Resetting a prerequisite also clears dependent progress so the graph remains consistent.
 - Multiple goals with highlighted, ordered prerequisite paths. Paths include missing supporting prerequisites, deduplicate shared dependencies, and stop at mastered skills.
 - Deterministic recommendations ranked by goal relevance, current training, supporting strength, and difficulty. Only available/training skills with compatible equipment are recommended.
 - Equipment filtering, completion statistics, category progress, training lists, and mastered-skill lists.
 - A responsive mobile skill list and a keyboard-accessible details dialog. Desktop nodes are also keyboard accessible; use the zoom and fit controls or drag the canvas to explore.
-- Progress, goals, and equipment stored under `calisthenics-skill-tree:v1` in localStorage, with validation, safe recovery from corrupt data, and cross-tab updates. If storage is blocked, the UI reports that progress lasts for the current session.
+- Progress, personal records, goals, and equipment stored under `calisthenics-skill-tree:v1` in localStorage, with validation, safe recovery from corrupt data, and cross-tab updates. Existing profiles gain an empty records collection while keeping their progress. If storage is blocked, the UI reports that progress and records last for the current session.
 
 The demo starts with eight mastered fundamentals, two skills in training, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Available equipment is floor, a fixed pull-up bar, parallettes, and a resistance band. Equipment changes do not erase historical mastery. Floor is always available; the Gym equipment option supplies a bar, dip bars, and parallettes, plus a secure bench for the dragon flag.
 
@@ -56,7 +58,7 @@ The data and algorithms are independent of the React components. The UI derives 
 
 ## Add a skill
 
-Add one `define(...)` entry to `src/data/skills.ts`. Use a unique, stable ID; choose `pull`, `push`, `legs`, or `core`; give the skill a difficulty from 1 to 5; and reference existing prerequisite IDs. Add a description, required equipment, a mastery benchmark, and practice exercises. For example:
+Add one `define(...)` entry to `src/data/skills.ts`. Use a unique, stable ID; choose `pull`, `push`, `legs`, or `core`; give the skill a difficulty from 1 to 5 and a movement type (`dynamic` or `static`); and reference existing prerequisite IDs. Add a description, required equipment, a mastery benchmark, and practice exercises. For example:
 
 ```ts
 define(
@@ -65,6 +67,7 @@ define(
   "push",
   "fundamentals",
   3,
+  "dynamic",
   ["push-up"],
   ["floor"],
   "Shift your weight toward one hand while the other arm assists.",
