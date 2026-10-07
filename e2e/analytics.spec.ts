@@ -441,7 +441,11 @@ test("practice-history shortcuts carry the skill filter and edited records immed
     storageKey,
   );
   expect(stored.progress).toEqual({ "push-up": "mastered" });
-  expect(stored.personalRecords).toEqual({ "push-up": "20 clean reps" });
+  expect(stored.personalRecords).toEqual({
+    "push-up": "10 reps",
+    "hollow-body-hold": "30 sec hold",
+    "pull-up": "5 reps",
+  });
 });
 
 test("mobile monthly analytics use the local date and keep charts accessible without page overflow", async ({

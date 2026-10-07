@@ -123,7 +123,7 @@ test("version 1 upgrades without losing progress, records, goals, or equipment",
   expect((await savedProfile(page)).version).toBe(2);
 });
 
-test("hold and repetition logs can be edited and deleted without changing mastery or Personal Records", async ({
+test("hold and repetition logs update Personal Records while leaving mastery unchanged", async ({
   page,
 }) => {
   await page.clock.setFixedTime(new Date("2026-10-07T12:00:00+02:00"));
@@ -246,7 +246,9 @@ test("hold and repetition logs can be edited and deleted without changing master
     .toBe(1);
   const saved = await savedProfile(page);
   expect(saved.progress).toEqual(profile.progress);
-  expect(saved.personalRecords).toEqual(profile.personalRecords);
+  expect(saved.personalRecords).toEqual({
+    "hollow-body-hold": "22.5 sec hold",
+  });
   await page.reload();
   await navigate(page, "Practice log");
   await expect(repetitions).toHaveCount(0);
@@ -414,6 +416,7 @@ test("mobile practice uses the local calendar date and validates entries without
   await expect
     .poll(async () => (await savedProfile(page)).practiceLog?.length)
     .toBe(0);
+  expect((await savedProfile(page)).personalRecords).toEqual({});
   await skill.selectOption("hollow-body-hold");
   await page
     .getByRole("spinbutton", { name: "Hold seconds per set", exact: true })
@@ -437,6 +440,9 @@ test("mobile practice uses the local calendar date and validates entries without
     .poll(async () => (await savedProfile(page)).practiceLog?.length)
     .toBe(1);
   expect((await savedProfile(page)).progress).toEqual({});
+  expect((await savedProfile(page)).personalRecords).toEqual({
+    "hollow-body-hold": "10.5 sec hold",
+  });
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,

@@ -91,7 +91,9 @@ Goal planning chooses a single route per step, includes its supporting dependenc
 
 Equipment substitutions apply to specific exercises, with notes about grip, stability, clearance, and range. Suitable floor holds may use parallettes; L-sit/V-sit positions may use appropriate floor or raised supports; eligible levers may use a bar or rings. The Full-Range Handstand Push-up needs raised supports, whereas head-to-floor pressing can use the floor. Bar Archer Pull-up retains a fixed bar; Ring Archer Pull-up has its own level and entry. Ring planches, Pelican Planche, ring muscle-ups, Iron Cross, and Maltese retain rings. Bar-contact skills such as bar muscle-ups and Hefesto retain their required apparatus. The Gym option does not imply rings.
 
-Practice entries record repetitions and hold durations per set, independently of manual mastery and Personal Records. Consistency counts distinct local calendar dates. Weekly/monthly analytics multiply per-set volume by the number of sets and preserve bests per set. Catalog expansion and level changes do not reinterpret existing practice entries.
+Practice entries record repetitions and hold durations per set without changing manual mastery. Saving or editing an entry replaces its skill's Personal Record with the best logged repetitions and hold duration, independently per set; lower performances do not reduce an existing logged best. Editing or deleting a best entry falls back to the remaining history, and deleting the final entry clears the record. Moving an entry to another skill updates both records. Valid older logs fill missing records on load, while nonempty stored text stays until the next practice save or edit. Retired skills update their archived records without assigning them to another movement.
+
+Consistency counts distinct local calendar dates. Weekly/monthly analytics multiply per-set volume by the number of sets and preserve bests per set. Personal record history follows recorded practice dates, consolidates improvements on the same day, and carries earlier bests into later periods. Ties and lower values are not new records. Edits, deletions, and backdated entries rebuild the timeline. Repetitions and hold durations stay separate, and manual text is not assigned a fabricated practice date. Catalog expansion and level changes do not reinterpret existing practice entries.
 
 ## Excluded progressions
 
@@ -99,7 +101,7 @@ Assisted, one-leg intermediate, and weighted progression nodes are excluded. Thi
 
 Tucks, straddles, half-lays with both knees bent, and controlled negatives remain because they change leverage or isolate the eccentric phase while carrying the prescribed bodyweight. Normal foot contact in push-ups, rows/curls, pike positions, and squats is part of the movement. A decline pike uses a box to increase shoulder load. A Nordic's ankle anchor fixes the feet; the negative permits a hand catch after the working descent, and the full curl does not use a hand push to return.
 
-Weighted values in editable Personal Records, such as `12 reps + 10 kg`, remain valid. Excluding weighted progression nodes does not remove or rewrite those saved values.
+Weighted values in editable Personal Records, such as `12 reps + 10 kg`, remain valid. Excluding weighted progression nodes does not remove or rewrite those saved values. Saving or editing practice for that skill replaces its manually entered record with the logged best; the practice log has no weight metric.
 
 ## Existing records and migration
 

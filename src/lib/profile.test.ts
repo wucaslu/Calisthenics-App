@@ -8,7 +8,10 @@ import {
   PERSONAL_RECORD_MAX_LENGTH,
   updatePersonalRecord,
   savePracticeEntry,
+  savePracticeToProfile,
+  deletePracticeFromProfile,
 } from "@/lib/profile";
+import type { PracticeEntry } from "@/types/skill";
 
 describe("personal records", () => {
   it("archives one-leg records and retains downstream mastery through the shorter routes", () => {
@@ -315,13 +318,17 @@ describe("version 2 profiles", () => {
     expect(parseProfile(JSON.stringify(parsed))).toEqual(parsed);
   });
 
-  it("round-trips practice history independently of mastery and personal records", () => {
+  it("backfills a missing personal record from practice without changing mastery", () => {
     const profile = createDemoProfile();
     profile.practiceLog = savePracticeEntry([], entry);
     const parsed = parseProfile(JSON.stringify(profile))!;
-    expect(parsed).toEqual(profile);
+    expect(parsed).toEqual({
+      ...profile,
+      personalRecords: { "tuck-planche": "12.5 sec hold" },
+    });
     expect(parsed.progress["tuck-planche"]).toBeUndefined();
-    expect(parsed.personalRecords).toEqual({});
+    expect(parsed.personalRecords).toEqual({ "tuck-planche": "12.5 sec hold" });
+    expect(parseProfile(JSON.stringify(parsed))).toEqual(parsed);
   });
 
   it("recovers valid history entries without discarding the rest of a profile", () => {
@@ -338,7 +345,11 @@ describe("version 2 profiles", () => {
         ],
       }),
     )!;
-    expect(parsed).toEqual({ ...profile, practiceLog: [entry] });
+    expect(parsed).toEqual({
+      ...profile,
+      practiceLog: [entry],
+      personalRecords: { "tuck-planche": "12.5 sec hold" },
+    });
     for (const value of [null, {}, "wrong", 5]) {
       expect(
         parseProfile(JSON.stringify({ ...profile, practiceLog: value })),
@@ -366,5 +377,285 @@ describe("version 2 profiles", () => {
         ?.practiceLog,
     ).toEqual([stored]);
     expect(savePracticeEntry([], stored)).toEqual([]);
+  });
+});
+
+describe("practice-linked personal records", () => {
+  const today = "2026-01-10";
+  const entry: PracticeEntry = {
+    id: "record-practice",
+    skillId: "pull-up",
+    date: "2026-01-02",
+    sets: 3,
+    repetitions: 12,
+    holdSeconds: 2.5,
+    notes: "Controlled repetitions",
+  };
+
+  it("replaces manual record text with independent per-set bests while preserving the rest of the profile", () => {
+    const original = createDemoProfile();
+    original.personalRecords = {
+      "pull-up": "10 reps + 15 kg",
+      "dead-hang": "45 seconds",
+    };
+    const snapshot = structuredClone(original);
+    const saved = savePracticeToProfile(original, entry, today);
+    expect(saved.personalRecords).toEqual({
+      "pull-up": "12 reps · 2.5 sec hold",
+      "dead-hang": "45 seconds",
+    });
+    expect(saved.practiceLog).toEqual([entry]);
+    expect(saved.progress).toBe(original.progress);
+    expect(saved.goals).toBe(original.goals);
+    expect(saved.equipment).toBe(original.equipment);
+    expect(original).toEqual(snapshot);
+
+    const lowerRepsLongerHold = {
+      ...entry,
+      id: "different-metric-bests",
+      sets: 8,
+      repetitions: 7,
+      holdSeconds: 5.25,
+    };
+    const next = savePracticeToProfile(saved, lowerRepsLongerHold, today);
+    expect(next.personalRecords["pull-up"]).toBe("12 reps · 5.25 sec hold");
+    expect(saved.practiceLog).toEqual([entry]);
+    expect(saved.personalRecords["pull-up"]).toBe("12 reps · 2.5 sec hold");
+  });
+
+  it("retains a best through weaker sessions and falls back after editing or deleting its source entry", () => {
+    const profile = savePracticeToProfile(createDemoProfile(), entry, today);
+    const lower: PracticeEntry = {
+      ...entry,
+      id: "lower-session",
+      repetitions: 8,
+      holdSeconds: 1.25,
+    };
+    const withLower = savePracticeToProfile(profile, lower, today);
+    expect(withLower.personalRecords["pull-up"]).toBe("12 reps · 2.5 sec hold");
+    const edited = savePracticeToProfile(
+      withLower,
+      { ...entry, repetitions: 6, holdSeconds: 0.5 },
+      today,
+    );
+    expect(edited.personalRecords["pull-up"]).toBe("8 reps · 1.25 sec hold");
+    const deleted = deletePracticeFromProfile(edited, lower.id, today);
+    expect(deleted.personalRecords["pull-up"]).toBe("6 reps · 0.5 sec hold");
+    expect(
+      deletePracticeFromProfile(deleted, entry.id, today).personalRecords,
+    ).toEqual({});
+    expect(withLower.practiceLog).toEqual([entry, lower]);
+  });
+
+  it("clears only the automatic metric removed by an edit and clears a final entry's record", () => {
+    const saved = savePracticeToProfile(createDemoProfile(), entry, today);
+    const { repetitions, ...holdOnly } = entry;
+    expect(repetitions).toBe(12);
+    const edited = savePracticeToProfile(saved, holdOnly, today);
+    expect(edited.personalRecords["pull-up"]).toBe("2.5 sec hold");
+    const cleared = deletePracticeFromProfile(edited, entry.id, today);
+    expect(cleared.personalRecords["pull-up"]).toBeUndefined();
+    expect(cleared.practiceLog).toEqual([]);
+    expect(edited.personalRecords["pull-up"]).toBe("2.5 sec hold");
+  });
+
+  it("recalculates both skill records when an entry is moved without touching unrelated manual records", () => {
+    const profile = createDemoProfile();
+    profile.personalRecords = {
+      "push-up": "20 weighted reps",
+      "dead-hang": "30 seconds",
+    };
+    const saved = savePracticeToProfile(profile, entry, today);
+    const lower = savePracticeToProfile(
+      saved,
+      {
+        ...entry,
+        id: "remaining-pull-up",
+        repetitions: 6,
+        holdSeconds: 1,
+      },
+      today,
+    );
+    const moved = savePracticeToProfile(
+      lower,
+      { ...entry, skillId: "push-up" },
+      today,
+    );
+    expect(moved.personalRecords).toEqual({
+      "pull-up": "6 reps · 1 sec hold",
+      "push-up": "12 reps · 2.5 sec hold",
+      "dead-hang": "30 seconds",
+    });
+    expect(
+      moved.practiceLog.find((item) => item.id === entry.id)?.skillId,
+    ).toBe("push-up");
+    expect(lower.personalRecords["push-up"]).toBe("20 weighted reps");
+  });
+
+  it("returns the original profile for invalid saves and nonexistent deletions", () => {
+    const profile = createDemoProfile();
+    for (const changes of [
+      { skillId: "fake" },
+      { skillId: "constructor" },
+      { sets: 0 },
+      { repetitions: 1.5 },
+      { holdSeconds: Number.NaN },
+      { holdSeconds: Number.POSITIVE_INFINITY },
+      { date: "2026-02-30" },
+      { date: "2026-01-11" },
+    ])
+      expect(
+        savePracticeToProfile(profile, { ...entry, ...changes }, today),
+      ).toBe(profile);
+    expect(deletePracticeFromProfile(profile, "missing", today)).toBe(profile);
+  });
+
+  it("updates retired practice in its canonical archive without moving the record or mastery to a replacement skill", () => {
+    const profile = createDemoProfile();
+    profile.archivedSkills["front-lever-row"] = {
+      name: "Stored display name",
+      progress: "mastered",
+      personalRecord: "5 tuck rows",
+    };
+    const retired = { ...entry, skillId: "front-lever-row" };
+    const saved = savePracticeToProfile(profile, retired, today);
+    expect(saved.archivedSkills[retired.skillId]).toEqual({
+      name: retiredSkillNames[retired.skillId],
+      progress: "mastered",
+      personalRecord: "12 reps · 2.5 sec hold",
+    });
+    expect(saved.personalRecords[retired.skillId]).toBeUndefined();
+    expect(saved.personalRecords["full-front-lever-row"]).toBeUndefined();
+    expect(saved.progress["full-front-lever-row"]).toBeUndefined();
+    const moved = savePracticeToProfile(saved, entry, today);
+    expect(moved.archivedSkills[retired.skillId]).toEqual({
+      name: retiredSkillNames[retired.skillId],
+      progress: "mastered",
+    });
+    expect(moved.personalRecords["pull-up"]).toBe("12 reps · 2.5 sec hold");
+    expect(profile.archivedSkills[retired.skillId].personalRecord).toBe(
+      "5 tuck rows",
+    );
+  });
+
+  it("removes a retired record-only archive when its final practice entry is deleted", () => {
+    const retired = { ...entry, skillId: "one-leg-front-lever" };
+    const saved = savePracticeToProfile(createDemoProfile(), retired, today);
+    expect(saved.archivedSkills[retired.skillId]?.personalRecord).toBe(
+      "12 reps · 2.5 sec hold",
+    );
+    expect(
+      deletePracticeFromProfile(saved, retired.id, today).archivedSkills[
+        retired.skillId
+      ],
+    ).toBeUndefined();
+    expect(saved.archivedSkills[retired.skillId]?.personalRecord).toBe(
+      "12 reps · 2.5 sec hold",
+    );
+  });
+
+  it("backfills only missing records from valid past logs, including retired skills", () => {
+    const profile = createDemoProfile();
+    profile.personalRecords = { "pull-up": "   ", "push-up": "Manual 20 reps" };
+    profile.archivedSkills["one-leg-front-lever"] = {
+      name: "Untrusted display name",
+      progress: "training",
+    };
+    profile.archivedSkills["one-leg-back-lever"] = {
+      name: "One-Leg Back Lever",
+      personalRecord: "Manual 10 seconds",
+    };
+    const parsed = parseProfile(
+      JSON.stringify({
+        ...profile,
+        practiceLog: [
+          entry,
+          {
+            ...entry,
+            id: "push-up-history",
+            skillId: "push-up",
+            repetitions: 30,
+          },
+          {
+            ...entry,
+            id: "retired-history",
+            skillId: "one-leg-front-lever",
+            holdSeconds: 3.75,
+          },
+          { ...entry, id: "retired-manual", skillId: "one-leg-back-lever" },
+          {
+            ...entry,
+            id: "future-history",
+            repetitions: 100,
+            date: "2026-01-11",
+          },
+          { ...entry, id: "invalid-history", repetitions: -1 },
+          { ...entry, id: "unknown-history", skillId: "made-up-skill" },
+        ],
+      }),
+      today,
+    )!;
+    expect(parsed.personalRecords).toEqual({
+      "pull-up": "12 reps · 2.5 sec hold",
+      "push-up": "Manual 20 reps",
+    });
+    expect(parsed.archivedSkills["one-leg-front-lever"]).toEqual({
+      name: retiredSkillNames["one-leg-front-lever"],
+      progress: "training",
+      personalRecord: "12 reps · 3.75 sec hold",
+    });
+    expect(parsed.archivedSkills["one-leg-back-lever"]?.personalRecord).toBe(
+      "Manual 10 seconds",
+    );
+    expect(parsed.practiceLog.map((row) => row.id)).toContain("future-history");
+    expect(parsed.practiceLog).toHaveLength(5);
+    expect(parsed.progress).toEqual(profile.progress);
+    expect(parseProfile(JSON.stringify(parsed), today)).toEqual(parsed);
+  });
+
+  it("retains clock-shifted future history without backfilling its metrics or discarding it on the next save", () => {
+    const future = { ...entry, date: "2026-01-11", repetitions: 100 };
+    const parsed = parseProfile(
+      JSON.stringify({ ...createDemoProfile(), practiceLog: [future] }),
+      today,
+    )!;
+    expect(parsed.practiceLog).toEqual([future]);
+    expect(parsed.personalRecords).toEqual({});
+    const saved = savePracticeToProfile(
+      parsed,
+      { ...entry, id: "past-session" },
+      today,
+    );
+    expect(saved.personalRecords["pull-up"]).toBe("12 reps · 2.5 sec hold");
+    expect(saved.practiceLog).toEqual([
+      future,
+      { ...entry, id: "past-session" },
+    ]);
+    const tomorrow = parseProfile(
+      JSON.stringify({ ...parsed, personalRecords: {} }),
+      "2026-01-11",
+    )!;
+    expect(tomorrow.personalRecords["pull-up"]).toBe("100 reps · 2.5 sec hold");
+  });
+
+  it("preserves a manual edit on reload until the next practice save replaces it with the logged best", () => {
+    const saved = savePracticeToProfile(createDemoProfile(), entry, today);
+    const manual = {
+      ...saved,
+      personalRecords: updatePersonalRecord(
+        saved.personalRecords,
+        "pull-up",
+        "8 reps + 20 kg",
+      ),
+    };
+    const reloaded = parseProfile(JSON.stringify(manual), today)!;
+    expect(reloaded.personalRecords["pull-up"]).toBe("8 reps + 20 kg");
+    const next = savePracticeToProfile(
+      reloaded,
+      { ...entry, id: "weaker-session", repetitions: 5 },
+      today,
+    );
+    expect(next.personalRecords["pull-up"]).toBe("12 reps · 2.5 sec hold");
+    expect(reloaded.personalRecords["pull-up"]).toBe("8 reps + 20 kg");
   });
 });

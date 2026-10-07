@@ -289,7 +289,9 @@ export function PracticeLog({
           </div>
           <p className={styles.muted}>
             Record a skill you practised, including locked skills. Entries leave
-            mastery and your Personal Record unchanged.
+            mastery unchanged and update your Personal Record with the best
+            repetitions and hold duration per set. Editing or deleting an entry
+            recalculates those records.
           </p>
           {!storageAvailable && (
             <p className={styles.warning}>

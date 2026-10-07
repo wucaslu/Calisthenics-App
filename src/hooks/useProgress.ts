@@ -6,7 +6,8 @@ import {
   parseProfile,
   STORAGE_KEY,
   updatePersonalRecord,
-  savePracticeEntry,
+  savePracticeToProfile,
+  deletePracticeFromProfile,
 } from "@/lib/profile";
 import { updateSkillProgress } from "@/lib/progression";
 import { skillById } from "@/data/skills";
@@ -108,16 +109,10 @@ export function useProgress() {
     [hydrated],
   );
   const savePractice = useCallback((entry: PracticeEntry) => {
-    setProfile((previous) => ({
-      ...previous,
-      practiceLog: savePracticeEntry(previous.practiceLog, entry),
-    }));
+    setProfile((previous) => savePracticeToProfile(previous, entry));
   }, []);
   const deletePractice = useCallback((id: string) => {
-    setProfile((previous) => ({
-      ...previous,
-      practiceLog: previous.practiceLog.filter((entry) => entry.id !== id),
-    }));
+    setProfile((previous) => deletePracticeFromProfile(previous, id));
   }, []);
   return {
     profile,

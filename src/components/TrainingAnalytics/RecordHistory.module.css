@@ -1,0 +1,320 @@
+.records {
+  min-width: 0;
+  margin-top: 26px;
+  padding: 22px;
+  border: 1px solid var(--border-blue, #405c79);
+  border-radius: 10px;
+  background: var(--surface-card, #1c232b);
+}
+
+.heading,
+.heading h3,
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.heading,
+.controls {
+  justify-content: space-between;
+}
+
+.heading h3 {
+  margin: 0;
+  color: var(--text-strong, #d7e1eb);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.heading h3 svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.periodLabel,
+.muted,
+.baseline,
+.noMilestones {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.muted {
+  margin: 12px 0 0;
+}
+
+.periodLabel {
+  font-size: 10px;
+}
+
+.controls {
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.skillSelect {
+  display: grid;
+  min-width: 0;
+  flex: 1 1 230px;
+  gap: 7px;
+  max-width: 360px;
+}
+
+.skillSelect > span {
+  color: var(--text-primary, #bbc8d6);
+  font-size: 11px;
+}
+
+.skillSelect select {
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  padding: 8px 32px 8px 11px;
+  border: 1px solid var(--border-strong, #526171);
+  border-radius: 7px;
+  color: var(--text-strong, #d7e1eb);
+  background: var(--surface-card, #202a35);
+  font: inherit;
+  font-size: 12px;
+}
+
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-self: end;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-soft, #19212a);
+}
+
+.segmented button {
+  min-height: 30px;
+  padding: 7px 11px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: var(--text-primary, #bbc8d6);
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.segmented button[aria-pressed="true"] {
+  border-color: var(--border-blue, #5d7fa2);
+  color: var(--text-strong, #d8e9fc);
+  background: var(--surface-raised, #354d68);
+}
+
+.segmented button:hover {
+  color: var(--text-strong, #edf5ff);
+  background: var(--surface-hover, #2c3a4a);
+}
+
+.segmented button:focus-visible,
+.skillSelect select:focus-visible,
+.chartScroll:focus-visible,
+.tableScroll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 20px 0 0;
+}
+
+.summary > div {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-soft, #19212a);
+}
+
+.summary dt {
+  color: var(--text-primary, #bbc8d6);
+  font-size: 11px;
+}
+
+.summary dd {
+  margin: 8px 0 0;
+  color: var(--accent);
+  font-size: clamp(17px, 2.5vw, 23px);
+  font-weight: 650;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.figure {
+  min-width: 0;
+  margin: 23px 0 0;
+}
+
+.figure figcaption {
+  color: var(--text-strong, #d7e1eb);
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.chartScroll,
+.tableScroll {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-color: var(--scrollbar, #536d87) var(--surface-soft, #1c232b);
+  scrollbar-width: thin;
+}
+
+.chartScroll {
+  margin-top: 14px;
+  padding-bottom: 7px;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  min-width: 460px;
+  height: auto;
+}
+
+.gridLine {
+  stroke: var(--border);
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+}
+
+.axisText {
+  fill: var(--text-secondary, #9cacbd);
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.recordLine {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.recordPoint,
+.carriedPoint {
+  stroke: var(--accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.recordPoint {
+  fill: var(--accent);
+}
+
+.carriedPoint {
+  fill: var(--surface-card, #1c232b);
+}
+
+.baseline,
+.noMilestones {
+  margin: 12px 0 0;
+}
+
+.baseline strong {
+  color: var(--text-blue, #bdcad8);
+  font-weight: 600;
+}
+
+.noMilestones {
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.tableScroll {
+  margin-top: 18px;
+  padding-bottom: 7px;
+}
+
+.tableScroll table {
+  width: 100%;
+  min-width: 290px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tableScroll caption {
+  padding: 0 0 12px;
+  color: var(--text-strong, #d7e1eb);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.tableScroll th,
+.tableScroll td {
+  padding: 11px 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.tableScroll thead th {
+  color: var(--text-secondary, #9baebf);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.tableScroll tbody th {
+  color: var(--text-blue, #c8d7e8);
+  font-weight: 500;
+}
+
+.tableScroll td {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.empty {
+  margin: 20px 0 0;
+  padding: 15px;
+  border: 1px dashed var(--border-blue, #526e8d);
+  border-radius: 8px;
+  color: var(--text-blue, #bdcad8);
+  background: var(--surface-soft, #202a35);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .records {
+    padding: 16px;
+  }
+
+  .summary {
+    gap: 10px;
+  }
+
+  .summary > div {
+    padding: 12px;
+  }
+
+  .controls {
+    align-items: start;
+  }
+
+  .skillSelect {
+    max-width: none;
+  }
+
+  .segmented {
+    align-self: start;
+  }
+}

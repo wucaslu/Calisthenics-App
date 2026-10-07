@@ -1,7 +1,15 @@
 import { equipmentLabels, skillById } from "@/data/skills";
 import { retiredSkillNames } from "@/data/retiredSkills";
 import { normalizeProgress } from "@/lib/progression";
-import { sanitizePracticeEntries, validatePracticeEntry } from "@/lib/practice";
+import {
+  getLocalToday,
+  sanitizePracticeEntries,
+  validatePracticeEntry,
+} from "@/lib/practice";
+import {
+  formatLoggedPersonalRecord,
+  getLoggedPersonalRecords,
+} from "@/lib/records";
 import type {
   Equipment,
   PersonalRecords,
@@ -17,13 +25,95 @@ export const PERSONAL_RECORD_MAX_LENGTH = 160;
 export function savePracticeEntry(
   entries: PracticeEntry[],
   entry: PracticeEntry,
+  today = getLocalToday(),
 ): PracticeEntry[] {
-  if (validatePracticeEntry(entry)) return entries;
-  const validated = sanitizePracticeEntries([entry])[0];
+  if (validatePracticeEntry(entry, today)) return entries;
+  const validated = sanitizePracticeEntries([entry], today)[0];
   if (!validated) return entries;
   const index = entries.findIndex((item) => item.id === entry.id);
   if (index === -1) return [...entries, validated];
   return entries.map((item) => (item.id === entry.id ? validated : item));
+}
+
+/** Recalculate only the skills affected by a log edit, or fill missing legacy records. */
+function syncLoggedRecords(
+  profile: UserProfile,
+  skillIds: Iterable<string>,
+  today: string,
+  missingOnly = false,
+): UserProfile {
+  const personalRecords = { ...profile.personalRecords };
+  const archivedSkills = { ...profile.archivedSkills };
+  const affected = new Set(skillIds);
+  const entriesBySkill = new Map<string, PracticeEntry[]>();
+  for (const entry of profile.practiceLog) {
+    if (!affected.has(entry.skillId)) continue;
+    const entries = entriesBySkill.get(entry.skillId) ?? [];
+    entries.push(entry);
+    entriesBySkill.set(entry.skillId, entries);
+  }
+  for (const id of affected) {
+    const active = Object.hasOwn(skillById, id);
+    if (!active && !Object.hasOwn(retiredSkillNames, id)) continue;
+    const existing = active
+      ? personalRecords[id]
+      : archivedSkills[id]?.personalRecord;
+    if (missingOnly && existing?.trim()) continue;
+    const record = formatLoggedPersonalRecord(
+      getLoggedPersonalRecords(entriesBySkill.get(id) ?? [], id, today),
+    );
+    if (active) {
+      if (record) personalRecords[id] = record;
+      else delete personalRecords[id];
+    } else if (record) {
+      archivedSkills[id] = {
+        ...archivedSkills[id],
+        name: retiredSkillNames[id],
+        personalRecord: record,
+      };
+    } else {
+      const archived = archivedSkills[id];
+      if (archived?.progress)
+        archivedSkills[id] = {
+          name: retiredSkillNames[id],
+          progress: archived.progress,
+        };
+      else delete archivedSkills[id];
+    }
+  }
+  return { ...profile, personalRecords, archivedSkills };
+}
+
+export function savePracticeToProfile(
+  profile: UserProfile,
+  entry: PracticeEntry,
+  today = getLocalToday(),
+): UserProfile {
+  const practiceLog = savePracticeEntry(profile.practiceLog, entry, today);
+  if (practiceLog === profile.practiceLog) return profile;
+  const previous = profile.practiceLog.find((item) => item.id === entry.id);
+  return syncLoggedRecords(
+    { ...profile, practiceLog },
+    previous ? [previous.skillId, entry.skillId] : [entry.skillId],
+    today,
+  );
+}
+
+export function deletePracticeFromProfile(
+  profile: UserProfile,
+  id: string,
+  today = getLocalToday(),
+): UserProfile {
+  const previous = profile.practiceLog.find((entry) => entry.id === id);
+  if (!previous) return profile;
+  return syncLoggedRecords(
+    {
+      ...profile,
+      practiceLog: profile.practiceLog.filter((entry) => entry.id !== id),
+    },
+    [previous.skillId],
+    today,
+  );
 }
 
 export function updatePersonalRecord(
@@ -62,7 +152,10 @@ export function createDemoProfile(): UserProfile {
   };
 }
 
-export function parseProfile(raw: string): UserProfile | null {
+export function parseProfile(
+  raw: string,
+  today = getLocalToday(),
+): UserProfile | null {
   try {
     const data: unknown = JSON.parse(raw);
     if (!data || typeof data !== "object") return null;
@@ -157,15 +250,21 @@ export function parseProfile(raw: string): UserProfile | null {
         }
       }
     }
-    return {
-      version: 2,
-      practiceLog: sanitizePracticeEntries(candidate.practiceLog),
-      progress: normalized,
-      personalRecords,
-      goals,
-      equipment,
-      archivedSkills,
-    };
+    const practiceLog = sanitizePracticeEntries(candidate.practiceLog);
+    return syncLoggedRecords(
+      {
+        version: 2,
+        practiceLog,
+        progress: normalized,
+        personalRecords,
+        goals,
+        equipment,
+        archivedSkills,
+      },
+      practiceLog.map((entry) => entry.skillId),
+      today,
+      true,
+    );
   } catch {
     return null;
   }

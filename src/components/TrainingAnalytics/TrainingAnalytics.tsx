@@ -10,6 +10,7 @@ import {
 } from "@/lib/analytics";
 import { formatPracticeDate } from "@/lib/practice";
 import type { PracticeEntry } from "@/types/skill";
+import { RecordHistory } from "./RecordHistory";
 import styles from "./TrainingAnalytics.module.css";
 
 interface TrainingAnalyticsProps {
@@ -248,6 +249,14 @@ export function TrainingAnalytics({
             Volume includes every set; repetitions and hold seconds are
             multiplied by sets. Entries are individual skill logs.
           </p>
+
+          <RecordHistory
+            entries={entries}
+            today={today}
+            start={current.start}
+            through={current.through}
+            period={period}
+          />
 
           {!current.totals.entries && (
             <p className={styles.empty} role="status">

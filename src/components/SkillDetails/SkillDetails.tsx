@@ -26,6 +26,10 @@ import { DIFFICULTY_EXPLANATION, MAX_DIFFICULTY } from "@/lib/difficulty";
 import { getSkillState, missingEquipment } from "@/lib/progression";
 import { PERSONAL_RECORD_MAX_LENGTH } from "@/lib/profile";
 import {
+  formatLoggedPersonalRecord,
+  getLoggedPersonalRecords,
+} from "@/lib/records";
+import {
   PrerequisiteOptions,
   EquipmentOptions,
 } from "@/components/TrainingOptions/TrainingOptions";
@@ -66,6 +70,9 @@ export function SkillDetails({
   const state = getSkillState(skill, profile.progress);
   const missing = missingEquipment(skill, profile.equipment);
   const isGoal = profile.goals.includes(skill.id);
+  const loggedRecord = formatLoggedPersonalRecord(
+    getLoggedPersonalRecords(profile.practiceLog, skill.id),
+  );
   const mobile = useSyncExternalStore(
     subscribeMobile,
     mobileSnapshot,
@@ -187,11 +194,20 @@ export function SkillDetails({
               <button
                 type="button"
                 className="personal-record-clear"
-                onClick={() => onPersonalRecord(skill.id, "")}
-                disabled={!hydrated || !profile.personalRecords[skill.id]}
-                aria-label={`Clear personal record for ${skill.name}`}
+                onClick={() => onPersonalRecord(skill.id, loggedRecord)}
+                disabled={
+                  !hydrated ||
+                  (loggedRecord
+                    ? profile.personalRecords[skill.id] === loggedRecord
+                    : !profile.personalRecords[skill.id])
+                }
+                aria-label={
+                  loggedRecord
+                    ? `Use logged personal record for ${skill.name}`
+                    : `Clear personal record for ${skill.name}`
+                }
               >
-                Clear
+                {loggedRecord ? "Use logged best" : "Clear"}
               </button>
             </div>
             <input
@@ -212,7 +228,9 @@ export function SkillDetails({
               aria-describedby="personal-record-hint personal-record-storage"
             />
             <p id="personal-record-hint">
-              Your best time, reps, or added weight.
+              {loggedRecord
+                ? `Best logged: ${loggedRecord}. New or edited practice entries replace manual records with your best values per set.`
+                : "Your best time, reps, or added weight. Practice entries update this field automatically."}
             </p>
             <small id="personal-record-storage">
               {storageAvailable

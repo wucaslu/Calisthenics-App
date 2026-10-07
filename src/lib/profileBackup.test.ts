@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createDemoProfile } from "@/lib/profile";
+import { createDemoProfile, savePracticeToProfile } from "@/lib/profile";
 import {
   createProfileBackup,
   PROFILE_BACKUP_MAX_BYTES,
@@ -58,6 +58,54 @@ describe("profile backups", () => {
         },
       },
     });
+  });
+
+  it("transfers synchronized personal records and their source log without changing the backup format", () => {
+    const profile = savePracticeToProfile(createDemoProfile(), {
+      id: "synced-backup-practice",
+      skillId: "pull-up",
+      date: "2026-01-02",
+      sets: 5,
+      repetitions: 9,
+      holdSeconds: 1.75,
+      notes: "Logged personal record",
+    });
+    const restored = readProfileBackup(createProfileBackup(profile));
+    expect(restored).toEqual(profile);
+    expect(restored.personalRecords["pull-up"]).toBe("9 reps · 1.75 sec hold");
+    expect(restored.version).toBe(2);
+    expect(Object.keys(restored).sort()).toEqual(
+      Object.keys(createDemoProfile()).sort(),
+    );
+  });
+
+  it("backfills missing historical records during import while preserving saved manual text", () => {
+    const profile = createDemoProfile();
+    profile.personalRecords["push-up"] = "25 weighted reps";
+    const entry = {
+      id: "legacy-backup-practice",
+      skillId: "pull-up",
+      date: "2026-01-02",
+      sets: 4,
+      repetitions: 10,
+      notes: "Before records were synchronized",
+    };
+    profile.practiceLog = [
+      entry,
+      {
+        ...entry,
+        id: "legacy-manual-record",
+        skillId: "push-up",
+        repetitions: 30,
+      },
+    ];
+    const restored = readProfileBackup(createProfileBackup(profile));
+    expect(restored.personalRecords).toEqual({
+      "pull-up": "10 reps",
+      "push-up": "25 weighted reps",
+    });
+    expect(restored.practiceLog).toEqual(profile.practiceLog);
+    expect(profile.personalRecords).toEqual({ "push-up": "25 weighted reps" });
   });
 
   it("allows an intentionally empty profile and a UTF-8 BOM from a text editor", () => {
