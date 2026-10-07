@@ -588,7 +588,32 @@ button svg {
 }
 .tree-filter-controls {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 7px;
+}
+.level-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #a2aab4;
+  font-size: 10px;
+  min-width: 0;
+}
+.level-select > span {
+  flex-shrink: 0;
+}
+.branch-select.level-select select {
+  min-width: 0;
+  max-width: 170px;
+}
+.level-filter-note {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: #a9bfd7;
+  background: #202a35;
+  font-size: 11px;
+  line-height: 1.6;
 }
 .branch-select select {
   color: #c8ced4;
@@ -2296,9 +2321,15 @@ button svg {
     font-size: 12px;
   }
   .tree-filter-controls {
-    width: auto;
-    flex: 1;
-    justify-content: flex-end;
+    width: 100%;
+    flex: 1 0 100%;
+    justify-content: flex-start;
+  }
+  .level-select {
+    width: 100%;
+  }
+  .branch-select.level-select select {
+    max-width: 190px;
   }
   .branch-select select {
     max-width: 117px;

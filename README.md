@@ -23,6 +23,7 @@ All fonts are bundled locally; the app makes no external application requests. I
 ## Features
 
 - Pannable, zoomable dependency graph with four skill groups, named progression lanes, and optional progression filters. Mobile lists use the same families.
+- Choose **Max level** in the tree toolbar to show only skills at or below a difficulty from 1 to 10. Higher-level skills and prerequisite nodes are hidden on desktop and mobile; group, branch, search, and goal highlights respect the cutoff. **All levels (1–10)** restores the full view. The filter stays active while navigating the workspace, and a page reload restores the default full view.
 - Open or close the left menu with the navigation button in the top bar. Closing it on desktop gives the workspace more room. Mobile also has an in-menu close button, backdrop dismissal, and Escape support.
 - Skill details with prerequisites, estimated difficulty, drills, example mastery criteria, equipment, unlock links, and reviewed reference links. Published source levels appear separately from app difficulty.
 - Every skill description includes its target muscle groups, primary muscles, and secondary muscles. Primary muscles drive or hold the movement; secondary muscles assist and stabilize. These are qualitative movement-based descriptions, and roles can vary with technique or grip.

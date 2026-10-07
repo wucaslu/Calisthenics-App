@@ -4,9 +4,11 @@ import {
   getPrerequisiteRoutes,
 } from "@/data/trainingOptions";
 import { hasEquipment } from "@/lib/progression";
+import { MAX_DIFFICULTY } from "@/lib/difficulty";
 import type {
   Branch,
   Category,
+  DifficultyLevel,
   Equipment,
   PrerequisiteRoute,
   Progress,
@@ -116,6 +118,7 @@ export function getVisibleSkills(
   group: Category | "all",
   query = "",
   branch: Branch | "all" = "all",
+  maxDifficulty: DifficultyLevel = MAX_DIFFICULTY,
 ): Skill[] {
   const chosen = skills.filter(
     (skill) =>
@@ -125,7 +128,11 @@ export function getVisibleSkills(
   const ids = new Set(
     chosen.flatMap((skill) => [skill.id, ...getAncestors(skill.id)]),
   );
-  const scoped = skills.filter((skill) => ids.has(skill.id));
+  // Keep accessible foundations of advanced branches, but apply the ceiling to
+  // every node, including ancestors from alternative prerequisite routes.
+  const scoped = skills.filter(
+    (skill) => ids.has(skill.id) && skill.difficulty <= maxDifficulty,
+  );
   if (!query.trim()) return scoped;
   const matches = scoped.filter((skill) =>
     skill.name.toLowerCase().includes(query.trim().toLowerCase()),

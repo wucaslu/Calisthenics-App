@@ -51,7 +51,13 @@ import {
   getPrerequisiteIds,
   getPrerequisiteRoutes,
 } from "@/lib/progression";
-import type { Branch, Category, UserProfile } from "@/types/skill";
+import { getDifficultyTier, MAX_DIFFICULTY } from "@/lib/difficulty";
+import type {
+  Branch,
+  Category,
+  DifficultyLevel,
+  UserProfile,
+} from "@/types/skill";
 
 type GroupGraphNode = Node<
   { category: Category; count: number; branch?: Branch },
@@ -126,6 +132,8 @@ interface Props {
   group: Category | "all";
   setGroup: (value: Category | "all") => void;
   query: string;
+  maxDifficulty: DifficultyLevel;
+  setMaxDifficulty: (value: DifficultyLevel) => void;
   selectedId: string | null;
   onSelect: (id: string) => void;
   highlightPath: boolean;
@@ -208,11 +216,19 @@ export function SkillTree(props: Props) {
     },
     [],
   );
-  const { profile, branch, group, query, selectedId, onSelect, highlightPath } =
-    props;
+  const {
+    profile,
+    branch,
+    group,
+    query,
+    maxDifficulty,
+    selectedId,
+    onSelect,
+    highlightPath,
+  } = props;
   const visible = useMemo(
-    () => getVisibleSkills(group, query, branch),
-    [group, branch, query],
+    () => getVisibleSkills(group, query, branch, maxDifficulty),
+    [group, branch, query, maxDifficulty],
   );
   const lanes = useMemo(() => getProgressionLanes(visible), [visible]);
   const { nodes, edges } = useMemo(() => {
@@ -368,8 +384,36 @@ export function SkillTree(props: Props) {
                 ))}
             </select>
           </label>
+          <label className="branch-select level-select">
+            <span>Max level</span>
+            <select
+              aria-label="Maximum skill level"
+              value={maxDifficulty}
+              onChange={(event) =>
+                props.setMaxDifficulty(
+                  Number(event.target.value) as DifficultyLevel,
+                )
+              }
+            >
+              <option value={MAX_DIFFICULTY}>All levels (1–10)</option>
+              {Array.from(
+                { length: MAX_DIFFICULTY - 1 },
+                (_, index) => index + 1,
+              ).map((level) => (
+                <option key={level} value={level}>
+                  Up to {level}/10 · {getDifficultyTier(level)}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
       </div>
+      {maxDifficulty < MAX_DIFFICULTY && (
+        <p className="level-filter-note" role="status">
+          Showing levels 1–{maxDifficulty}/10. Higher-level skills and
+          prerequisites are hidden.
+        </p>
+      )}
       <div className="tree-subtoolbar">
         <div className="tree-legend">
           {(["mastered", "training", "available", "locked"] as const).map(
@@ -414,7 +458,7 @@ export function SkillTree(props: Props) {
                 />
                 <CanvasControls />
                 <FitTree
-                  viewKey={`${group}:${branch}:${query}`}
+                  viewKey={`${group}:${branch}:${query}:${maxDifficulty}`}
                   focusGoalPath={
                     group !== "all" &&
                     (branch === "all" ||
@@ -478,7 +522,9 @@ export function SkillTree(props: Props) {
         </>
       ) : (
         <EmptyState title="No skills found">
-          Try another name or choose a different branch.
+          {maxDifficulty < MAX_DIFFICULTY
+            ? "Increase Max level, try another name, or choose a different branch."
+            : "Try another name or choose a different branch."}
         </EmptyState>
       )}
       <div className="tree-footer">

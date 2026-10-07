@@ -39,7 +39,8 @@ import { TrainingAnalytics } from "@/components/TrainingAnalytics/TrainingAnalyt
 import { categories, categoryLabels, skillById, skills } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { getLocalToday, getPracticeSkillName } from "@/lib/practice";
-import type { Branch, Category } from "@/types/skill";
+import { MAX_DIFFICULTY } from "@/lib/difficulty";
+import type { Branch, Category, DifficultyLevel } from "@/types/skill";
 
 type View =
   "tree" | "overview" | "goals" | "equipment" | "practice" | "analytics";
@@ -113,6 +114,8 @@ export function AppShell() {
   const [group, setGroup] = useState<Category | "all">("push");
   const [branch, setBranch] = useState<Branch | "all">("planche");
   const [query, setQuery] = useState("");
+  const [maxDifficulty, setMaxDifficulty] =
+    useState<DifficultyLevel>(MAX_DIFFICULTY);
   const [highlightPath, setHighlightPath] = useState(true);
   const [selection, setSelection] = useState<string | null | undefined>(
     undefined,
@@ -133,7 +136,10 @@ export function AppShell() {
   const menuToggleRef = useRef<HTMLButtonElement>(null);
   const menuCloseRef = useRef<HTMLButtonElement>(null);
   const sidebarOpen = isDesktop ? !sidebarCollapsed : menuOpen;
-  const selectedSkill = selectedId ? skillById[selectedId] : null;
+  const selectedSkill =
+    selectedId && skillById[selectedId]?.difficulty <= maxDifficulty
+      ? skillById[selectedId]
+      : null;
   const copy = pageCopy[view];
   const previousLogSkills = [
     ...new Set([
@@ -171,10 +177,22 @@ export function AppShell() {
   }, [notice]);
 
   const onClose = useCallback(() => setSelection(null), []);
-  const onSelect = useCallback((id: string) => {
-    setSelection(id);
-    setView("tree");
-  }, []);
+  const onSelect = useCallback(
+    (id: string) => {
+      const skill = skillById[id];
+      if (!skill) return;
+      setView("tree");
+      if (skill.difficulty > maxDifficulty) {
+        setSelection(null);
+        setNotice(
+          `${skill.name} is level ${skill.difficulty}/10. Increase Max level to show it.`,
+        );
+        return;
+      }
+      setSelection(id);
+    },
+    [maxDifficulty],
+  );
   const onProgress = useCallback(
     (id: string, action: "training" | "mastered" | "reset") => {
       setSkillProgress(id, action);
@@ -202,8 +220,7 @@ export function AppShell() {
     setGroup(skill.category);
     setBranch(skill.branch);
     setQuery("");
-    setSelection(id);
-    setView("tree");
+    onSelect(id);
   };
 
   return (
@@ -414,7 +431,13 @@ export function AppShell() {
                   branch={branch}
                   setBranch={setBranch}
                   query={query}
-                  selectedId={selectedId}
+                  maxDifficulty={maxDifficulty}
+                  setMaxDifficulty={(value) => {
+                    setMaxDifficulty(value);
+                    if (selectedId && skillById[selectedId]?.difficulty > value)
+                      setSelection(null);
+                  }}
+                  selectedId={selectedSkill?.id ?? null}
                   onSelect={onSelect}
                   highlightPath={highlightPath}
                   setHighlightPath={setHighlightPath}
