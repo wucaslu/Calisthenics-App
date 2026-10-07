@@ -52,6 +52,7 @@ import {
   getPrerequisiteRoutes,
 } from "@/lib/progression";
 import { getDifficultyTier, MAX_DIFFICULTY } from "@/lib/difficulty";
+import type { Theme } from "@/lib/theme";
 import type {
   Branch,
   Category,
@@ -126,6 +127,9 @@ function CanvasControls() {
   );
 }
 interface Props {
+  theme: Theme;
+  availableOnly: boolean;
+  setAvailableOnly: (value: boolean) => void;
   profile: UserProfile;
   branch: Branch | "all";
   setBranch: (value: Branch | "all") => void;
@@ -225,10 +229,18 @@ export function SkillTree(props: Props) {
     selectedId,
     onSelect,
     highlightPath,
+    availableOnly,
   } = props;
   const visible = useMemo(
-    () => getVisibleSkills(group, query, branch, maxDifficulty),
-    [group, branch, query, maxDifficulty],
+    () =>
+      getVisibleSkills(
+        group,
+        query,
+        branch,
+        maxDifficulty,
+        availableOnly ? profile.progress : undefined,
+      ),
+    [group, query, branch, maxDifficulty, availableOnly, profile.progress],
   );
   const lanes = useMemo(() => getProgressionLanes(visible), [visible]);
   const { nodes, edges } = useMemo(() => {
@@ -340,7 +352,9 @@ export function SkillTree(props: Props) {
         <div className="tree-heading">
           <span className="live-dot" />
           <h2>Your skill tree</h2>
-          <span className="count-pill">{visible.length} skills</span>
+          <span className="count-pill">
+            {visible.length} {visible.length === 1 ? "skill" : "skills"}
+          </span>
         </div>
         <div className="tree-filter-controls">
           <label className="branch-select">
@@ -408,12 +422,28 @@ export function SkillTree(props: Props) {
               ))}
             </select>
           </label>
+          <label
+            className="availability-filter"
+            title="Show only skills marked Available"
+          >
+            <input
+              type="checkbox"
+              checked={availableOnly}
+              onChange={(event) => props.setAvailableOnly(event.target.checked)}
+            />
+            Available only
+          </label>
         </div>
       </div>
       {maxDifficulty < MAX_DIFFICULTY && (
         <p className="level-filter-note" role="status">
           Showing levels 1–{maxDifficulty}/{MAX_DIFFICULTY}. Higher-level skills
           and prerequisites are hidden.
+        </p>
+      )}
+      {availableOnly && (
+        <p className="availability-filter-note" role="status">
+          Showing skills marked Available.
         </p>
       )}
       <div className="tree-subtoolbar">
@@ -449,7 +479,7 @@ export function SkillTree(props: Props) {
                 elementsSelectable={false}
                 minZoom={0.06}
                 maxZoom={1.8}
-                colorMode="dark"
+                colorMode={props.theme}
                 aria-label="Pannable calisthenics dependency graph"
               >
                 <Background
@@ -460,7 +490,7 @@ export function SkillTree(props: Props) {
                 />
                 <CanvasControls />
                 <FitTree
-                  viewKey={`${group}:${branch}:${query}:${maxDifficulty}`}
+                  viewKey={`${group}:${branch}:${query}:${maxDifficulty}:${availableOnly ? visible.map((skill) => skill.id).join(",") : "all"}`}
                   focusGoalPath={
                     group !== "all" &&
                     (branch === "all" ||
@@ -527,10 +557,14 @@ export function SkillTree(props: Props) {
           </div>
         </>
       ) : (
-        <EmptyState title="No skills found">
-          {maxDifficulty < MAX_DIFFICULTY
-            ? "Increase Max level, try another name, or choose a different branch."
-            : "Try another name or choose a different branch."}
+        <EmptyState
+          title={availableOnly ? "No available skills" : "No skills found"}
+        >
+          {availableOnly
+            ? "Turn off Available only, try another name, or adjust your group, progression, or level filters."
+            : maxDifficulty < MAX_DIFFICULTY
+              ? "Increase Max level, try another name, or choose a different branch."
+              : "Try another name or choose a different branch."}
         </EmptyState>
       )}
       <div className="tree-footer">

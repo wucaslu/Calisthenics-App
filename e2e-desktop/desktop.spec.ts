@@ -87,6 +87,24 @@ test("the offline desktop app keeps its renderer isolated and preserves training
   try {
     application = await launchDesktop(profileDirectory);
     const page = await hydratedWindow(application);
+    await page
+      .getByRole("button", { name: "Switch to light mode", exact: true })
+      .click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    const availability = page.getByRole("checkbox", {
+      name: "Available only",
+      exact: true,
+    });
+    await availability.check();
+    await expect(
+      page.locator(".react-flow__node-skill").first(),
+    ).toBeAttached();
+    await expect(
+      page.locator(
+        ".react-flow__node-skill .node-locked, .react-flow__node-skill .node-training, .react-flow__node-skill .node-mastered",
+      ),
+    ).toHaveCount(0);
+    await availability.uncheck();
     const pageErrors: string[] = [];
     page.on("pageerror", (error) => pageErrors.push(error.message));
 
@@ -302,6 +320,19 @@ test("the offline desktop app keeps its renderer isolated and preserves training
     application = undefined;
     application = await launchDesktop(profileDirectory);
     const restarted = await hydratedWindow(application);
+    await expect(restarted.locator("html")).toHaveAttribute(
+      "data-theme",
+      "light",
+    );
+    await expect(
+      restarted.getByRole("button", {
+        name: "Switch to dark mode",
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(
+      restarted.getByRole("checkbox", { name: "Available only", exact: true }),
+    ).not.toBeChecked();
     expect(
       await restarted.evaluate(
         (key) => JSON.parse(localStorage.getItem(key) ?? "null"),

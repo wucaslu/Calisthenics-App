@@ -11,7 +11,7 @@
 
 .message {
   margin: 14px 0 0;
-  color: #a2c9ed;
+  color: var(--text-blue, #a2c9ed);
   font-size: 12px;
   line-height: 1.6;
 }
@@ -21,5 +21,5 @@
 }
 
 .error {
-  color: #f0aeae;
+  color: var(--text-danger, #f0aeae);
 }

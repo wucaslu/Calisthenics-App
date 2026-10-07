@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { branches, categories, skillById, skills } from "@/data/skills";
 import { getVisibleSkills } from "@/lib/graph";
 import { MAX_DIFFICULTY } from "@/lib/difficulty";
+import { createDemoProfile } from "@/lib/profile";
+import { getSkillState } from "@/lib/progression";
 import type { DifficultyLevel } from "@/types/skill";
 
 describe("skill tree maximum level", () => {
@@ -107,5 +109,58 @@ describe("skill tree maximum level", () => {
     expect(JSON.stringify(skills)).toBe(before);
     expect(skillById["full-planche"].prerequisites).toEqual(prerequisiteIds);
     expect(getVisibleSkills("all", "", "all", MAX_DIFFICULTY)).toEqual(skills);
+  });
+});
+
+describe("available skill filter", () => {
+  it("shows ready skills while excluding mastered, training, and locked states without changing progress", () => {
+    const profile = createDemoProfile();
+    const before = JSON.stringify(profile);
+    const visible = getVisibleSkills("all", "", "all", 17, profile.progress);
+    const ids = visible.map((skill) => skill.id);
+    expect(ids).toContain("chin-up");
+    expect(ids).not.toContain("push-up");
+    expect(ids).not.toContain("planche-lean");
+    expect(ids).not.toContain("tuck-planche");
+    expect(
+      visible.every(
+        (skill) => getSkillState(skill, profile.progress) === "available",
+      ),
+    ).toBe(true);
+    expect(JSON.stringify(profile)).toBe(before);
+  });
+
+  it("composes with group, branch, level, and search without leaking hidden matches or ancestors", () => {
+    const { progress } = createDemoProfile();
+    expect(
+      getVisibleSkills("push", "Full Planche", "planche", 17, progress),
+    ).toEqual([]);
+    expect(
+      getVisibleSkills("all", "Push-up", "all", 17, progress).map(
+        (skill) => skill.id,
+      ),
+    ).not.toContain("push-up");
+    const visible = getVisibleSkills(
+      "legs",
+      "Squat",
+      "pistol-squat",
+      3,
+      progress,
+    );
+    expect(visible.map((skill) => skill.id)).toEqual(["bodyweight-squat"]);
+    expect(getVisibleSkills("all", "", "all", 17)).toEqual(skills);
+  });
+
+  it("recomputes readiness from complete alternative routes", () => {
+    const { progress } = createDemoProfile();
+    delete progress["tuck-front-lever"];
+    delete progress["pull-up"];
+    expect(
+      getVisibleSkills("all", "", "all", 17, progress).map((skill) => skill.id),
+    ).not.toContain("tuck-front-lever");
+    progress["chin-up"] = "mastered";
+    expect(
+      getVisibleSkills("all", "", "all", 17, progress).map((skill) => skill.id),
+    ).toContain("tuck-front-lever");
   });
 });

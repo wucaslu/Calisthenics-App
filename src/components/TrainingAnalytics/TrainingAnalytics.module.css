@@ -44,14 +44,14 @@
   padding: 4px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: #1c232b;
+  background: var(--surface-card, #1c232b);
 }
 
 .segmented button,
 .resetButton,
 .arrowButton {
   border: 1px solid transparent;
-  color: #bbc8d6;
+  color: var(--text-primary, #bbc8d6);
   background: transparent;
   border-radius: 5px;
   cursor: pointer;
@@ -69,16 +69,16 @@
 }
 
 .segmented button[aria-pressed="true"] {
-  color: #d8e9fc;
-  background: #354d68;
-  border-color: #5d7fa2;
+  color: var(--text-strong, #d8e9fc);
+  background: var(--surface-raised, #354d68);
+  border-color: var(--border-blue, #5d7fa2);
 }
 
 .segmented button:hover,
 .resetButton:hover,
 .arrowButton:hover {
-  color: #edf5ff;
-  background: #2c3a4a;
+  color: var(--text-strong, #edf5ff);
+  background: var(--surface-hover, #2c3a4a);
 }
 
 .resetButton,
@@ -122,7 +122,7 @@
 
 .periodNavigation h3 {
   margin: 0;
-  color: #d8e2ed;
+  color: var(--text-strong, #d8e2ed);
   font-size: 15px;
   line-height: 1.6;
   text-align: center;
@@ -149,11 +149,11 @@
   padding: 17px;
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: #1c232b;
+  background: var(--surface-card, #1c232b);
 }
 
 .stat > span {
-  color: #bbc8d6;
+  color: var(--text-primary, #bbc8d6);
   font-size: 11px;
 }
 
@@ -166,7 +166,7 @@
 }
 
 .stat strong small {
-  color: #9cacbd;
+  color: var(--text-secondary, #9cacbd);
   font-size: 14px;
   font-weight: 400;
 }
@@ -178,17 +178,17 @@
 }
 
 .stat > .consistency {
-  color: #adc8e6;
+  color: var(--text-blue, #adc8e6);
   font-size: 11px;
 }
 
 .empty {
   margin: 21px 0;
   padding: 15px;
-  border: 1px dashed #526e8d;
+  border: 1px dashed var(--border-blue, #526e8d);
   border-radius: 8px;
-  color: #bdcad8;
-  background: #202a35;
+  color: var(--text-blue, #bdcad8);
+  background: var(--surface-card, #202a35);
   font-size: 12px;
   line-height: 1.7;
 }
@@ -201,7 +201,7 @@
 }
 
 .chart figcaption {
-  color: #d7e1eb;
+  color: var(--text-strong, #d7e1eb);
   font-size: 13px;
   font-weight: 650;
 }
@@ -220,7 +220,7 @@
   min-width: 0;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
-  scrollbar-color: #536d87 #1c232b;
+  scrollbar-color: var(--scrollbar, #536d87) var(--surface-soft, #1c232b);
   scrollbar-width: thin;
 }
 
@@ -250,7 +250,7 @@
 }
 
 .bars strong {
-  color: #b8d3ed;
+  color: var(--text-blue, #b8d3ed);
   font-size: 10px;
   line-height: 1.5;
   overflow-wrap: anywhere;
@@ -261,9 +261,12 @@
   height: 130px;
   align-items: end;
   overflow: hidden;
-  border-bottom: 1px solid #526171;
+  border-bottom: 1px solid var(--border-strong, #526171);
   border-radius: 5px 5px 0 0;
-  background: linear-gradient(#23303d, #1b232b);
+  background: linear-gradient(
+    var(--chart-track, #23303d),
+    var(--chart-track, #1b232b)
+  );
 }
 
 .barTrack span {
@@ -271,11 +274,14 @@
   width: 100%;
   min-height: 0;
   border-radius: 4px 4px 0 0;
-  background: linear-gradient(#b2d2f1, #6088b2);
+  background: linear-gradient(
+    var(--chart-bar-start, #b2d2f1),
+    var(--chart-bar-end, #6088b2)
+  );
 }
 
 .bars time {
-  color: #aab7c6;
+  color: var(--text-primary, #aab7c6);
   font-size: 10px;
   line-height: 1.5;
 }
@@ -295,7 +301,7 @@
 
 .breakdowns h3 {
   margin: 0;
-  color: #d7e1eb;
+  color: var(--text-strong, #d7e1eb);
   font-size: 13px;
 }
 
@@ -312,7 +318,7 @@
   justify-content: space-between;
   gap: 15px;
   margin-bottom: 8px;
-  color: #c4d0de;
+  color: var(--text-blue, #c4d0de);
   font-size: 12px;
 }
 
@@ -325,14 +331,14 @@
   height: 6px;
   overflow: hidden;
   border-radius: 3px;
-  background: #263441;
+  background: var(--chart-track, #263441);
 }
 
 .groupTrack span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: #789fc8;
+  background: var(--chart-bar-end, #789fc8);
 }
 
 .groups small {
@@ -346,7 +352,7 @@
   padding: 17px;
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: #1c232b;
+  background: var(--surface-card, #1c232b);
 }
 
 .comparisonPanel dl {
@@ -363,12 +369,12 @@
 }
 
 .comparisonPanel dt {
-  color: #aab9ca;
+  color: var(--text-primary, #aab9ca);
 }
 
 .comparisonPanel dd {
   margin: 0;
-  color: #c6d9ee;
+  color: var(--text-strong, #c6d9ee);
   text-align: right;
 }
 
@@ -379,7 +385,7 @@
 
 .skillBreakdown summary {
   padding: 19px 0;
-  color: #c6d9ee;
+  color: var(--text-strong, #c6d9ee);
   font-size: 13px;
   font-weight: 650;
   cursor: pointer;
@@ -409,19 +415,19 @@
 }
 
 .skillBreakdown thead th {
-  color: #9baebf;
+  color: var(--text-secondary, #9baebf);
   font-size: 10px;
   font-weight: 500;
   white-space: nowrap;
 }
 
 .skillBreakdown tbody th {
-  color: #c8d7e8;
+  color: var(--text-blue, #c8d7e8);
   font-weight: 600;
 }
 
 .skillBreakdown td {
-  color: #afc2d7;
+  color: var(--text-blue, #afc2d7);
 }
 
 .visuallyHidden {

@@ -6,6 +6,8 @@ A local-first application for personal use built with Next.js, TypeScript, React
 
 The app can run as a portable **Windows 64-bit `.exe`**. Download the **Calisthenics-Skill-Tree-Windows** artifact from the latest successful [Windows desktop app workflow](https://github.com/wucaslu/Calisthenics-App/actions/workflows/windows-desktop.yml), unzip it, and double-click **Calisthenics-Skill-Tree-0.2.1-Windows.exe**. No Node.js installation, terminal, local server, or administrator access is required to use it. GitHub requires you to sign in to download workflow artifacts.
 
+Desktop builds run manually through **Run workflow** and only when a desktop update is requested. Pushing web changes does not rebuild the executable. Light mode and the Available only filter are currently web/source features awaiting a requested desktop update.
+
 The skill tree, records, practice log, and analytics work offline. Reference links open in your usual browser. Desktop progress saves in `%APPDATA%\Calisthenics Skill Tree`, independently of the executable's location, so replacing the executable keeps your profile. Browser and desktop storage are separate.
 
 To transfer existing records, open **Overview → Profile backup → Export JSON** in the browser app. In the desktop app, open the same panel and choose **Import JSON**. Import validates the backup and asks before replacing that app's current profile. Export also provides a backup of your practice history and archived records.
@@ -42,6 +44,8 @@ All fonts are bundled locally; the app makes no external application requests. I
 ## Features
 
 - Pannable, zoomable dependency graph with four skill groups, named progression lanes, and optional progression filters. Mobile lists use the same families.
+- Switch between dark and **Light mode** with the sun/moon button in the top bar. Light mode keeps the blue accents with pale backgrounds and dark text across the tree, skill details, practice log, and analytics. The choice saves separately from training data, applies before the page paints, and synchronizes across browser tabs. When storage is unavailable, the toggle still works for the current window.
+- Enable **Available only** in the tree toolbar to show skills marked Available: prerequisites are complete and the skill is ready to start training. Mastered, training, and locked skills are hidden, including supporting prerequisite nodes. This combines with group, progression, search, and Max level; counts, graph edges, goal highlights, and the mobile list follow the same filtered set. Starting training or marking mastery removes that skill from this view immediately. The filter stays active across workspace navigation and resets on reload; it does not change saved records or progress.
 - Choose **Max level** in the tree toolbar to show only skills at or below a difficulty from 1 to 17. Higher-level skills and prerequisite nodes are hidden on desktop and mobile; group, branch, search, and goal highlights respect the cutoff. **All levels (1–17)** restores the full view. The filter stays active while navigating the workspace, and a page reload restores the default full view.
 - Open or close the left menu with the navigation button in the top bar. Closing it on desktop gives the workspace more room. Mobile also has an in-menu close button, backdrop dismissal, and Escape support.
 - Skill details with prerequisites, difficulty, drills, example mastery criteria, equipment, unlock links, and reviewed reference links. Matched levels include the workbook's exact source cell; unmatched skills are labeled app estimates.
@@ -101,6 +105,8 @@ src/
   lib/practice.ts         Log validation, calendar dates, records, and trends
   lib/analytics.ts        Calendar-week/month volume, comparisons, and breakdowns
   hooks/useProgress.ts    React state and localStorage persistence
+  hooks/useTheme.ts       Saved theme preference and cross-tab synchronization
+  lib/theme.ts            Theme storage key and pre-paint preference script
   components/             App shell and focused feature components
 e2e/                      Browser interaction tests
 ```

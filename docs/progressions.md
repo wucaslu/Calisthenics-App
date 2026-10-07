@@ -62,7 +62,7 @@ Iron Cross Negative is an app estimate at 9; Maltese Negative and Straddle Malte
 
 ## Route organization
 
-The four groups remain Pull, Push, Legs, and Core. Named progression lanes, branch filters, search, and the mobile list share the same catalog. The **Max level** filter can hide all skills above any cutoff from 1 to 17, including otherwise relevant prerequisites; it does not change saved progress or unlock rules.
+The four groups remain Pull, Push, Legs, and Core. Named progression lanes, branch filters, search, and the mobile list share the same catalog. The **Max level** filter can hide all skills above any cutoff from 1 to 17, including otherwise relevant prerequisites; it does not change saved progress or unlock rules. **Available only** additionally keeps skills whose prerequisite route is complete and whose state is Available. Training, mastered, and locked states are excluded before search expansion, so hidden matches cannot pull unrelated prerequisites into the result. The graph and mobile list share the same filtered catalog.
 
 The workbook supplies progression ordering and numeric levels. The application's prerequisite edges, alternative routes, drills, and hold/repetition benchmarks remain **app preparation choices**. They are not claimed as exact workbook requirements or universal physiological prerequisites. Mastery stays a manual action; logged repetitions and holds do not automatically assess it.
 

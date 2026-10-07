@@ -33,7 +33,7 @@ async function expectTreeWithinLevel(page: Page, maximum: number) {
   expect(levels.length).toBeGreaterThan(0);
   expect(levels.every((level) => level >= 1 && level <= maximum)).toBe(true);
   await expect(page.locator(".tree-heading .count-pill")).toHaveText(
-    `${levels.length} skills`,
+    `${levels.length} ${levels.length === 1 ? "skill" : "skills"}`,
   );
   // Every visible edge must join two visible nodes, including alternative routes.
   const ids = new Set(

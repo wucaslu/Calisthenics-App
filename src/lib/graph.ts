@@ -3,7 +3,7 @@ import {
   getPrerequisiteIds,
   getPrerequisiteRoutes,
 } from "@/data/trainingOptions";
-import { hasEquipment } from "@/lib/progression";
+import { getSkillState, hasEquipment } from "@/lib/progression";
 import { MAX_DIFFICULTY } from "@/lib/difficulty";
 import type {
   Branch,
@@ -119,6 +119,7 @@ export function getVisibleSkills(
   query = "",
   branch: Branch | "all" = "all",
   maxDifficulty: DifficultyLevel = MAX_DIFFICULTY,
+  availableProgress?: Progress,
 ): Skill[] {
   const chosen = skills.filter(
     (skill) =>
@@ -131,7 +132,11 @@ export function getVisibleSkills(
   // Keep accessible foundations of advanced branches, but apply the ceiling to
   // every node, including ancestors from alternative prerequisite routes.
   const scoped = skills.filter(
-    (skill) => ids.has(skill.id) && skill.difficulty <= maxDifficulty,
+    (skill) =>
+      ids.has(skill.id) &&
+      skill.difficulty <= maxDifficulty &&
+      (!availableProgress ||
+        getSkillState(skill, availableProgress) === "available"),
   );
   if (!query.trim()) return scoped;
   const matches = scoped.filter((skill) =>

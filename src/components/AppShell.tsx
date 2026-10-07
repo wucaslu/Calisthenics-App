@@ -19,11 +19,13 @@ import {
   LayoutDashboard,
   NotebookPen,
   Menu,
+  Moon,
   PanelLeftClose,
   PanelLeftOpen,
   RotateCcw,
   Search,
   ShieldCheck,
+  Sun,
   Target,
   X,
 } from "lucide-react";
@@ -38,8 +40,10 @@ import { PracticeLog } from "@/components/PracticeLog/PracticeLog";
 import { TrainingAnalytics } from "@/components/TrainingAnalytics/TrainingAnalytics";
 import { categories, categoryLabels, skillById, skills } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
+import { useTheme } from "@/hooks/useTheme";
 import { getLocalToday, getPracticeSkillName } from "@/lib/practice";
 import { MAX_DIFFICULTY } from "@/lib/difficulty";
+import { getSkillState } from "@/lib/progression";
 import type { Branch, Category, DifficultyLevel } from "@/types/skill";
 
 type View =
@@ -98,6 +102,7 @@ function subscribeDesktop(callback: () => void) {
 const desktopSnapshot = () => window.matchMedia("(min-width: 768px)").matches;
 
 export function AppShell() {
+  const { theme, toggleTheme } = useTheme();
   const {
     profile,
     hydrated,
@@ -118,6 +123,7 @@ export function AppShell() {
   const [maxDifficulty, setMaxDifficulty] =
     useState<DifficultyLevel>(MAX_DIFFICULTY);
   const [highlightPath, setHighlightPath] = useState(true);
+  const [availableOnly, setAvailableOnly] = useState(false);
   const [selection, setSelection] = useState<string | null | undefined>(
     undefined,
   );
@@ -138,7 +144,10 @@ export function AppShell() {
   const menuCloseRef = useRef<HTMLButtonElement>(null);
   const sidebarOpen = isDesktop ? !sidebarCollapsed : menuOpen;
   const selectedSkill =
-    selectedId && skillById[selectedId]?.difficulty <= maxDifficulty
+    selectedId &&
+    skillById[selectedId]?.difficulty <= maxDifficulty &&
+    (!availableOnly ||
+      getSkillState(skillById[selectedId], profile.progress) === "available")
       ? skillById[selectedId]
       : null;
   const copy = pageCopy[view];
@@ -190,18 +199,27 @@ export function AppShell() {
         );
         return;
       }
+      if (
+        availableOnly &&
+        getSkillState(skill, profile.progress) !== "available"
+      ) {
+        setSelection(null);
+        setNotice(`Turn off Available only to view ${skill.name}.`);
+        return;
+      }
       setSelection(id);
     },
-    [maxDifficulty],
+    [maxDifficulty, availableOnly, profile.progress],
   );
   const onProgress = useCallback(
     (id: string, action: "training" | "mastered" | "reset") => {
       setSkillProgress(id, action);
+      if (availableOnly && action !== "reset") setSelection(null);
       setNotice(
         `${skillById[id].name}: ${action === "mastered" ? "mastered. New progressions unlocked!" : action === "training" ? "added to your training." : "progress reset. Dependent skills keep progress when another route is complete."}`,
       );
     },
-    [setSkillProgress],
+    [setSkillProgress, availableOnly],
   );
   const navigate = (next: View) => {
     setView(next);
@@ -400,6 +418,15 @@ export function AppShell() {
             <ShieldCheck size={14} />
             No account needed
           </span>
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
+          </button>
         </header>
         <main className="page-content">
           <div className="page-heading">
@@ -426,6 +453,18 @@ export function AppShell() {
                 className={`tree-layout ${selectedSkill ? "with-details" : ""}`}
               >
                 <SkillTree
+                  theme={theme}
+                  availableOnly={availableOnly}
+                  setAvailableOnly={(value) => {
+                    setAvailableOnly(value);
+                    if (
+                      value &&
+                      selectedId &&
+                      getSkillState(skillById[selectedId], profile.progress) !==
+                        "available"
+                    )
+                      setSelection(null);
+                  }}
                   profile={profile}
                   group={group}
                   setGroup={selectGroup}

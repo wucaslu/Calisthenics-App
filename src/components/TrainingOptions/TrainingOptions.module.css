@@ -4,7 +4,7 @@
 
 .explanation {
   margin-bottom: 12px;
-  color: #a7b3c0;
+  color: var(--text-primary, #a7b3c0);
   font-size: 10px;
   line-height: 1.8;
 }
@@ -17,14 +17,14 @@
 .option {
   min-width: 0;
   padding: 12px;
-  border: 1px solid #405064;
+  border: 1px solid var(--border-blue, #405064);
   border-radius: 7px;
-  background: #202934;
+  background: var(--surface-card, #202934);
 }
 
 .ready {
-  border-color: #718ca9;
-  background: #273443;
+  border-color: var(--border-blue, #718ca9);
+  background: var(--surface-blue, #273443);
 }
 
 .heading {
@@ -36,7 +36,7 @@
 }
 
 .heading h4 {
-  color: #d8e2ee;
+  color: var(--text-strong, #d8e2ee);
   font-size: 11px;
   font-weight: 600;
   line-height: 1.6;
@@ -47,18 +47,18 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: #bacfe6;
+  color: var(--text-blue, #bacfe6);
   font-size: 9px;
   line-height: 1.6;
 }
 
 .unavailable {
-  color: #d6b67d;
+  color: var(--text-amber, #d6b67d);
 }
 
 .description {
   margin: 8px 0 10px;
-  color: #a5b1bf;
+  color: var(--text-secondary, #a5b1bf);
   font-size: 10px;
   line-height: 1.8;
   overflow-wrap: anywhere;

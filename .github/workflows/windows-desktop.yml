@@ -2,14 +2,6 @@ name: Windows desktop app
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "src/**"
-      - "desktop/**"
-      - "package*.json"
-      - "next.config.*"
-      - ".github/workflows/windows-desktop.yml"
 
 permissions:
   contents: read
