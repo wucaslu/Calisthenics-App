@@ -15,11 +15,13 @@ import {
   removeScheduledSkill as removeFromSchedule,
 } from "@/lib/schedule";
 import { skillById } from "@/data/skills";
+import { applyWeeklyScheduleSuggestion } from "@/lib/scheduleSuggestions";
 import type {
   Equipment,
   UserProfile,
   PracticeEntry,
   Weekday,
+  WeeklySchedule,
 } from "@/types/skill";
 
 export function useProgress() {
@@ -129,6 +131,9 @@ export function useProgress() {
   const removeScheduledSkill = useCallback((day: Weekday, skillId: string) => {
     setProfile((previous) => removeFromSchedule(previous, day, skillId));
   }, []);
+  const applyScheduleSuggestion = useCallback((schedule: WeeklySchedule) => {
+    setProfile((previous) => applyWeeklyScheduleSuggestion(previous, schedule));
+  }, []);
   return {
     profile,
     hydrated,
@@ -143,5 +148,6 @@ export function useProgress() {
     deletePractice,
     addScheduledSkill,
     removeScheduledSkill,
+    applyScheduleSuggestion,
   };
 }

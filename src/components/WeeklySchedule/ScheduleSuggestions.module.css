@@ -1,0 +1,394 @@
+.generator {
+  min-width: 0;
+}
+
+.heading {
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+.heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.heading h2 svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.intro,
+.hint {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  margin-top: 10px;
+}
+
+.goals {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 15px;
+}
+
+.goalLabel {
+  color: var(--text-secondary, #9aaabd);
+  font-size: 11px;
+}
+
+.goals ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.goals li {
+  max-width: 100%;
+  padding: 5px 8px;
+  border: 1px solid var(--border-blue, #405064);
+  border-radius: 5px;
+  background: var(--surface-blue, #25313e);
+  color: var(--text-blue, #bacfe6);
+  font-size: 11px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.controls {
+  min-width: 0;
+  margin: 22px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.controls legend,
+.limit {
+  color: var(--text-primary, #c7cdd5);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.controls legend {
+  margin-bottom: 9px;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.weekday {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+  min-height: 38px;
+  padding: 9px 6px;
+  border: 1px solid var(--border-soft, #39414a);
+  border-radius: 6px;
+  background: var(--surface-soft, #12181e);
+  color: var(--text-secondary, #9aaabd);
+  font-size: 11px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.weekday span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.weekday input {
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.selectedDay {
+  border-color: var(--border-blue, #455466);
+  background: var(--surface-blue, #25313e);
+  color: var(--text-blue, #bacfe6);
+}
+
+.controls:disabled .weekday {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.actions {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.limit {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  width: 195px;
+  max-width: 100%;
+}
+
+.limit select {
+  min-width: 0;
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid var(--border-soft, #39414a);
+  border-radius: 6px;
+  background: var(--surface-soft, #12181e);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.generateButton,
+.applyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  max-width: 100%;
+  padding: 10px 13px;
+  border: 1px solid var(--button-primary, #c3d9f0);
+  border-radius: 6px;
+  background: var(--button-primary, #c3d9f0);
+  color: var(--on-accent, #162433);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.6;
+}
+
+.generateButton svg,
+.applyButton svg {
+  flex-shrink: 0;
+}
+
+.generateButton:hover:enabled,
+.applyButton:hover:enabled {
+  background: var(--button-primary-hover, #dae9f8);
+}
+
+.generateButton:disabled,
+.applyButton:disabled {
+  opacity: 0.55;
+}
+
+.status {
+  color: var(--text-blue, #bfd7ed);
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.status:not(:empty) {
+  margin-top: 13px;
+}
+
+.stale {
+  color: var(--text-amber, #e7cfaa);
+}
+
+.preview {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.previewHeading,
+.dayHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.previewHeading {
+  margin-bottom: 14px;
+}
+
+.previewHeading h3 {
+  color: var(--text-strong, #d8e7f5);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.previewHeading > span {
+  color: var(--text-secondary, #98a9ba);
+  font-size: 11px;
+}
+
+.previewDays {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+}
+
+.stalePreview {
+  opacity: 0.65;
+}
+
+.previewDay {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid var(--border-soft, #343d47);
+  border-radius: 7px;
+  background: var(--surface-soft, #161d25);
+}
+
+.dayHeading {
+  margin-bottom: 10px;
+}
+
+.dayHeading h4 {
+  color: var(--text-strong, #d8e7f5);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.dayHeading span,
+.rest {
+  color: var(--text-secondary, #98a9ba);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.skillList {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.skill h5 {
+  color: var(--text-primary, #c4d4e4);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.6;
+}
+
+.skillMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 5px 0;
+  color: var(--text-secondary, #9aaabd);
+  font-size: 10px;
+}
+
+.skillMeta :global(.movement-badge),
+.skillMeta :global(.state-badge) {
+  font-size: 10px;
+}
+
+.skill p {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.warning,
+.empty {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-amber, #795f39);
+  border-radius: 6px;
+  background: var(--surface-amber, #29231a);
+  color: var(--text-amber, #e7cfaa);
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  margin-bottom: 0;
+  border-color: var(--border-blue, #405064);
+  background: var(--surface-blue, #25313e);
+  color: var(--text-blue, #bacfe6);
+}
+
+.applyRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.applyRow .hint {
+  flex: 1 1 260px;
+  margin-top: 0;
+}
+
+.generator button:focus-visible,
+.generator input:focus-visible,
+.generator select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1150px) {
+  .weekdays {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .previewDays {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .weekdays {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .previewDays {
+    grid-template-columns: 1fr;
+  }
+
+  .weekday {
+    min-height: 42px;
+    justify-content: start;
+    padding-inline: 11px;
+  }
+
+  .limit {
+    width: 100%;
+  }
+
+  .limit select {
+    font-size: 16px;
+  }
+
+  .applyRow {
+    align-items: start;
+  }
+}

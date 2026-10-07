@@ -11,7 +11,13 @@ import {
   WEEKDAYS,
   WEEKDAY_LABELS,
 } from "@/lib/schedule";
-import type { Category, UserProfile, Weekday } from "@/types/skill";
+import type {
+  Category,
+  UserProfile,
+  Weekday,
+  WeeklySchedule as WeeklyPlan,
+} from "@/types/skill";
+import { ScheduleSuggestions } from "./ScheduleSuggestions";
 import styles from "./WeeklySchedule.module.css";
 
 interface WeeklyScheduleProps {
@@ -20,6 +26,7 @@ interface WeeklyScheduleProps {
   storageAvailable: boolean;
   onAdd: (day: Weekday, skillId: string) => void;
   onRemove: (day: Weekday, skillId: string) => void;
+  onApplySuggestion: (schedule: WeeklyPlan) => void;
   onSelect: (id: string) => void;
   onLogPractice: (id: string) => void;
 }
@@ -32,6 +39,7 @@ export function WeeklySchedule({
   storageAvailable,
   onAdd,
   onRemove,
+  onApplySuggestion,
   onSelect,
   onLogPractice,
 }: WeeklyScheduleProps) {
@@ -65,6 +73,11 @@ export function WeeklySchedule({
 
   return (
     <div className={styles.schedule}>
+      <ScheduleSuggestions
+        profile={profile}
+        hydrated={hydrated}
+        onApply={onApplySuggestion}
+      />
       <section
         className={`surface-panel ${styles.builder}`}
         aria-labelledby="schedule-builder-title"

@@ -133,6 +133,7 @@ export function AppShell() {
     deletePractice,
     addScheduledSkill,
     removeScheduledSkill,
+    applyScheduleSuggestion,
   } = useProgress();
   const [view, setView] = useState<View>("tree");
   const [group, setGroup] = useState<Category | "all">("push");
@@ -576,6 +577,7 @@ export function AppShell() {
               storageAvailable={storageAvailable}
               onAdd={addScheduledSkill}
               onRemove={removeScheduledSkill}
+              onApplySuggestion={applyScheduleSuggestion}
               onSelect={exploreScheduledSkill}
               onLogPractice={(id) => {
                 if (!canScheduleSkill(id, profile)) return;
