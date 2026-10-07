@@ -203,4 +203,70 @@ describe("profile backups", () => {
       readProfileBackup("é".repeat(PROFILE_BACKUP_MAX_BYTES / 2 + 1)),
     ).toThrow("smaller than 5 MB");
   });
+
+  it("round-trips weekly plans and preserves assignments that currently lack prerequisites or equipment", () => {
+    const profile = createDemoProfile();
+    profile.equipment = ["floor"];
+    profile.personalRecords = { "push-up": "25 weighted reps" };
+    profile.weeklySchedule = {
+      monday: ["push-up", "full-planche"],
+      friday: ["chest-to-bar-pull-up", "push-up"],
+    };
+    const snapshot = structuredClone(profile);
+    const restored = readProfileBackup(createProfileBackup(profile));
+    expect(restored).toEqual(profile);
+    expect(profile).toEqual(snapshot);
+    expect(restored.progress["full-planche"]).toBeUndefined();
+    expect(restored.personalRecords["full-planche"]).toBeUndefined();
+  });
+
+  it("accepts older backups without schedules and normalizes empty schedule days", () => {
+    const profile = createDemoProfile();
+    for (const version of [1, 2]) {
+      expect(
+        readProfileBackup(JSON.stringify({ ...profile, version })),
+      ).toEqual(profile);
+      expect(
+        readProfileBackup(
+          JSON.stringify({
+            ...profile,
+            version,
+            weeklySchedule: { monday: [], sunday: [] },
+          }),
+        ),
+      ).toEqual(profile);
+    }
+    expect(
+      readProfileBackup(
+        JSON.stringify({
+          ...profile,
+          weeklySchedule: { monday: [], wednesday: ["push-up"] },
+        }),
+      ).weeklySchedule,
+    ).toEqual({ wednesday: ["push-up"] });
+  });
+
+  it("rejects malformed weekly plans as a whole instead of silently altering the imported backup", () => {
+    for (const weeklySchedule of [
+      null,
+      [],
+      "bad",
+      42,
+      { Monday: ["push-up"] },
+      { fake: [] },
+      { constructor: ["push-up"] },
+      { monday: null },
+      { monday: "push-up" },
+      { monday: ["push-up", "push-up"] },
+      { monday: ["push-up", 42] },
+      { monday: ["push-up", "fake"] },
+      { monday: ["constructor"] },
+      { monday: ["one-leg-front-lever"] },
+    ])
+      expect(() =>
+        readProfileBackup(
+          JSON.stringify({ ...createDemoProfile(), weeklySchedule }),
+        ),
+      ).toThrow("not a supported");
+  });
 });

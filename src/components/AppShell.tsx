@@ -11,6 +11,7 @@ import Link from "next/link";
 import {
   ArrowUpRight,
   BarChart3,
+  CalendarDays,
   Check,
   ChevronRight,
   Compass,
@@ -38,19 +39,28 @@ import { EquipmentSelector } from "@/components/EquipmentSelector/EquipmentSelec
 import { Recommendations } from "@/components/Recommendations";
 import { PracticeLog } from "@/components/PracticeLog/PracticeLog";
 import { TrainingAnalytics } from "@/components/TrainingAnalytics/TrainingAnalytics";
+import { WeeklySchedule } from "@/components/WeeklySchedule/WeeklySchedule";
 import { categories, categoryLabels, skillById, skills } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { useTheme } from "@/hooks/useTheme";
 import { getLocalToday, getPracticeSkillName } from "@/lib/practice";
 import { MAX_DIFFICULTY } from "@/lib/difficulty";
 import { getSkillState } from "@/lib/progression";
+import { canScheduleSkill } from "@/lib/schedule";
 import type { Branch, Category, DifficultyLevel } from "@/types/skill";
 
 type View =
-  "tree" | "overview" | "goals" | "equipment" | "practice" | "analytics";
+  | "tree"
+  | "overview"
+  | "goals"
+  | "equipment"
+  | "schedule"
+  | "practice"
+  | "analytics";
 const navigation = [
   { id: "tree" as const, label: "Skill tree", Icon: GitBranch },
   { id: "overview" as const, label: "Overview", Icon: LayoutDashboard },
+  { id: "schedule" as const, label: "Weekly schedule", Icon: CalendarDays },
   { id: "practice" as const, label: "Practice log", Icon: NotebookPen },
   { id: "analytics" as const, label: "Analytics", Icon: BarChart3 },
   { id: "goals" as const, label: "My goals", Icon: Target },
@@ -87,6 +97,12 @@ const pageCopy = {
     description:
       "Record your holds and repetitions, follow your consistency, and see what’s improving.",
   },
+  schedule: {
+    eyebrow: "PLAN YOUR PRACTICE",
+    title: "Plan your training week.",
+    description:
+      "Choose skills for Monday through Sunday and keep your weekly routine in one place.",
+  },
   analytics: {
     eyebrow: "UNDERSTAND YOUR PRACTICE",
     title: "See your training take shape.",
@@ -115,6 +131,8 @@ export function AppShell() {
     restoreProfile,
     savePractice,
     deletePractice,
+    addScheduledSkill,
+    removeScheduledSkill,
   } = useProgress();
   const [view, setView] = useState<View>("tree");
   const [group, setGroup] = useState<Category | "all">("push");
@@ -240,6 +258,21 @@ export function AppShell() {
     setQuery("");
     onSelect(id);
   };
+  const exploreScheduledSkill = (id: string) => {
+    const skill = skillById[id];
+    if (!skill) return;
+    setGroup(skill.category);
+    setBranch(skill.branch);
+    setQuery("");
+    setMaxDifficulty(
+      Math.max(maxDifficulty, skill.difficulty) as DifficultyLevel,
+    );
+    if (getSkillState(skill, profile.progress) === "locked")
+      setAvailableOnly(false);
+    setSelection(id);
+    setView("tree");
+    setMenuOpen(false);
+  };
 
   return (
     <div className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
@@ -342,7 +375,7 @@ export function AppShell() {
             onClick={() => {
               if (
                 window.confirm(
-                  "Restore the demo profile? This replaces your saved progress, personal records, practice log, goals, and equipment on this device.",
+                  "Restore the demo profile? This replaces your saved progress, personal records, practice log, weekly schedule, goals, and equipment on this device.",
                 )
               ) {
                 restoreDemo();
@@ -534,6 +567,23 @@ export function AppShell() {
               onToggle={toggleEquipment}
               onSelect={exploreGoal}
               hydrated={hydrated}
+            />
+          )}
+          {view === "schedule" && (
+            <WeeklySchedule
+              profile={profile}
+              hydrated={hydrated}
+              storageAvailable={storageAvailable}
+              onAdd={addScheduledSkill}
+              onRemove={removeScheduledSkill}
+              onSelect={exploreScheduledSkill}
+              onLogPractice={(id) => {
+                if (!canScheduleSkill(id, profile)) return;
+                setPracticeSkillId(id);
+                setSelection(null);
+                setView("practice");
+                setMenuOpen(false);
+              }}
             />
           )}
           {view === "practice" && (

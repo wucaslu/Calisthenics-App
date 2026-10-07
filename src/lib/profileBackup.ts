@@ -2,6 +2,8 @@ import { equipmentLabels, skillById } from "@/data/skills";
 import { retiredSkillNames } from "@/data/retiredSkills";
 import { validatePracticeEntry } from "@/lib/practice";
 import { parseProfile } from "@/lib/profile";
+import { WEEKDAYS } from "@/lib/schedule";
+import type { Weekday } from "@/types/skill";
 import type { UserProfile } from "@/types/skill";
 
 export const PROFILE_BACKUP_MAX_BYTES = 5 * 1024 * 1024;
@@ -91,6 +93,20 @@ export function readProfileBackup(raw: string): UserProfile {
       const id = entry.id as string;
       if (ids.has(id)) return invalid();
       ids.add(id);
+    }
+  }
+  if (Object.hasOwn(candidate, "weeklySchedule")) {
+    if (!isObject(candidate.weeklySchedule)) return invalid();
+    for (const [day, ids] of Object.entries(candidate.weeklySchedule)) {
+      if (
+        !WEEKDAYS.includes(day as Weekday) ||
+        !Array.isArray(ids) ||
+        !ids.every(
+          (id) => typeof id === "string" && Object.hasOwn(skillById, id),
+        ) ||
+        new Set(ids).size !== ids.length
+      )
+        return invalid();
     }
   }
   const profile = parseProfile(JSON.stringify(candidate));

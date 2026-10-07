@@ -10,8 +10,17 @@ import {
   deletePracticeFromProfile,
 } from "@/lib/profile";
 import { updateSkillProgress } from "@/lib/progression";
+import {
+  addScheduledSkill as addToSchedule,
+  removeScheduledSkill as removeFromSchedule,
+} from "@/lib/schedule";
 import { skillById } from "@/data/skills";
-import type { Equipment, UserProfile, PracticeEntry } from "@/types/skill";
+import type {
+  Equipment,
+  UserProfile,
+  PracticeEntry,
+  Weekday,
+} from "@/types/skill";
 
 export function useProgress() {
   const [profile, setProfile] = useState<UserProfile>(createDemoProfile);
@@ -114,6 +123,12 @@ export function useProgress() {
   const deletePractice = useCallback((id: string) => {
     setProfile((previous) => deletePracticeFromProfile(previous, id));
   }, []);
+  const addScheduledSkill = useCallback((day: Weekday, skillId: string) => {
+    setProfile((previous) => addToSchedule(previous, day, skillId));
+  }, []);
+  const removeScheduledSkill = useCallback((day: Weekday, skillId: string) => {
+    setProfile((previous) => removeFromSchedule(previous, day, skillId));
+  }, []);
   return {
     profile,
     hydrated,
@@ -126,5 +141,7 @@ export function useProgress() {
     restoreProfile,
     savePractice,
     deletePractice,
+    addScheduledSkill,
+    removeScheduledSkill,
   };
 }

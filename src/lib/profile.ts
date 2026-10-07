@@ -10,6 +10,7 @@ import {
   formatLoggedPersonalRecord,
   getLoggedPersonalRecords,
 } from "@/lib/records";
+import { sanitizeWeeklySchedule } from "@/lib/schedule";
 import type {
   Equipment,
   PersonalRecords,
@@ -251,6 +252,7 @@ export function parseProfile(
       }
     }
     const practiceLog = sanitizePracticeEntries(candidate.practiceLog);
+    const weeklySchedule = sanitizeWeeklySchedule(candidate.weeklySchedule);
     return syncLoggedRecords(
       {
         version: 2,
@@ -260,6 +262,7 @@ export function parseProfile(
         goals,
         equipment,
         archivedSkills,
+        ...(Object.keys(weeklySchedule).length ? { weeklySchedule } : {}),
       },
       practiceLog.map((entry) => entry.skillId),
       today,

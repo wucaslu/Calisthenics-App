@@ -31,6 +31,15 @@ export type MovementType = "dynamic" | "static";
 export type DifficultyLevel =
   1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17;
 export type PersonalRecords = Record<string, string>;
+export type Weekday =
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday";
+export type WeeklySchedule = Partial<Record<Weekday, string[]>>;
 
 export interface MuscleProfile {
   target: string;
@@ -97,6 +106,7 @@ export interface UserProfile {
   equipment: Equipment[];
   archivedSkills: Record<string, ArchivedSkill>;
   practiceLog: PracticeEntry[];
+  weeklySchedule?: WeeklySchedule;
 }
 
 export interface ArchivedSkill {

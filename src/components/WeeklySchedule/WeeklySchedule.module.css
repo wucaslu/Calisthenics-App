@@ -1,0 +1,380 @@
+.schedule {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+
+.builder {
+  min-width: 0;
+}
+
+.builderHeading {
+  flex-wrap: wrap;
+  margin-bottom: 13px;
+}
+
+.builderHeading h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.builderHeading h2 svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.muted,
+.planHint {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.planHint {
+  margin-top: 7px;
+  color: var(--text-secondary, #9aaabd);
+}
+
+.fields {
+  display: grid;
+  grid-template-columns:
+    minmax(120px, 0.7fr) minmax(0, 1fr) minmax(0, 1.2fr)
+    auto;
+  align-items: end;
+  gap: 12px;
+  padding: 0;
+  margin: 22px 0 0;
+  border: 0;
+  min-width: 0;
+}
+
+.fields label {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  color: var(--text-primary, #c7cdd5);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.fields input,
+.fields select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: 10px 11px;
+  border: 1px solid var(--border-soft, #39414a);
+  border-radius: 6px;
+  background: var(--surface-soft, #12181e);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.fields input::placeholder {
+  color: var(--text-muted, #747e89);
+}
+
+.addButton,
+.logButton,
+.removeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--border-blue, #455466);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.addButton {
+  min-height: 38px;
+  padding: 10px 13px;
+  background: var(--button-primary, #c3d9f0);
+  border-color: var(--button-primary, #c3d9f0);
+  color: var(--on-accent, #162433);
+  white-space: nowrap;
+}
+
+.addButton:hover:enabled {
+  background: var(--button-primary-hover, #dae9f8);
+}
+
+.addButton:disabled,
+.fields:disabled .addButton {
+  opacity: 0.55;
+}
+
+.emptyChoices,
+.warning {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-amber, #795f39);
+  border-radius: 6px;
+  background: var(--surface-amber, #29231a);
+  color: var(--text-amber, #e7cfaa);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.emptyChoices {
+  border-color: var(--border-blue, #405064);
+  background: var(--surface-blue, #25313e);
+  color: var(--text-blue, #bacfe6);
+}
+
+.status {
+  color: var(--text-blue, #bfd7ed);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.status:not(:empty) {
+  margin-top: 14px;
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  padding: 0 2px;
+  color: var(--text-secondary, #98a9ba);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.summary strong {
+  color: var(--text-blue, #c7d9ec);
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+  min-width: 0;
+}
+
+.day {
+  min-width: 0;
+  padding: 18px;
+}
+
+.trainingDay {
+  border-top: 2px solid var(--accent);
+}
+
+.restDay {
+  border-top: 2px solid var(--border);
+}
+
+.dayHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 15px;
+}
+
+.dayHeading h2 {
+  color: var(--text-strong, #d8e7f5);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.dayCount {
+  padding: 4px 7px;
+  border-radius: 5px;
+  background: var(--surface-blue, #25313e);
+  color: var(--text-blue, #bacfe6);
+  font-size: 10px;
+}
+
+.rest {
+  display: grid;
+  justify-items: start;
+  gap: 9px;
+  padding: 10px 0 8px;
+  color: var(--text-secondary, #95a7b9);
+}
+
+.rest svg {
+  color: var(--text-muted, #8593a2);
+}
+
+.rest h3 {
+  color: var(--text-primary, #c4d4e4);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rest p {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.skillList {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.skill {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border-soft, #343d47);
+  border-radius: 7px;
+  background: var(--surface-soft, #161d25);
+}
+
+.skillHeading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.detailsButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  flex: 1;
+  gap: 5px;
+  padding: 5px 0;
+  color: var(--text-strong, #d8e7f5);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.7;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.detailsButton svg {
+  color: var(--text-secondary, #9aaabd);
+  flex-shrink: 0;
+}
+
+.detailsButton:hover:enabled {
+  color: var(--accent);
+}
+
+.removeButton {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-secondary, #98a9ba);
+}
+
+.removeButton:hover:enabled {
+  border-color: var(--border-danger, #67454e);
+  background: var(--surface-danger, #2d2326);
+  color: var(--text-danger, #e2b3bb);
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 11px;
+  margin: 8px 0 12px;
+}
+
+.badges :global(.state-badge),
+.badges :global(.movement-badge) {
+  font-size: 10px;
+}
+
+.logButton {
+  padding: 7px 9px;
+  background: var(--surface-card, #202a35);
+  color: var(--text-blue, #cbddef);
+}
+
+.logButton:hover:enabled {
+  background: var(--surface-hover, #2c3b4b);
+}
+
+.logButton:disabled {
+  opacity: 0.55;
+}
+
+.unavailable {
+  border-color: var(--border-amber, #795f39);
+}
+
+.unavailableReason {
+  margin: 10px 0 12px;
+  color: var(--text-amber, #e7cfaa);
+  font-size: 11px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.unavailableReason strong {
+  font-weight: 650;
+}
+
+.schedule button:focus-visible,
+.fields input:focus-visible,
+.fields select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1150px) {
+  .fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .week {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .week {
+    grid-template-columns: 1fr;
+  }
+
+  .fields {
+    grid-template-columns: 1fr;
+  }
+
+  .addButton {
+    justify-self: start;
+  }
+
+  .fields input,
+  .fields select {
+    font-size: 16px;
+  }
+
+  .day {
+    padding: 16px;
+  }
+
+  .summary {
+    gap: 7px 15px;
+  }
+
+  .removeButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .logButton {
+    min-height: 36px;
+  }
+}
