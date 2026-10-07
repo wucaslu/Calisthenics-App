@@ -56,7 +56,14 @@ for (const mobile of [false, true]) {
       .locator(mobile ? ".state-badge" : ".node-state")
       .allTextContents();
     expect(states.length).toBeGreaterThan(0);
-    expect(states.every((state) => state.trim() === "Available")).toBe(true);
+    expect(states.map((state) => state.trim())).toEqual(
+      expect.arrayContaining(["Available", "Training", "Mastered"]),
+    );
+    expect(
+      states.every((state) =>
+        ["Available", "Training", "Mastered"].includes(state.trim()),
+      ),
+    ).toBe(true);
     await expect(page.locator(".tree-heading .count-pill")).toHaveText(
       `${states.length} ${states.length === 1 ? "skill" : "skills"}`,
     );
@@ -104,14 +111,52 @@ for (const mobile of [false, true]) {
     await panel
       .getByRole("button", { name: "Mark as Mastered", exact: true })
       .click();
-    await expect(panel).toHaveCount(0);
-    await expect(items.filter({ hasText: "Bodyweight Squat" })).toHaveCount(0);
+    await expect(panel).toBeVisible();
+    await expect(
+      panel.getByRole("button", { name: "Skill mastered", exact: true }),
+    ).toBeDisabled();
+    await expect(items.filter({ hasText: "Bodyweight Squat" })).toBeAttached();
+    await expect(items.filter({ hasText: "Split Squat" })).toBeAttached();
+    await panel
+      .getByRole("button", { name: "Close skill details", exact: true })
+      .click();
     const split = await open("split-squat", "Split Squat");
     await split
       .getByRole("button", { name: "Start Training", exact: true })
       .click();
-    await expect(split).toHaveCount(0);
+    await expect(split).toBeVisible();
+    await expect(
+      split.getByRole("button", { name: "Currently training", exact: true }),
+    ).toBeDisabled();
+    await expect(items.filter({ hasText: "Split Squat" })).toBeAttached();
+    await split
+      .getByRole("button", { name: "Close skill details", exact: true })
+      .click();
+    const reset = await open("bodyweight-squat", "Bodyweight Squat");
+    await reset
+      .getByRole("button", { name: "Reset Progress", exact: true })
+      .click();
+    await expect(reset).toBeVisible();
+    await expect(items.filter({ hasText: "Bodyweight Squat" })).toBeAttached();
     await expect(items.filter({ hasText: "Split Squat" })).toHaveCount(0);
+    await expect(
+      reset.getByRole("textbox", { name: "Personal Record", exact: true }),
+    ).toHaveValue("25 clean reps");
+    await reset
+      .getByRole("button", { name: "Mark as Mastered", exact: true })
+      .click();
+    await expect(items.filter({ hasText: "Split Squat" })).toBeAttached();
+    await reset
+      .getByRole("button", { name: "Close skill details", exact: true })
+      .click();
+    const retrain = await open("split-squat", "Split Squat");
+    await retrain
+      .getByRole("button", { name: "Start Training", exact: true })
+      .click();
+    await expect(retrain).toBeVisible();
+    await retrain
+      .getByRole("button", { name: "Close skill details", exact: true })
+      .click();
     await available.uncheck();
     await expect(items.filter({ hasText: "Bodyweight Squat" })).toBeAttached();
     await expect(items.filter({ hasText: "Split Squat" })).toBeAttached();

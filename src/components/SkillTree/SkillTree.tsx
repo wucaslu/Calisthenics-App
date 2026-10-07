@@ -424,7 +424,7 @@ export function SkillTree(props: Props) {
           </label>
           <label
             className="availability-filter"
-            title="Show only skills marked Available"
+            title="Show available, training, and mastered skills; hide locked skills"
           >
             <input
               type="checkbox"
@@ -443,7 +443,7 @@ export function SkillTree(props: Props) {
       )}
       {availableOnly && (
         <p className="availability-filter-note" role="status">
-          Showing skills marked Available.
+          Showing available, training, and mastered skills.
         </p>
       )}
       <div className="tree-subtoolbar">

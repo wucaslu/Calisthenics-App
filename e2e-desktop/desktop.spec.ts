@@ -100,10 +100,14 @@ test("the offline desktop app keeps its renderer isolated and preserves training
       page.locator(".react-flow__node-skill").first(),
     ).toBeAttached();
     await expect(
-      page.locator(
-        ".react-flow__node-skill .node-locked, .react-flow__node-skill .node-training, .react-flow__node-skill .node-mastered",
-      ),
+      page.locator(".react-flow__node-skill .state-locked"),
     ).toHaveCount(0);
+    await expect(
+      page.locator('[data-id="planche-lean"] .state-training'),
+    ).toBeAttached();
+    await expect(
+      page.locator('[data-id="push-up"] .state-mastered'),
+    ).toBeAttached();
     await availability.uncheck();
     const pageErrors: string[] = [];
     page.on("pageerror", (error) => pageErrors.push(error.message));

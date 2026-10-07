@@ -147,7 +147,7 @@ export function AppShell() {
     selectedId &&
     skillById[selectedId]?.difficulty <= maxDifficulty &&
     (!availableOnly ||
-      getSkillState(skillById[selectedId], profile.progress) === "available")
+      getSkillState(skillById[selectedId], profile.progress) !== "locked")
       ? skillById[selectedId]
       : null;
   const copy = pageCopy[view];
@@ -201,7 +201,7 @@ export function AppShell() {
       }
       if (
         availableOnly &&
-        getSkillState(skill, profile.progress) !== "available"
+        getSkillState(skill, profile.progress) === "locked"
       ) {
         setSelection(null);
         setNotice(`Turn off Available only to view ${skill.name}.`);
@@ -214,12 +214,11 @@ export function AppShell() {
   const onProgress = useCallback(
     (id: string, action: "training" | "mastered" | "reset") => {
       setSkillProgress(id, action);
-      if (availableOnly && action !== "reset") setSelection(null);
       setNotice(
         `${skillById[id].name}: ${action === "mastered" ? "mastered. New progressions unlocked!" : action === "training" ? "added to your training." : "progress reset. Dependent skills keep progress when another route is complete."}`,
       );
     },
-    [setSkillProgress, availableOnly],
+    [setSkillProgress],
   );
   const navigate = (next: View) => {
     setView(next);
@@ -460,8 +459,8 @@ export function AppShell() {
                     if (
                       value &&
                       selectedId &&
-                      getSkillState(skillById[selectedId], profile.progress) !==
-                        "available"
+                      getSkillState(skillById[selectedId], profile.progress) ===
+                        "locked"
                     )
                       setSelection(null);
                   }}

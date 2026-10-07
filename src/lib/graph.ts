@@ -119,7 +119,7 @@ export function getVisibleSkills(
   query = "",
   branch: Branch | "all" = "all",
   maxDifficulty: DifficultyLevel = MAX_DIFFICULTY,
-  availableProgress?: Progress,
+  unlockedProgress?: Progress,
 ): Skill[] {
   const chosen = skills.filter(
     (skill) =>
@@ -129,14 +129,14 @@ export function getVisibleSkills(
   const ids = new Set(
     chosen.flatMap((skill) => [skill.id, ...getAncestors(skill.id)]),
   );
-  // Keep accessible foundations of advanced branches, but apply the ceiling to
-  // every node, including ancestors from alternative prerequisite routes.
+  // Keep accessible foundations of advanced branches, but apply level and
+  // locked-skill filters to every node, including alternative prerequisites.
   const scoped = skills.filter(
     (skill) =>
       ids.has(skill.id) &&
       skill.difficulty <= maxDifficulty &&
-      (!availableProgress ||
-        getSkillState(skill, availableProgress) === "available"),
+      (!unlockedProgress ||
+        getSkillState(skill, unlockedProgress) !== "locked"),
   );
   if (!query.trim()) return scoped;
   const matches = scoped.filter((skill) =>

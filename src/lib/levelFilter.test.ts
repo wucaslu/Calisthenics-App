@@ -3,7 +3,7 @@ import { branches, categories, skillById, skills } from "@/data/skills";
 import { getVisibleSkills } from "@/lib/graph";
 import { MAX_DIFFICULTY } from "@/lib/difficulty";
 import { createDemoProfile } from "@/lib/profile";
-import { getSkillState } from "@/lib/progression";
+import { getSkillState, updateSkillProgress } from "@/lib/progression";
 import type { DifficultyLevel } from "@/types/skill";
 
 describe("skill tree maximum level", () => {
@@ -113,18 +113,18 @@ describe("skill tree maximum level", () => {
 });
 
 describe("available skill filter", () => {
-  it("shows ready skills while excluding mastered, training, and locked states without changing progress", () => {
+  it("shows available, mastered, and training skills while excluding locked skills without changing progress", () => {
     const profile = createDemoProfile();
     const before = JSON.stringify(profile);
     const visible = getVisibleSkills("all", "", "all", 17, profile.progress);
     const ids = visible.map((skill) => skill.id);
     expect(ids).toContain("chin-up");
-    expect(ids).not.toContain("push-up");
-    expect(ids).not.toContain("planche-lean");
+    expect(ids).toContain("push-up");
+    expect(ids).toContain("planche-lean");
     expect(ids).not.toContain("tuck-planche");
     expect(
       visible.every(
-        (skill) => getSkillState(skill, profile.progress) === "available",
+        (skill) => getSkillState(skill, profile.progress) !== "locked",
       ),
     ).toBe(true);
     expect(JSON.stringify(profile)).toBe(before);
@@ -139,7 +139,7 @@ describe("available skill filter", () => {
       getVisibleSkills("all", "Push-up", "all", 17, progress).map(
         (skill) => skill.id,
       ),
-    ).not.toContain("push-up");
+    ).toContain("push-up");
     const visible = getVisibleSkills(
       "legs",
       "Squat",
@@ -162,5 +162,27 @@ describe("available skill filter", () => {
     expect(
       getVisibleSkills("all", "", "all", 17, progress).map((skill) => skill.id),
     ).toContain("tuck-front-lever");
+  });
+
+  it("keeps a skill through training and mastery, then hides descendants whose prerequisite route is reset", () => {
+    let progress = createDemoProfile().progress;
+    const visibleIds = () =>
+      getVisibleSkills("legs", "", "all", 17, progress).map(
+        (skill) => skill.id,
+      );
+    expect(visibleIds()).toContain("bodyweight-squat");
+    expect(visibleIds()).not.toContain("split-squat");
+    progress = updateSkillProgress(progress, "bodyweight-squat", "training");
+    expect(visibleIds()).toContain("bodyweight-squat");
+    progress = updateSkillProgress(progress, "bodyweight-squat", "mastered");
+    expect(visibleIds()).toEqual(
+      expect.arrayContaining(["bodyweight-squat", "split-squat"]),
+    );
+    progress = updateSkillProgress(progress, "split-squat", "training");
+    expect(visibleIds()).toContain("split-squat");
+    progress = updateSkillProgress(progress, "bodyweight-squat", "reset");
+    expect(visibleIds()).toContain("bodyweight-squat");
+    expect(visibleIds()).not.toContain("split-squat");
+    expect(progress["split-squat"]).toBeUndefined();
   });
 });
