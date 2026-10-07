@@ -2,9 +2,28 @@
 
 A local-first application for personal use built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **101 skills grouped into Pull, Push, Legs, and Core**: Pull 40, Push 37, Legs 13, and Core 11. No account, external database, API key, or backend service is needed.
 
+## Windows desktop app
+
+The app can run as a portable **Windows 64-bit `.exe`**. Download the **Calisthenics-Skill-Tree-Windows** artifact from the latest successful [Windows desktop app workflow](https://github.com/wucaslu/Calisthenics-App/actions/workflows/windows-desktop.yml), unzip it, and double-click **Calisthenics-Skill-Tree-0.2.0-Windows.exe**. No Node.js installation, terminal, local server, or administrator access is required to use it. GitHub requires you to sign in to download workflow artifacts.
+
+The skill tree, records, practice log, and analytics work offline. Reference links open in your usual browser. Desktop progress saves in `%APPDATA%\Calisthenics Skill Tree`, independently of the executable's location, so replacing the executable keeps your profile. Browser and desktop storage are separate.
+
+To transfer existing records, open **Overview → Profile backup → Export JSON** in the browser app. In the desktop app, open the same panel and choose **Import JSON**. Import validates the backup and asks before replacing that app's current profile. Export also provides a backup of your practice history and archived records.
+
+For developers, build the executable on Windows with Node.js 22.12 or later:
+
+```sh
+npm ci
+npm run desktop:package
+```
+
+The executable appears in `dist-desktop/`. Use `npm run desktop:start` to build and open the desktop app during development. `npm run desktop:build` generates static files in `out/`; normal web development and production commands remain available. The GitHub workflow builds the executable on Windows, runs the desktop checks against its unpacked executable, and uploads the portable download.
+
+The executable is not code-signed. Signing requires a Windows signing certificate; the repository does not include one. Linux cross-builds skip Windows executable resource editing; Windows CI enables it to apply the app's icon and version metadata.
+
 ## Run locally
 
-Use Node.js 22 or later (the cloud workspace uses Node 24) and npm.
+Use Node.js 22.12 or later (the cloud workspace uses Node 24) and npm.
 
 ```sh
 npm ci
@@ -42,6 +61,7 @@ All fonts are bundled locally; the app makes no external application requests. I
 - Equipment filtering, completion statistics, category progress, training lists, and mastered-skill lists.
 - A responsive mobile skill list and a keyboard-accessible details dialog. Desktop nodes are also keyboard accessible; use the zoom and fit controls or drag the canvas to explore.
 - Progress, personal records, practice history, goals, and equipment stored under the existing `calisthenics-skill-tree:v1` localStorage key, with validation, recovery from corrupt data, and cross-tab updates. The profile schema is now version 2; version 1 profiles migrate automatically with an empty practice log while keeping their other data. Invalid log rows are discarded individually. If storage is blocked, the UI reports that data lasts for the current session.
+- **Overview → Profile backup** exports the complete profile as JSON and imports supported version 1 or 2 backups with validation and replacement confirmation. Invalid files, cancelled imports, and failed saves preserve the existing profile.
 
 The demo starts with eight mastered fundamentals, two skills in training, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Available equipment is floor, a fixed pull-up bar, and parallettes. Equipment changes do not erase historical mastery. Floor is always available; the Gym equipment option supplies a bar, dip bars, and parallettes, plus a secure bench for the dragon flag. Rings must be selected separately for ring skills.
 
@@ -85,6 +105,8 @@ e2e/                      Browser interaction tests
 ```
 
 The data and algorithms are independent of the React components. The UI derives availability and recommendations from the same rules tested by Vitest. React Flow renders the graph; custom layout logic separates the four groups into progression lanes and positions prerequisites above dependent skills.
+
+`desktop/` contains a minimal Electron main process and secure static-file protocol. The renderer uses a fixed `app://calisthenics/` origin, sandboxing, context isolation, and no Node integration. The packaged app bundles the static export and Electron runtime, without Next.js or production npm dependencies. The desktop executable uses the same React application and stored profile format as the browser version.
 
 ## Add a skill
 
@@ -146,10 +168,19 @@ npm run test:e2e
 
 `npm run format` formats source and docs; `npm run format:check` checks formatting.
 
+After `npm run desktop:build`, validate desktop URL boundaries and the desktop runtime with:
+
+```sh
+npm run test:desktop:unit
+npm run test:desktop
+```
+
+The runtime check opens Electron, exercises the skill filter, Personal Record, practice logging and analytics, restarts the app to verify saved data, and checks renderer isolation. Set `CALISTHENICS_DESKTOP_EXECUTABLE` to an unpacked desktop executable to test the packaged app. Headless Linux runners need a display such as Xvfb; the production app keeps the renderer sandbox enabled.
+
 ## Future improvements
 
 1. Short technique videos, entry/exit demonstrations, and coaching cues.
-2. Optional account-based synchronization and progress export/import.
+2. Optional account-based synchronization.
 3. Richer leg progressions, accessibility preferences, and saved graph views.
 
 Progress currently stays in this browser and does not synchronize between devices. Clearing site data removes it. Mastery benchmarks are illustrative guides, not automatic assessments.

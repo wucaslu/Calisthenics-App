@@ -1,0 +1,29 @@
+appId: com.wucaslu.calisthenicsskilltree
+productName: Calisthenics Skill Tree
+directories:
+  app: desktop
+  output: dist-desktop
+files:
+  # The desktop main process has no npm runtime dependencies.
+  - "!**/*"
+  - main.cjs
+  - protocol.cjs
+  - package.json
+  - icon.png
+extraResources:
+  - from: out
+    to: web
+    filter:
+      - "**/*"
+asar: true
+npmRebuild: false
+win:
+  icon: desktop/icon.ico
+  target:
+    - target: portable
+      arch:
+        - x64
+  signAndEditExecutable: false
+portable:
+  artifactName: Calisthenics-Skill-Tree-${version}-Windows.exe
+  requestExecutionLevel: user

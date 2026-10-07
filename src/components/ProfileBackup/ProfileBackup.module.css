@@ -1,0 +1,25 @@
+.panel {
+  margin-top: 18px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.message {
+  margin: 14px 0 0;
+  color: #a2c9ed;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.message:empty {
+  display: none;
+}
+
+.error {
+  color: #f0aeae;
+}

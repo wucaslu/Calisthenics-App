@@ -10,6 +10,7 @@ import { categories, categoryLabels, skillById, skills } from "@/data/skills";
 import { getGoalPath } from "@/lib/graph";
 import { completion, getSkillState } from "@/lib/progression";
 import { Recommendations } from "@/components/Recommendations";
+import { ProfileBackup } from "@/components/ProfileBackup/ProfileBackup";
 import type { UserProfile } from "@/types/skill";
 
 export function ProgressStats({ profile }: { profile: UserProfile }) {
@@ -73,11 +74,17 @@ export function Dashboard({
   onSelect,
   onGoals,
   onEquipment,
+  hydrated,
+  storageAvailable,
+  onRestore,
 }: {
   profile: UserProfile;
   onSelect: (id: string) => void;
   onGoals: () => void;
   onEquipment: () => void;
+  hydrated: boolean;
+  storageAvailable: boolean;
+  onRestore: (profile: UserProfile) => boolean;
 }) {
   const training = skills.filter(
     (skill) => getSkillState(skill, profile.progress) === "training",
@@ -243,6 +250,12 @@ export function Dashboard({
           </div>
         </details>
       )}
+      <ProfileBackup
+        profile={profile}
+        hydrated={hydrated}
+        storageAvailable={storageAvailable}
+        onRestore={onRestore}
+      />
     </>
   );
 }

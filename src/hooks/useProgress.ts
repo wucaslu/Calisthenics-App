@@ -91,6 +91,22 @@ export function useProgress() {
     }));
   }, []);
   const restoreDemo = useCallback(() => setProfile(createDemoProfile()), []);
+  const restoreProfile = useCallback(
+    (next: UserProfile): boolean => {
+      if (!hydrated) return false;
+      try {
+        // Persist before replacing state so a storage failure keeps the old profile.
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        setProfile(next);
+        setStorageAvailable(true);
+        return true;
+      } catch {
+        setStorageAvailable(false);
+        return false;
+      }
+    },
+    [hydrated],
+  );
   const savePractice = useCallback((entry: PracticeEntry) => {
     setProfile((previous) => ({
       ...previous,
@@ -112,6 +128,7 @@ export function useProgress() {
     toggleGoal,
     toggleEquipment,
     restoreDemo,
+    restoreProfile,
     savePractice,
     deletePractice,
   };

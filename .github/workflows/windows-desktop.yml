@@ -1,0 +1,41 @@
+name: Windows desktop app
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "desktop/**"
+      - "package*.json"
+      - "next.config.*"
+      - ".github/workflows/windows-desktop.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run test:desktop:unit
+      - run: npm run desktop:package -- --config.win.signAndEditExecutable=true
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - run: npm run test:desktop
+        env:
+          CALISTHENICS_DESKTOP_EXECUTABLE: dist-desktop/win-unpacked/Calisthenics Skill Tree.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Calisthenics-Skill-Tree-Windows
+          path: dist-desktop/*-Windows.exe
+          if-no-files-found: error
+          retention-days: 90

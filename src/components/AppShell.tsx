@@ -107,6 +107,7 @@ export function AppShell() {
     toggleGoal,
     toggleEquipment,
     restoreDemo,
+    restoreProfile,
     savePractice,
     deletePractice,
   } = useProgress();
@@ -472,6 +473,9 @@ export function AppShell() {
           {view === "overview" && (
             <Dashboard
               profile={profile}
+              hydrated={hydrated}
+              storageAvailable={storageAvailable}
+              onRestore={restoreProfile}
               onSelect={exploreGoal}
               onGoals={() => navigate("goals")}
               onEquipment={() => navigate("equipment")}
