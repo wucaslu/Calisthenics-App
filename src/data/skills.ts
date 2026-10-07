@@ -1,5 +1,6 @@
 import { skillReferences } from "@/data/references";
 import { skillMuscles } from "@/data/muscles";
+import { skillTechnique } from "@/data/technique";
 import { og2Levels } from "@/data/overcomingGravity";
 import { getOg2Skills } from "@/data/og2Skills";
 import {
@@ -98,6 +99,9 @@ function define(
 ): Skill {
   const muscles = skillMuscles[id];
   if (!muscles) throw new Error(`Missing muscle profile for skill: ${id}`);
+  const technique = skillTechnique[id];
+  if (!technique)
+    throw new Error(`Missing technique guidance for skill: ${id}`);
   const sourceLevel = og2Levels[id];
   return {
     id,
@@ -113,6 +117,7 @@ function define(
     equipmentSetups: equipmentSetups[id],
     description,
     muscles,
+    technique,
     progressionTo: [],
     requirements: [{ exercise: name, target }],
     exercises: drills,

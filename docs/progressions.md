@@ -117,6 +117,18 @@ Earlier retired IDs remain archived: `one-leg-front-lever`, `one-leg-back-lever`
 
 The profile remains **version 2** under the existing `calisthenics-skill-tree:v1` localStorage key. Version 1 profiles migrate with an empty practice log. Browser and desktop profiles remain separate unless transferred with **Overview → Profile backup**. Desktop version **0.2.1** keeps the same storage origin and user-data directory, so replacing the executable preserves its profile.
 
+## Technique references
+
+Technique guidance was researched on **2026-10-07** and is separate from progression-level references. Every active skill has setup instructions, form cues, common mistakes, and links in its **Technique & form** section. The sources are pinned to the actual content reviewed:
+
+- [Bodyweight Fitness instructional wiki mirror](https://github.com/asdjflk/r/tree/da02f88bc4534b50f12895465a87748d62a34425/bodyweightfitness/wiki): pull-up, row, push-up, dip, overhead press, support, squat, Nordic curl, core, and body-positioning instructions.
+- [Public GymnasticBodies curriculum](https://raw.githubusercontent.com/tlchatt/gymnasticbodies.com/e932443104bbe86f6bf7acb1e710baad5398bfe3/data/workout/programCurricula.json): written hollow/arch, L-sit/Manna, body-lever, back-lever, ring-hang, planche, and handstand instructions.
+- [Free Exercise DB](https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises): ring muscle-up, lunge, glute bridge, and calf-raise movement instructions.
+
+Research used reachable written guides and their archived text; several coaching websites and direct video pages were inaccessible. Rare skills, custom variants, angle-specific V-sits, and apparatus changes use clearly labeled adaptations when the linked instruction does not demonstrate the exact movement. Technique text synthesizes movement mechanics, and level references continue to determine progression ratings. Existing equipment substitutions and movement definitions remain the source of catalog scope.
+
+`src/data/technique.ts` assembles the four category maps and their technique-only sources. A catalog entry must have guidance before it can be defined. New or renamed variants need their own shape, grip, apparatus, or movement-range cues, and their source scope should reflect what the reference actually demonstrates. These static fields do not enter the version 2 user profile or alter saved mastery, records, goals, schedules, or practice history.
+
 ## Maintaining the catalog
 
 For a source-matched skill, add its exact apparatus/range-specific cell, text, level, origin, and selected variant to `src/data/overcomingGravity.ts`. Its mapped level overrides the definition's fallback estimate. Keep reference generation in `src/data/references.ts`; unmatched estimates must not acquire a chart level or source label.

@@ -1,0 +1,131 @@
+.section {
+  min-width: 0;
+  margin-bottom: 22px;
+}
+
+.section > h3 {
+  margin-bottom: 12px;
+  color: var(--text-strong, #d8e2ee);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.guidance {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--border-blue, #405064);
+  border-radius: 7px;
+  background: var(--surface-card, #202934);
+}
+
+.group {
+  min-width: 0;
+}
+
+.group > h4,
+.references > h4 {
+  margin-bottom: 6px;
+  color: var(--text-strong, #d8e2ee);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 17px;
+  list-style-type: disc;
+  color: var(--text-secondary, #a5b1bf);
+  font-size: 11px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.list li {
+  padding-left: 2px;
+}
+
+.list li::marker {
+  color: var(--text-blue, #bacfe6);
+}
+
+.cues {
+  list-style-type: decimal;
+}
+
+.cues li::marker {
+  font-weight: 600;
+}
+
+.references {
+  min-width: 0;
+  margin-top: 12px;
+}
+
+.scope {
+  margin: 0 0 6px;
+  color: var(--text-muted, #81909f);
+  font-size: 10px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.sources {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sources li {
+  min-width: 0;
+}
+
+.sources a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 4px 0;
+  color: var(--text-blue, #bacfe6);
+  font-size: 10px;
+  line-height: 1.7;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sources a > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sources a > svg {
+  flex-shrink: 0;
+}
+
+.sources a:hover {
+  color: var(--text-strong, #d8e2ee);
+}
+
+.sources a:focus-visible {
+  border-radius: 3px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .sources a {
+    min-height: 36px;
+    font-size: 11px;
+  }
+
+  .scope {
+    font-size: 11px;
+  }
+}

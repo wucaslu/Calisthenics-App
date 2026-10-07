@@ -47,6 +47,19 @@ export interface MuscleProfile {
   secondary: string[];
 }
 
+export interface TechniqueGuidance {
+  setup: string[];
+  cues: string[];
+  mistakes: string[];
+  sources: string[];
+  sourceScope?: string;
+}
+
+export interface TechniqueSource {
+  title: string;
+  url: string;
+}
+
 export interface PrerequisiteRoute {
   id: string;
   label: string;
@@ -81,6 +94,7 @@ export interface Skill {
   movementType: MovementType;
   description: string;
   muscles: MuscleProfile;
+  technique: TechniqueGuidance;
   references: string[];
   referenceLevel?: string;
   prerequisites: string[];

@@ -22,6 +22,7 @@ import {
 } from "@/components/ui";
 import { branchLabels, skillById } from "@/data/skills";
 import { researchSources } from "@/data/references";
+import { SkillTechnique } from "@/components/SkillTechnique/SkillTechnique";
 import { DIFFICULTY_EXPLANATION, MAX_DIFFICULTY } from "@/lib/difficulty";
 import { getSkillState, missingEquipment } from "@/lib/progression";
 import { PERSONAL_RECORD_MAX_LENGTH } from "@/lib/profile";
@@ -185,6 +186,7 @@ export function SkillDetails({
               assist and stabilize. Roles can vary with technique.
             </p>
           </section>
+          <SkillTechnique skill={skill} />
           <div className="personal-record-card">
             <div className="personal-record-heading">
               <label htmlFor="personal-record">
