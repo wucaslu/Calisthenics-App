@@ -31,6 +31,8 @@ All fonts are bundled locally; the app makes no external application requests. I
 - Click a skill to read its description and edit its Personal Record (for example, `25 seconds` or `12 reps + 10 kg`). Records save automatically, can be cleared, and stay intact when resetting skill progress.
 - A **Practice log** workspace for dated entries with sets, repetitions per set, hold seconds per set, and notes. Use **Log practice** in skill details to preselect that skill. Edit or delete entries, filter history by skill, and see the best logged hold and repetition values. Logging remains independent of mastery and the editable Personal Record.
 - An eight-week consistency chart counts distinct practice days in rolling seven-day windows. The latest seven days are compared with the previous seven days; multiple entries on one day count once. Dates follow the user's local calendar, including daylight-saving boundaries.
+- **Analytics** adds calendar-week (Monday–Sunday) and calendar-month summaries, previous/next period navigation, and an all-skills or individual-skill filter. Open it from the menu or **Weekly & monthly analytics** in the practice log. It shows practice days and consistency, logged entries, sets, total repetitions, total hold time, daily volume charts, group totals, and per-skill bests. Repetition and hold-time volume multiply the per-set values by the number of sets; bests remain per set.
+- Analytics compares a current partial period with the same elapsed days in the previous period, capped at the previous month's length. Completed historical periods compare with the full previous period. Both comparison ranges and day counts are shown; months retain their actual lengths, including leap years. Analytics updates when practice entries are edited or removed and does not change mastery or Personal Records.
 - Locked, available, training, and mastered states with labels and icons. Master every prerequisite in any one complete route to unlock a skill. Where alternatives exist, skill details show each route and its readiness; dashed tree edges indicate alternative prerequisites.
 - Start training, mark mastery, and reset progress. Resetting a prerequisite clears dependent progress only when no complete alternative route remains.
 - Multiple goals with highlighted, ordered prerequisite paths. Each step chooses one preparation route, includes its supporting prerequisites, deduplicates shared dependencies, and stops at mastered skills.
@@ -75,6 +77,7 @@ src/
   lib/recommendations.ts  Pure deterministic recommendation rules
   lib/profile.ts          Demo profile and stored-data validation
   lib/practice.ts         Log validation, calendar dates, records, and trends
+  lib/analytics.ts        Calendar-week/month volume, comparisons, and breakdowns
   hooks/useProgress.ts    React state and localStorage persistence
   components/             App shell and focused feature components
 e2e/                      Browser interaction tests
@@ -123,7 +126,7 @@ npm test
 npm run build
 ```
 
-Vitest covers prerequisite gating, alternative routes, unlock propagation, cascading resets, complete goal planning, exercise-specific equipment compatibility, recommendations, profile migration, practice validation, local-calendar arithmetic, consistency trends, group membership, and graph/data consistency.
+Vitest covers prerequisite gating, alternative routes, unlock propagation, cascading resets, complete goal planning, exercise-specific equipment compatibility, recommendations, profile migration, practice validation, local-calendar arithmetic, consistency trends, weekly/monthly analytics, group membership, and graph/data consistency.
 
 To run the browser tests:
 

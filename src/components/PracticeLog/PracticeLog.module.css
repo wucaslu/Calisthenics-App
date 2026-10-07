@@ -10,6 +10,11 @@
   align-items: center;
 }
 
+.analyticsShortcut {
+  justify-self: start;
+  max-width: 100%;
+}
+
 .log :global(.panel-heading) {
   flex-wrap: wrap;
 }

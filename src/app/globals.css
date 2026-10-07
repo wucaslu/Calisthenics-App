@@ -407,6 +407,23 @@ button svg {
   gap: 24px;
   margin-bottom: 27px;
 }
+
+.analytics-skill-filter {
+  display: grid;
+  gap: 8px;
+  width: min(100%, 340px);
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.analytics-skill-filter select {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--foreground);
+}
 .eyebrow {
   display: flex;
   gap: 5px;
@@ -2154,6 +2171,9 @@ button svg {
   }
 }
 @media (max-width: 767px) {
+  .analytics-skill-filter select {
+    font-size: 16px;
+  }
   .sidebar {
     width: 224px;
     padding: 26px 20px 20px;

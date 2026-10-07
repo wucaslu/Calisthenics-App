@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CalendarDays,
+  BarChart3,
   Check,
   Pencil,
   Plus,
@@ -30,6 +31,7 @@ interface PracticeLogProps {
   storageAvailable: boolean;
   onSave: (entry: PracticeEntry) => void;
   onDelete: (id: string) => void;
+  onAnalytics: (skillId?: string) => void;
 }
 
 function entrySummary(entry: PracticeEntry): string {
@@ -47,6 +49,7 @@ export function PracticeLog({
   storageAvailable,
   onSave,
   onDelete,
+  onAnalytics,
 }: PracticeLogProps) {
   const initialSkill =
     initialSkillId && skillById[initialSkillId] ? initialSkillId : "pull-up";
@@ -178,6 +181,15 @@ export function PracticeLog({
 
   return (
     <div className={styles.log}>
+      <button
+        className={`secondary-button ${styles.analyticsShortcut}`}
+        type="button"
+        disabled={!hydrated}
+        onClick={() => onAnalytics(filter === "all" ? undefined : filter)}
+      >
+        <BarChart3 size={16} aria-hidden="true" />
+        Weekly & monthly analytics
+      </button>
       <section
         className={`surface-panel ${styles.trends}`}
         aria-labelledby="practice-trends-title"

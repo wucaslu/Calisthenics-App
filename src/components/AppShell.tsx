@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import {
   ArrowUpRight,
+  BarChart3,
   Check,
   ChevronRight,
   Compass,
@@ -34,15 +35,19 @@ import { GoalSelector } from "@/components/GoalSelector/GoalSelector";
 import { EquipmentSelector } from "@/components/EquipmentSelector/EquipmentSelector";
 import { Recommendations } from "@/components/Recommendations";
 import { PracticeLog } from "@/components/PracticeLog/PracticeLog";
+import { TrainingAnalytics } from "@/components/TrainingAnalytics/TrainingAnalytics";
 import { categories, categoryLabels, skillById, skills } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
+import { getLocalToday, getPracticeSkillName } from "@/lib/practice";
 import type { Branch, Category } from "@/types/skill";
 
-type View = "tree" | "overview" | "goals" | "equipment" | "practice";
+type View =
+  "tree" | "overview" | "goals" | "equipment" | "practice" | "analytics";
 const navigation = [
   { id: "tree" as const, label: "Skill tree", Icon: GitBranch },
   { id: "overview" as const, label: "Overview", Icon: LayoutDashboard },
   { id: "practice" as const, label: "Practice log", Icon: NotebookPen },
+  { id: "analytics" as const, label: "Analytics", Icon: BarChart3 },
   { id: "goals" as const, label: "My goals", Icon: Target },
   { id: "equipment" as const, label: "Equipment", Icon: Dumbbell },
 ];
@@ -77,6 +82,12 @@ const pageCopy = {
     description:
       "Record your holds and repetitions, follow your consistency, and see what’s improving.",
   },
+  analytics: {
+    eyebrow: "UNDERSTAND YOUR PRACTICE",
+    title: "See your training take shape.",
+    description:
+      "Compare your weekly and monthly consistency, repetitions, and hold time.",
+  },
 };
 function subscribeDesktop(callback: () => void) {
   const media = window.matchMedia("(min-width: 768px)");
@@ -110,6 +121,7 @@ export function AppShell() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [practiceSkillId, setPracticeSkillId] = useState<string | null>(null);
+  const [analyticsSkillId, setAnalyticsSkillId] = useState("all");
   const isDesktop = useSyncExternalStore(
     subscribeDesktop,
     desktopSnapshot,
@@ -123,6 +135,12 @@ export function AppShell() {
   const sidebarOpen = isDesktop ? !sidebarCollapsed : menuOpen;
   const selectedSkill = selectedId ? skillById[selectedId] : null;
   const copy = pageCopy[view];
+  const previousLogSkills = [
+    ...new Set([
+      ...profile.practiceLog.map((entry) => entry.skillId),
+      ...(analyticsSkillId === "all" ? [] : [analyticsSkillId]),
+    ]),
+  ].filter((id) => !skillById[id]);
 
   useEffect(() => {
     const keyboard = (event: KeyboardEvent) => {
@@ -462,7 +480,62 @@ export function AppShell() {
               storageAvailable={storageAvailable}
               onSave={savePractice}
               onDelete={deletePractice}
+              onAnalytics={(id) => {
+                setAnalyticsSkillId(id ?? "all");
+                navigate("analytics");
+              }}
             />
+          )}
+          {view === "analytics" && (
+            <>
+              <label className="analytics-skill-filter">
+                <span>Analytics skill</span>
+                <select
+                  value={analyticsSkillId}
+                  onChange={(event) => setAnalyticsSkillId(event.target.value)}
+                  disabled={!hydrated}
+                >
+                  <option value="all">All skills</option>
+                  {categories.map((category) => (
+                    <optgroup key={category} label={categoryLabels[category]}>
+                      {skills
+                        .filter((skill) => skill.category === category)
+                        .map((skill) => (
+                          <option key={skill.id} value={skill.id}>
+                            {skill.name}
+                          </option>
+                        ))}
+                    </optgroup>
+                  ))}
+                  {previousLogSkills.length > 0 && (
+                    <optgroup label="Previous skills">
+                      {previousLogSkills.map((id) => (
+                        <option key={id} value={id}>
+                          {getPracticeSkillName(id)}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                </select>
+              </label>
+              <TrainingAnalytics
+                entries={
+                  analyticsSkillId === "all"
+                    ? profile.practiceLog
+                    : profile.practiceLog.filter(
+                        (entry) => entry.skillId === analyticsSkillId,
+                      )
+                }
+                today={hydrated ? getLocalToday() : "2000-01-01"}
+                hydrated={hydrated}
+                skillLabel={
+                  analyticsSkillId === "all"
+                    ? "All skills"
+                    : (getPracticeSkillName(analyticsSkillId) ??
+                      "Selected skill")
+                }
+              />
+            </>
           )}
           <footer className="page-footer">
             <span>
