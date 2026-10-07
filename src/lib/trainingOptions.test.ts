@@ -82,9 +82,15 @@ describe("alternative prerequisite routes", () => {
     expect(normalized["advanced-tuck-front-lever"]).toBeUndefined();
   });
 
-  it("plans one complete route and gives standard preparation deterministic equal-score priority", () => {
+  it("plans the fewest remaining steps and gives standard preparation deterministic equal-score priority", () => {
     expect(
       getGoalPlan("tuck-front-lever", {}).routeIds["tuck-front-lever"],
+    ).toBe("chin-up-foundation");
+    expect(
+      getGoalPlan("tuck-front-lever", {
+        ...leverFoundations,
+        "pull-up-negative": "mastered",
+      }).routeIds["tuck-front-lever"],
     ).toBe("standard");
     const progress: Progress = { ...leverFoundations, "chin-up": "mastered" };
     const plan = getGoalPlan("tuck-front-lever", progress);
@@ -205,7 +211,9 @@ describe("route catalog and graph integrity", () => {
       expect(new Set(setups.map((setup) => setup.id)).size).toBe(setups.length);
       for (const parent of getPrerequisiteIds(skill)) {
         expect(skillById[parent]).toBeDefined();
-        expect(parent).not.toMatch(/assisted|band|^(one|single)-leg/);
+        expect(parent).not.toMatch(
+          /assisted|band|weighted|^(one|single|1)-leg/,
+        );
         expect(skillById[parent].progressionTo).toContain(skill.id);
       }
     }
@@ -233,8 +241,8 @@ describe("route catalog and graph integrity", () => {
     );
     expect(visible).toEqual(expect.arrayContaining(ancestors));
     const path = getGoalPath("tuck-front-lever", {}).map((skill) => skill.id);
-    expect(path).toContain("pull-up");
-    expect(path).not.toContain("chin-up");
+    expect(path).toContain("chin-up");
+    expect(path).not.toContain("pull-up");
     expect(path).not.toContain("ring-pull-up");
   });
 });
@@ -295,6 +303,38 @@ describe("exercise-specific equipment substitutions", () => {
       expect(hasEquipment(skillById[id], ["pull-up-bar", "gym"])).toBe(false);
       expect(hasEquipment(skillById[id], ["rings"])).toBe(true);
     }
+  });
+
+  it("preserves apparatus-specific requirements for the new chart variants", () => {
+    expect(hasEquipment(skillById["archer-pull-up"], ["rings"])).toBe(false);
+    expect(hasEquipment(skillById["ring-archer-pull-up"], ["rings"])).toBe(
+      true,
+    );
+    expect(
+      hasEquipment(skillById["ring-archer-pull-up"], ["pull-up-bar"]),
+    ).toBe(false);
+    for (const id of ["ring-full-planche", "ring-full-planche-push-up"]) {
+      expect(hasEquipment(skillById[id], ["rings"])).toBe(true);
+      expect(hasEquipment(skillById[id], ["parallettes", "dip-bars"])).toBe(
+        false,
+      );
+    }
+    expect(hasEquipment(skillById["full-planche-push-up"], ["floor"])).toBe(
+      true,
+    );
+    for (const id of ["straddle-l-sit", "v-sit-170", "manna"]) {
+      expect(hasEquipment(skillById[id], ["floor"])).toBe(true);
+      expect(hasEquipment(skillById[id], ["dip-bars"])).toBe(true);
+    }
+    expect(
+      hasEquipment(skillById["full-range-handstand-push-up"], ["dip-bars"]),
+    ).toBe(true);
+    expect(
+      hasEquipment(skillById["full-range-handstand-push-up"], ["floor"]),
+    ).toBe(false);
+    expect(hasEquipment(skillById["one-arm-chin-up"], ["pull-up-bar"])).toBe(
+      true,
+    );
   });
 
   it("requires a secure row-height setup and preserves bench or anchor equipment requirements", () => {

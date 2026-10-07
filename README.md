@@ -1,10 +1,10 @@
 # Calisthenics Skill Tree
 
-A local-first application for personal use built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **101 skills grouped into Pull, Push, Legs, and Core**: Pull 40, Push 37, Legs 13, and Core 11. No account, external database, API key, or backend service is needed.
+A local-first application for personal use built with Next.js, TypeScript, React, Tailwind CSS, and React Flow. Explore **139 skills grouped into Pull, Push, Legs, and Core**: Pull 46, Push 57, Legs 13, and Core 23. No account, external database, API key, or backend service is needed.
 
 ## Windows desktop app
 
-The app can run as a portable **Windows 64-bit `.exe`**. Download the **Calisthenics-Skill-Tree-Windows** artifact from the latest successful [Windows desktop app workflow](https://github.com/wucaslu/Calisthenics-App/actions/workflows/windows-desktop.yml), unzip it, and double-click **Calisthenics-Skill-Tree-0.2.0-Windows.exe**. No Node.js installation, terminal, local server, or administrator access is required to use it. GitHub requires you to sign in to download workflow artifacts.
+The app can run as a portable **Windows 64-bit `.exe`**. Download the **Calisthenics-Skill-Tree-Windows** artifact from the latest successful [Windows desktop app workflow](https://github.com/wucaslu/Calisthenics-App/actions/workflows/windows-desktop.yml), unzip it, and double-click **Calisthenics-Skill-Tree-0.2.1-Windows.exe**. No Node.js installation, terminal, local server, or administrator access is required to use it. GitHub requires you to sign in to download workflow artifacts.
 
 The skill tree, records, practice log, and analytics work offline. Reference links open in your usual browser. Desktop progress saves in `%APPDATA%\Calisthenics Skill Tree`, independently of the executable's location, so replacing the executable keeps your profile. Browser and desktop storage are separate.
 
@@ -42,11 +42,11 @@ All fonts are bundled locally; the app makes no external application requests. I
 ## Features
 
 - Pannable, zoomable dependency graph with four skill groups, named progression lanes, and optional progression filters. Mobile lists use the same families.
-- Choose **Max level** in the tree toolbar to show only skills at or below a difficulty from 1 to 10. Higher-level skills and prerequisite nodes are hidden on desktop and mobile; group, branch, search, and goal highlights respect the cutoff. **All levels (1–10)** restores the full view. The filter stays active while navigating the workspace, and a page reload restores the default full view.
+- Choose **Max level** in the tree toolbar to show only skills at or below a difficulty from 1 to 17. Higher-level skills and prerequisite nodes are hidden on desktop and mobile; group, branch, search, and goal highlights respect the cutoff. **All levels (1–17)** restores the full view. The filter stays active while navigating the workspace, and a page reload restores the default full view.
 - Open or close the left menu with the navigation button in the top bar. Closing it on desktop gives the workspace more room. Mobile also has an in-menu close button, backdrop dismissal, and Escape support.
-- Skill details with prerequisites, estimated difficulty, drills, example mastery criteria, equipment, unlock links, and reviewed reference links. Published source levels appear separately from app difficulty.
+- Skill details with prerequisites, difficulty, drills, example mastery criteria, equipment, unlock links, and reviewed reference links. Matched levels include the workbook's exact source cell; unmatched skills are labeled app estimates.
 - Every skill description includes its target muscle groups, primary muscles, and secondary muscles. Primary muscles drive or hold the movement; secondary muscles assist and stabilize. These are qualitative movement-based descriptions, and roles can vary with technique or grip.
-- Individually calibrated difficulty scores from 1 to 10, shown with five shared tiers: Foundation, Developing, Intermediate, Advanced, and Elite. Scores reflect the overall strength, balance, control, and mobility demands of each skill's benchmark.
+- Difficulty levels from 1 to 17 with four tiers: Beginner (1–5), Intermediate (6–9), Advanced (10–13), and Elite (14–17). Of the 139 skills, 97 match workbook levels: 83 are labeled **OG2 book** and 14 **Community chart**. The remaining 42 show **App estimate**.
 - Dynamic/Static badges on every tree node, mobile skill card, and details panel. Static skills hold a position; dynamic skills move through repetitions.
 - Click a skill to read its description and edit its Personal Record (for example, `25 seconds` or `12 reps + 10 kg`). Records save automatically, can be cleared, and stay intact when resetting skill progress.
 - A **Practice log** workspace for dated entries with sets, repetitions per set, hold seconds per set, and notes. Use **Log practice** in skill details to preselect that skill. Edit or delete entries, filter history by skill, and see the best logged hold and repetition values. Logging remains independent of mastery and the editable Personal Record.
@@ -63,21 +63,19 @@ All fonts are bundled locally; the app makes no external application requests. I
 - Progress, personal records, practice history, goals, and equipment stored under the existing `calisthenics-skill-tree:v1` localStorage key, with validation, recovery from corrupt data, and cross-tab updates. The profile schema is now version 2; version 1 profiles migrate automatically with an empty practice log while keeping their other data. Invalid log rows are discarded individually. If storage is blocked, the UI reports that data lasts for the current session.
 - **Overview → Profile backup** exports the complete profile as JSON and imports supported version 1 or 2 backups with validation and replacement confirmation. Invalid files, cancelled imports, and failed saves preserve the existing profile.
 
-The demo starts with eight mastered fundamentals, two skills in training, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Available equipment is floor, a fixed pull-up bar, and parallettes. Equipment changes do not erase historical mastery. Floor is always available; the Gym equipment option supplies a bar, dip bars, and parallettes, plus a secure bench for the dragon flag. Rings must be selected separately for ring skills.
+The demo starts with nine mastered fundamentals, two skills in training, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Available equipment is floor, a fixed pull-up bar, and parallettes. Equipment changes do not erase historical mastery. Floor is always available; the Gym equipment option supplies a bar, dip bars, and parallettes, plus a secure bench for the dragon flag. Rings must be selected separately for ring skills.
 
 The bar pulling progression is Pull-up → Chest-to-Bar Pull-up → Explosive Pull-up → High Pull-up → Muscle-up → Strict Muscle-up. Muscle-up also requires Straight-Bar Dip. Ring Muscle-up has an independent route through False-Grip Hang, Ring Pull-up, and Ring Dip.
 
-The earlier researched reorganization added 34 movements and removed 10 assisted milestones plus one duplicate tuck-row entry. Highlights include L-Sit Pull-up, Pull Over, Archer/One-Arm Row, Tuck Front Lever Row, Diamond/Archer/One-Arm Push-up, Elbow Lever, Frog Stand to Handstand, Ring L-Sit Dip, Shrimp Squat, Nordic Curl, Tuck L-Sit, Toes-to-Bar, and Hanging Windshield Wiper. Back Lever, Maltese, Pelican Press, Hefesto, Iron Cross, and Dragon Squat remain in the catalog.
+The uploaded workbook adds **38 milestones**, including separate ring planche and ring planche push-up routes, both-knees-bent half-lay levers/planches, straight-arm frog stands, angle-specific V-sits leading to Manna, one-arm chin-ups, full-range handstand push-ups, and dragon flag preparation. Floor Full Planche is level 11, Ring Full Planche 14, Iron Cross 10, and Maltese 17. The workbook's explicit Maltese L17 annotation takes precedence over its row position.
 
-The latest additions are **90 Degree Hold**, a static bent-arm planche with the elbows unbraced against the abdomen, and **Pelican Planche**, a dynamic ring transition from planche to back lever and back to planche. Their estimated difficulties are 7/10 and 10/10 respectively. Existing skills are scored individually rather than multiplying their old ratings: Back Lever is 6/10, Full Front Lever 8/10, Full Planche 9/10, and Maltese 10/10.
+Book entries and the workbook's proposed community additions have distinct source labels. Existing generic V-Sit, pronated One-Arm Pull-up, 90 Degree Hold (estimate 8), and the user's Pelican Planche transition (estimate 16) retain their meanings and are labeled app estimates. The existing floor Handstand Push-up is the head-to-floor level-6 movement; the added Full-Range Handstand Push-up is level 7 and requires raised supports. One-arm chin-ups remain distinct from pronated pull-ups. The stable `advanced-shrimp-squat` ID now displays Two-Hand Shrimp Squat at level 6, matching its existing two-hands-behind-the-body form.
 
-Assisted, band, and wall milestones are excluded. Tuck/straddle shapes and unassisted eccentric negatives remain. Legs now has Pistol, Shrimp, Dragon Squat, and posterior-chain routes. The Dragon route uses unassisted pistol strength and reverse-lunge balance. Ring muscle-ups and floor L-sits no longer require unrelated bar skills.
+Assisted, one-leg intermediate, and weighted progressions are excluded. Intrinsic unilateral exercises such as Pistol, Shrimp, and the requested Dragon Squat remain. Mixed chart cells contribute only the eligible half-lay or straddle option. Editable Personal Records may still describe added weight; excluding weighted progression nodes does not alter saved record values.
 
-See [progression research and route decisions](docs/progressions.md) for the reviewed sources, full route table, difficulty scale, and research limits. Research used accessible archived/community references; direct coaching sites were blocked by the cloud network proxy. App difficulty scores are estimates rather than universal grades, and published levels apply within their source's named progression. Body proportions and execution standards can change an athlete's personal ordering. Custom routes without published ratings are identified in skill details.
+See [the reviewed workbook mappings and route decisions](docs/progressions.md) for exact source cells, the source distinction, exclusions, and migration behavior. The app's prerequisite edges, drill prescriptions, and hold/repetition benchmarks remain preparation suggestions, while sourced numeric levels match the workbook. Existing records and practice logs keep their IDs. Additional preparation steps can relock older mastery/training and preserve those states in **Overview → Previous skill records**. The app does not invent mastery for new steps or automatically restore archived progress; the skill becomes eligible for manual training/mastery once a route is complete.
 
-One-leg progression steps have been removed: One-Leg Front Lever, One-Leg Back Lever, One-Leg L-Sit, and Single-Leg Glute Bridge. Front/back levers now progress from advanced tuck directly to straddle; Tuck L-Sit leads directly to L-Sit, and Glute Bridge leads directly to Nordic Curl Negative. Saved progress and Personal Records for removed steps appear under **Overview → Previous skill records**. Their goals leave the active list; retained skills keep their saved progress and records.
-
-Retained skill IDs and Personal Records stay intact. The old generic Front Lever Row described a tuck variation; its records are archived, and Full Front Lever Row has a new ID so old tuck records are not mislabeled. Removed milestone records and prior progress relocked by new prerequisites appear under **Overview → Previous skill records** and persist in the profile archive. The app does not grant mastery for new prerequisites automatically. Retired goals leave the active list; archived progress does not count toward tree completion.
+Earlier removed One-Leg Front Lever, One-Leg Back Lever, One-Leg L-Sit, and Single-Leg Glute Bridge records remain in **Overview → Previous skill records**. The old generic Front Lever Row described a tuck variation; its records remain archived, and Full Front Lever Row has a separate ID so tuck records are not mislabeled. Retired goals leave the active list; archived progress does not count toward tree completion.
 
 Prerequisites within a route are all required; different complete routes are alternatives. Goal planning chooses one route at each step and includes all of that route's outstanding supporting dependencies. Standard routes win otherwise equal choices. On a filtered desktop tree, the initial viewport focuses on the goal path; pan or use Fit View to explore the rest of the progression. The graph includes every alternative route, while goal highlights show the planned route.
 
@@ -88,12 +86,15 @@ src/
   app/                    Next.js entry points and Tailwind/global styles
   types/skill.ts          Skill, equipment, progress, and profile models
   data/skills.ts          Definitions, group labels, and derived reverse unlock links
-  data/references.ts      Reviewed sources and published per-progression levels
+  data/references.ts      Reviewed sources and exact workbook-cell references
+  data/overcomingGravity.ts Selected chart levels, cells, provenance, and source hash
+  data/og2Skills.ts       Additional workbook milestones
+  data/og2Muscles.ts      Muscle profiles for additional milestones
   data/muscles.ts         Target, primary, and secondary muscles for each skill
   data/trainingOptions.ts Alternative preparation routes and equipment setups
   data/retiredSkills.ts   Names used to preserve removed milestone records
   lib/progression.ts      Skill states, equipment checks, and cascading resets
-  lib/difficulty.ts       Shared 1–10 scale, tier labels, and explanatory text
+  lib/difficulty.ts       Shared 1–17 scale, chart tiers, and source labels
   lib/graph.ts            Dependency paths, filtering, and graph layout
   lib/recommendations.ts  Pure deterministic recommendation rules
   lib/profile.ts          Demo profile and stored-data validation
@@ -110,7 +111,7 @@ The data and algorithms are independent of the React components. The UI derives 
 
 ## Add a skill
 
-Add one `define(...)` entry to `src/data/skills.ts`. Use a unique, stable ID; choose `pull`, `push`, `legs`, or `core`; give the skill an individually estimated integer difficulty from 1 to 10 and a movement type (`dynamic` or `static`); and reference existing prerequisite IDs. Calibrate against the examples in [the difficulty scale](docs/progressions.md#difficulty-and-progression-levels), using the skill's actual execution standard rather than its prerequisite depth or a published family's level. Add a description, required equipment, a mastery benchmark, and practice exercises. For example:
+Add one `define(...)` entry to `src/data/skills.ts`. Use a unique, stable ID; choose `pull`, `push`, `legs`, or `core`; give the skill an individually estimated integer difficulty from 1 to 17 and a movement type (`dynamic` or `static`); and reference existing prerequisite IDs. For a matched chart skill, add its exact cell, level, and book/community origin to `src/data/overcomingGravity.ts`; the definition helper uses that source level. For an unmatched skill, calibrate its estimate against [the chart anchors](docs/progressions.md#difficulty-and-progression-levels). Apparatus and execution range must match the source entry. Add a description, required equipment, a mastery benchmark, and practice exercises. For example:
 
 ```ts
 define(
@@ -118,7 +119,7 @@ define(
   "New Push-up Variation",
   "push",
   "fundamentals",
-  3,
+  2,
   "dynamic",
   ["push-up"],
   ["floor"],
@@ -149,7 +150,7 @@ npm test
 npm run build
 ```
 
-Vitest covers prerequisite gating, alternative routes, unlock propagation, cascading resets, complete goal planning, exercise-specific equipment compatibility, recommendations, profile migration, practice validation, local-calendar arithmetic, consistency trends, weekly/monthly analytics, group membership, and graph/data consistency.
+Vitest covers workbook-level provenance, excluded variants, apparatus distinctions, prerequisite gating, alternative routes, unlock propagation, cascading resets, complete goal planning, exercise-specific equipment compatibility, recommendations, profile migration, practice validation, local-calendar arithmetic, consistency trends, weekly/monthly analytics, group membership, and graph/data consistency.
 
 To run the browser tests:
 
@@ -158,7 +159,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The suite starts and stops its own dev server on port 3001, then checks skill unlocking and persistence, practice logging and trends, cross-tab updates, profile migration, alternative routes, equipment substitutions, goals, the dashboard, search, responsive navigation, dialogs, and corrupt-storage recovery. To use an existing server or a system Chromium installation:
+The suite starts and stops its own dev server on port 3001, then checks source labels and 1–17 level filtering, skill unlocking and persistence, practice logging and trends, cross-tab updates, profile migration, alternative routes, equipment substitutions, goals, the dashboard, search, responsive navigation, dialogs, and corrupt-storage recovery. To use an existing server or a system Chromium installation:
 
 ```sh
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 \
@@ -183,4 +184,4 @@ The runtime check opens Electron, exercises the skill filter, Personal Record, p
 2. Optional account-based synchronization.
 3. Richer leg progressions, accessibility preferences, and saved graph views.
 
-Progress currently stays in this browser and does not synchronize between devices. Clearing site data removes it. Mastery benchmarks are illustrative guides, not automatic assessments.
+Progress stays in the current browser or desktop profile and does not synchronize between devices. Use profile backups to transfer or preserve it; clearing browser site data removes that browser's copy. Mastery benchmarks are illustrative guides, not automatic assessments.

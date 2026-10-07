@@ -142,7 +142,11 @@ export function SkillDetails({
           <div className="detail-meta">
             <StateBadge state={state} />
             <MovementBadge type={skill.movementType} />
-            <Difficulty level={skill.difficulty} text />
+            <Difficulty
+              level={skill.difficulty}
+              source={skill.levelSource}
+              text
+            />
           </div>
           <p className="detail-description">{skill.description}</p>
           <section className="skill-muscles" aria-label="Muscles used">
@@ -278,16 +282,17 @@ export function SkillDetails({
           <div className="detail-section">
             <h3>Progression references</h3>
             <p className="muted-copy">
-              App difficulty uses a 1–{MAX_DIFFICULTY} scale.{" "}
+              Skill levels use the chart’s 1–{MAX_DIFFICULTY} scale.{" "}
               {DIFFICULTY_EXPLANATION}
             </p>
             <p className="muted-copy difficulty-reference-note">
-              Published progression levels use their own scales. Unlocks follow
-              a suggested preparation route.
+              OG2 book and community entries keep their chart levels. Skills
+              without an exact match use an app estimate. Unlocks follow a
+              suggested preparation route, rather than level alone.
             </p>
             {skill.referenceLevel && (
               <p className="reference-level">
-                Published level: {skill.referenceLevel}
+                Chart reference: {skill.referenceLevel}
               </p>
             )}
             {skill.references.length ? (

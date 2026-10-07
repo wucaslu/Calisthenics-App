@@ -7,6 +7,7 @@ export type Branch =
   | "dragon-flag"
   | "posterior-chain"
   | "planche"
+  | "ring-planche"
   | "front-lever"
   | "back-lever"
   | "handstand"
@@ -27,7 +28,8 @@ export type Equipment =
 export type SkillState = "locked" | "available" | "training" | "mastered";
 export type Progress = Record<string, "training" | "mastered">;
 export type MovementType = "dynamic" | "static";
-export type DifficultyLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type DifficultyLevel =
+  1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17;
 export type PersonalRecords = Record<string, string>;
 
 export interface MuscleProfile {
@@ -66,6 +68,7 @@ export interface Skill {
   category: Category;
   branch: Branch;
   difficulty: DifficultyLevel;
+  levelSource?: "book" | "community";
   movementType: MovementType;
   description: string;
   muscles: MuscleProfile;

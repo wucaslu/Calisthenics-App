@@ -186,7 +186,7 @@ export function AppShell() {
       if (skill.difficulty > maxDifficulty) {
         setSelection(null);
         setNotice(
-          `${skill.name} is level ${skill.difficulty}/10. Increase Max level to show it.`,
+          `${skill.name} is level ${skill.difficulty}/${MAX_DIFFICULTY}. Increase Max level to show it.`,
         );
         return;
       }

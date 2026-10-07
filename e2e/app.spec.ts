@@ -238,7 +238,7 @@ for (const mobile of [false, true]) {
 }
 
 for (const mobile of [false, true]) {
-  test(`new planche skills show calibrated scores and preserve records on ${mobile ? "mobile" : "desktop"}`, async ({
+  test(`planche skills show estimated chart-scale levels and preserve records on ${mobile ? "mobile" : "desktop"}`, async ({
     page,
   }) => {
     if (mobile) await page.setViewportSize({ width: 390, height: 844 });
@@ -247,14 +247,14 @@ for (const mobile of [false, true]) {
       {
         id: "90-degree-hold",
         name: "90 Degree Hold",
-        score: 7,
+        score: 8,
         movement: "Static",
         record: "4 seconds",
       },
       {
         id: "pelican-planche",
         name: "Pelican Planche",
-        score: 10,
+        score: 16,
         movement: "Dynamic",
         record: "1 full cycle",
       },
@@ -268,14 +268,14 @@ for (const mobile of [false, true]) {
           has: page.getByText(entry.name, { exact: true }),
         });
         await expect(card.locator(".difficulty-score")).toHaveText(
-          `${entry.score}/10`,
+          `Level ${entry.score}/17`,
         );
         await card.click();
       } else {
         await openTreeSkill(page, entry.id, entry.name);
         await expect(
           page.locator(`[data-id="${entry.id}"] .difficulty-score`),
-        ).toHaveText(`${entry.score}/10`);
+        ).toHaveText(`Level ${entry.score}/17`);
       }
       return mobile ? page.getByRole("dialog") : page.locator(".detail-panel");
     };
@@ -285,13 +285,17 @@ for (const mobile of [false, true]) {
       const score = panel.locator(".detail-meta .difficulty");
       await expect(score).toHaveAttribute(
         "aria-label",
-        `Difficulty ${entry.score} of 10`,
+        `Level ${entry.score} of 17, ${entry.score === 8 ? "Intermediate" : "Elite"}, App estimate`,
       );
       await expect(score.locator(".difficulty-score")).toHaveText(
-        `${entry.score}/10`,
+        `Level ${entry.score}/17`,
       );
+      await expect(score.locator(".difficulty-bars i")).toHaveCount(17);
       await expect(score.locator(".difficulty-bars i.filled")).toHaveCount(
         entry.score,
+      );
+      await expect(score.locator(".difficulty-source")).toHaveText(
+        "App estimate",
       );
       await expect(panel.locator(".detail-description")).toContainText(
         entry.id === "90-degree-hold"
@@ -330,7 +334,7 @@ for (const mobile of [false, true]) {
           has: page.getByRole("heading", { name: entry.name, exact: true }),
         });
         await expect(card.locator(".difficulty-score")).toHaveText(
-          `${entry.score}/10`,
+          `Level ${entry.score}/17`,
         );
       }
     }
@@ -352,19 +356,19 @@ test("researched milestones show published levels, independent routes, and named
   ).toBeEnabled();
   await openTreeSkill(page, "diamond-push-up", "Diamond Push-up");
   await expect(panel.locator(".reference-level")).toContainText(
-    "Pushing progression · Level 4",
+    "OG2 book chart · Level 2 · AI6 (Diamond Pushups)",
   );
   await expect(panel.locator(".detail-meta .difficulty")).toHaveAttribute(
     "aria-label",
-    "Difficulty 3 of 10",
+    "Level 2 of 17, Beginner, OG2 book",
   );
   await expect(
     panel.getByRole("link", {
-      name: "Recommended Routine · archived exercise levels",
+      name: "Overcoming Gravity 2nd Edition · uploaded exercise chart",
     }),
   ).toHaveAttribute(
     "href",
-    /github.com\/mazurio\/bodyweight-fitness-android\/blob\/19806813/,
+    /docs.google.com\/spreadsheets\/d\/19l4tVfdTJLheLMwZBYqcw1oeEBPRh8mxngqrCz2YnVg/,
   );
   await expect(
     page.locator('[data-id="lane-push-push-up"] .graph-lane'),
@@ -385,9 +389,12 @@ test("researched milestones show published levels, independent routes, and named
     page.locator('[data-id="lane-legs-posterior-chain"] .graph-lane'),
   ).toHaveText(/Posterior chain/);
   await openTreeSkill(page, "hefesto", "Hefesto");
-  await expect(
-    panel.getByText("Custom app progression; no published level is assigned."),
-  ).toBeVisible();
+  await expect(panel.locator(".reference-level")).toContainText(
+    "Community extension · Level 9 · BI13 (Hefesto (GH pullout))",
+  );
+  await expect(panel.locator(".detail-meta .difficulty-source")).toHaveText(
+    "Community chart",
+  );
 });
 
 test("reorganization keeps retired records in the overview and retained records editable after reload", async ({
@@ -669,7 +676,7 @@ test("demo profile loads, graph zooms, and mastery unlocks downstream skills and
   await expect(
     page.getByRole("heading", { name: "Build strength. Unlock skills." }),
   ).toBeVisible();
-  await expect(page.locator(".stat-card").first()).toContainText("8");
+  await expect(page.locator(".stat-card").first()).toContainText("9");
   const panel = page.locator(".detail-panel");
   await expect(
     panel.getByRole("heading", { name: "Tuck Planche", exact: true }),
@@ -734,9 +741,15 @@ test("demo profile loads, graph zooms, and mastery unlocks downstream skills and
   ).toBeVisible();
   await panel.getByRole("button", { name: "Mark as Mastered" }).click();
   await expect(page.getByRole("status")).toContainText("mastered");
-  await panel
-    .getByRole("button", { name: "Tuck Planche", exact: true })
-    .click();
+  await openTreeSkill(page, "frog-stand", "Frog Stand");
+  await panel.getByRole("button", { name: "Mark as Mastered" }).click();
+  await openTreeSkill(
+    page,
+    "straight-arm-frog-stand",
+    "Straight-Arm Frog Stand",
+  );
+  await panel.getByRole("button", { name: "Mark as Mastered" }).click();
+  await openTreeSkill(page, "tuck-planche", "Tuck Planche");
   await expect(
     panel.getByRole("button", { name: "Start Training", exact: true }),
   ).toBeEnabled();
@@ -776,8 +789,8 @@ test("goals can be selected and their minimal prerequisite paths update", async 
   const planche = page.locator(".goal-path-card").filter({
     has: page.getByRole("heading", { name: "Tuck Planche", exact: true }),
   });
-  await expect(planche).toContainText("2 remaining skills");
-  await expect(planche.locator(".path-steps button")).toHaveCount(2);
+  await expect(planche).toContainText("4 remaining skills");
+  await expect(planche.locator(".path-steps button")).toHaveCount(4);
   await page
     .getByRole("textbox", { name: "Search target skills" })
     .fill("pistol");
@@ -813,7 +826,7 @@ test("equipment filters recommendations without clearing mastered skills", async
       .locator(".recommendation-card")
       .filter({ hasText: "Tuck Front Lever" }),
   ).toHaveCount(0);
-  await expect(page.locator(".stat-card").first()).toContainText("8");
+  await expect(page.locator(".stat-card").first()).toContainText("9");
   await page.reload();
   await page.getByRole("button", { name: "Equipment", exact: true }).click();
   await expect(bar).toHaveAttribute("aria-pressed", "false");
@@ -1007,7 +1020,7 @@ test("corrupt local storage falls back to the demo without breaking the app", as
   await expect(
     page.getByRole("heading", { name: "Build strength. Unlock skills." }),
   ).toBeVisible();
-  await expect(page.locator(".stat-card").first()).toContainText("8");
+  await expect(page.locator(".stat-card").first()).toContainText("9");
   await expect(page.locator(".page-footer")).toContainText(
     "Progress saved on this device",
   );

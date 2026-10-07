@@ -77,6 +77,53 @@ describe("personal records", () => {
     expect(parsed.progress["pelican-planche"]).toBeUndefined();
     expect(parsed.archivedSkills).toEqual({});
   });
+  it("preserves records, practice, goals, and archived mastery when workbook routes add missing prerequisites", () => {
+    const profile = createDemoProfile();
+    for (const skill of getGoalPath("full-planche", profile.progress))
+      profile.progress = updateSkillProgress(
+        profile.progress,
+        skill.id,
+        "mastered",
+      );
+    // An older profile can have full-planche mastery without this newly added step.
+    delete profile.progress["half-lay-planche"];
+    profile.personalRecords = {
+      "full-planche": "5 seconds",
+      "pull-up": "12 reps + 10 kg",
+    };
+    profile.practiceLog = [
+      {
+        id: "pre-workbook-planche",
+        skillId: "full-planche",
+        date: "2026-01-02",
+        sets: 3,
+        holdSeconds: 5,
+        notes: "Before the updated progression chart",
+      },
+    ];
+    profile.archivedSkills["one-leg-front-lever"] = {
+      name: retiredSkillNames["one-leg-front-lever"],
+      progress: "mastered",
+      personalRecord: "8 seconds",
+    };
+    profile.goals = ["full-planche", "manna"];
+
+    const parsed = parseProfile(JSON.stringify(profile))!;
+    expect(parsed.progress["half-lay-planche"]).toBeUndefined();
+    expect(parsed.progress["full-planche"]).toBeUndefined();
+    expect(parsed.archivedSkills["full-planche"]).toEqual({
+      name: "Full Planche",
+      progress: "mastered",
+    });
+    expect(parsed.archivedSkills["one-leg-front-lever"]).toEqual(
+      profile.archivedSkills["one-leg-front-lever"],
+    );
+    expect(parsed.personalRecords).toEqual(profile.personalRecords);
+    expect(parsed.practiceLog).toEqual(profile.practiceLog);
+    expect(parsed.goals).toEqual(profile.goals);
+    expect(parsed.equipment).toEqual(profile.equipment);
+    expect(parseProfile(JSON.stringify(parsed))).toEqual(parsed);
+  });
   it("removes retired band entries while preserving records through revised prerequisites", () => {
     const parsed = parseProfile(
       JSON.stringify({

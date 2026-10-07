@@ -190,7 +190,11 @@ export function Dashboard({
                 </span>
                 <span>
                   <strong>{skill.name}</strong>
-                  <Difficulty level={skill.difficulty} text />
+                  <Difficulty
+                    level={skill.difficulty}
+                    source={skill.levelSource}
+                    text
+                  />
                 </span>
                 <StateBadge state="training" />
               </button>

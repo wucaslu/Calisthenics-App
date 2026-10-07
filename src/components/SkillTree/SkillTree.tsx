@@ -395,13 +395,15 @@ export function SkillTree(props: Props) {
                 )
               }
             >
-              <option value={MAX_DIFFICULTY}>All levels (1–10)</option>
+              <option value={MAX_DIFFICULTY}>
+                All levels (1–{MAX_DIFFICULTY})
+              </option>
               {Array.from(
                 { length: MAX_DIFFICULTY - 1 },
                 (_, index) => index + 1,
               ).map((level) => (
                 <option key={level} value={level}>
-                  Up to {level}/10 · {getDifficultyTier(level)}
+                  Up to {level}/{MAX_DIFFICULTY} · {getDifficultyTier(level)}
                 </option>
               ))}
             </select>
@@ -410,8 +412,8 @@ export function SkillTree(props: Props) {
       </div>
       {maxDifficulty < MAX_DIFFICULTY && (
         <p className="level-filter-note" role="status">
-          Showing levels 1–{maxDifficulty}/10. Higher-level skills and
-          prerequisites are hidden.
+          Showing levels 1–{maxDifficulty}/{MAX_DIFFICULTY}. Higher-level skills
+          and prerequisites are hidden.
         </p>
       )}
       <div className="tree-subtoolbar">
@@ -508,7 +510,11 @@ export function SkillTree(props: Props) {
                           state={getSkillState(skill, profile.progress)}
                         />
                         <MovementBadge type={skill.movementType} />
-                        <Difficulty level={skill.difficulty} text />
+                        <Difficulty
+                          level={skill.difficulty}
+                          source={skill.levelSource}
+                          text
+                        />
                         {missingEquipment(skill, profile.equipment).length >
                           0 && <small>Equipment needed</small>}
                       </span>

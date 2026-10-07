@@ -75,7 +75,11 @@ export function GoalSelector({
                     ? `${path.length} remaining ${path.length === 1 ? "skill" : "skills"}`
                     : "Goal mastered"}
                 </span>
-                <Difficulty level={skill.difficulty} text />
+                <Difficulty
+                  level={skill.difficulty}
+                  source={skill.levelSource}
+                  text
+                />
               </div>
               {path.length ? (
                 <div className="path-steps">

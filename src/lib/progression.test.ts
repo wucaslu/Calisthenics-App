@@ -18,8 +18,8 @@ import { getRecommendations } from "@/lib/recommendations";
 import { getDifficultyTier, MAX_DIFFICULTY } from "@/lib/difficulty";
 
 describe("skill database", () => {
-  it("contains all 101 skills with valid, acyclic dependencies and reverse links", () => {
-    expect(skills).toHaveLength(101);
+  it("contains all 139 skills with valid, acyclic dependencies and reverse links", () => {
+    expect(skills).toHaveLength(139);
     expect(new Set(skills.map((skill) => skill.id)).size).toBe(skills.length);
     const visit = (id: string, ancestors: string[] = []) => {
       expect(ancestors).not.toContain(id);
@@ -91,13 +91,12 @@ describe("skill database", () => {
       for (const id of skill.references)
         expect(researchSources[id]?.url).toMatch(/^https:\/\//);
     }
-    expect(skillById["diamond-push-up"].referenceLevel).toBe(
-      "Pushing progression · Level 4",
-    );
-    expect(skillById["diamond-push-up"].difficulty).toBe(3);
-    expect(skillById["maltese"].referenceLevel).toBeUndefined();
+    expect(skillById["diamond-push-up"].difficulty).toBe(2);
+    expect(skillById["diamond-push-up"].levelSource).toBe("book");
+    expect(skillById["maltese"].difficulty).toBe(17);
+    expect(skillById["maltese"].levelSource).toBe("book");
   });
-  it("distinguishes advanced skill demands on the 10-point scale", () => {
+  it("distinguishes advanced skill demands on the workbook's 17-level scale", () => {
     const ordered = [
       "back-lever",
       "90-degree-hold",
@@ -105,16 +104,21 @@ describe("skill database", () => {
       "full-planche",
       "maltese",
     ].map((id) => skillById[id].difficulty);
-    expect(ordered).toEqual([6, 7, 8, 9, 10]);
+    expect(ordered).toEqual([7, 8, 8, 11, 17]);
     expect(skillById["full-front-lever-row"].difficulty).toBeGreaterThan(
       skillById["full-front-lever"].difficulty,
     );
     expect(skillById["pelican-planche"].difficulty).toBeGreaterThan(
       skillById["pelican-press"].difficulty,
     );
+    expect(getDifficultyTier(1)).toBe("Beginner");
+    expect(getDifficultyTier(5)).toBe("Beginner");
     expect(getDifficultyTier(6)).toBe("Intermediate");
-    expect(getDifficultyTier(7)).toBe("Advanced");
-    expect(getDifficultyTier(9)).toBe("Elite");
+    expect(getDifficultyTier(9)).toBe("Intermediate");
+    expect(getDifficultyTier(10)).toBe("Advanced");
+    expect(getDifficultyTier(13)).toBe("Advanced");
+    expect(getDifficultyTier(14)).toBe("Elite");
+    expect(getDifficultyTier(17)).toBe("Elite");
   });
   it("keeps progression lanes separate and skill rectangles from overlapping", () => {
     const positions = layoutSkills(skills);
@@ -201,6 +205,7 @@ describe("progression", () => {
     const pelicanPath = getGoalPath("pelican-planche", {}).map(
       (skill) => skill.id,
     );
+    expect(pelicanPath).toContain("ring-full-planche");
     expect(pelicanPath).toContain("full-planche");
     expect(pelicanPath).toContain("back-lever");
     expect(pelicanPath).toContain("pelican-press");
@@ -350,17 +355,28 @@ describe("progression", () => {
       }),
     ).toBe("available");
   });
-  it("unlocks downstream skills immediately on mastery", () => {
+  it("unlocks each downstream skill only after the complete preparation route is mastered", () => {
     const profile = createDemoProfile();
     const progress = updateSkillProgress(
       profile.progress,
       "planche-lean",
       "mastered",
     );
-    expect(getSkillState(skillById["tuck-planche"], progress)).toBe(
+    expect(getSkillState(skillById["tuck-planche"], progress)).toBe("locked");
+    expect(getSkillState(skillById["pseudo-planche-push-up"], progress)).toBe(
       "available",
     );
-    expect(getSkillState(skillById["pseudo-planche-push-up"], progress)).toBe(
+    const withFrogStand = updateSkillProgress(
+      progress,
+      "frog-stand",
+      "mastered",
+    );
+    const withStraightArms = updateSkillProgress(
+      withFrogStand,
+      "straight-arm-frog-stand",
+      "mastered",
+    );
+    expect(getSkillState(skillById["tuck-planche"], withStraightArms)).toBe(
       "available",
     );
   });
@@ -375,7 +391,8 @@ describe("progression", () => {
       "planche-lean",
       "mastered",
     );
-    progress = updateSkillProgress(progress, "tuck-planche", "mastered");
+    for (const skill of getGoalPath("tuck-planche", progress))
+      progress = updateSkillProgress(progress, skill.id, "mastered");
     progress = updateSkillProgress(progress, "push-up", "reset");
     expect(progress["planche-lean"]).toBeUndefined();
     expect(progress["tuck-planche"]).toBeUndefined();
@@ -421,7 +438,12 @@ describe("goal paths", () => {
       getGoalPath("tuck-planche", createDemoProfile().progress).map(
         (skill) => skill.id,
       ),
-    ).toEqual(["planche-lean", "tuck-planche"]);
+    ).toEqual([
+      "planche-lean",
+      "frog-stand",
+      "straight-arm-frog-stand",
+      "tuck-planche",
+    ]);
   });
   it("includes supporting prerequisites and deduplicates shared dependencies", () => {
     const path = getGoalPath("tuck-planche", {}).map((skill) => skill.id);
@@ -429,6 +451,8 @@ describe("goal paths", () => {
       "push-up",
       "scapular-push-up",
       "planche-lean",
+      "frog-stand",
+      "straight-arm-frog-stand",
       "hollow-body-hold",
       "tuck-planche",
     ]);

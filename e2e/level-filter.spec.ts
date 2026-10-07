@@ -27,9 +27,7 @@ async function expectTreeWithinLevel(page: Page, maximum: number) {
     .locator(".difficulty")
     .evaluateAll((elements) =>
       elements.map((element) =>
-        Number(
-          element.getAttribute("aria-label")?.match(/Difficulty (\d+)/)?.[1],
-        ),
+        Number(element.getAttribute("aria-label")?.match(/Level (\d+)/)?.[1]),
       ),
     );
   expect(levels.length).toBeGreaterThan(0);
@@ -65,7 +63,7 @@ test("maximum level hides harder skills, their alternative ancestors, and the se
     name: "Maximum skill level",
     exact: true,
   });
-  await expect(maximum).toHaveValue("10");
+  await expect(maximum).toHaveValue("17");
   await expect(
     page
       .locator(".detail-panel")
@@ -94,7 +92,7 @@ test("maximum level hides harder skills, their alternative ancestors, and the se
   // This valid level-3 skill has a harder level-4 alternative prerequisite.
   await expect(page.locator('[data-id="shrimp-squat"]')).toHaveCount(0);
   await expectTreeWithinLevel(page, 3);
-  await maximum.selectOption("10");
+  await maximum.selectOption("17");
   await expect(page.locator('[data-id="shrimp-squat"]')).toBeAttached();
 });
 
@@ -166,11 +164,11 @@ test("level filtering composes with branches and searches without changing saved
     page.getByRole("heading", { name: "No skills found", exact: true }),
   ).toBeVisible();
   await expect(page.locator(".react-flow__node-skill")).toHaveCount(0);
-  await maximum.selectOption("10");
+  await maximum.selectOption("17");
   await expect(page.locator('[data-id="full-planche"]')).toBeAttached();
   await page.reload();
   await waitForProfile(page);
-  await expect(maximum).toHaveValue("10");
+  await expect(maximum).toHaveValue("17");
   await expect(
     page
       .locator(".detail-panel")
@@ -215,9 +213,7 @@ test("mobile level filtering limits cards and restores skills without horizontal
     .locator(".mobile-skill .difficulty")
     .evaluateAll((elements) =>
       elements.map((element) =>
-        Number(
-          element.getAttribute("aria-label")?.match(/Difficulty (\d+)/)?.[1],
-        ),
+        Number(element.getAttribute("aria-label")?.match(/Level (\d+)/)?.[1]),
       ),
     );
   expect(levels.length).toBeGreaterThan(0);
@@ -249,7 +245,7 @@ test("mobile level filtering limits cards and restores skills without horizontal
   await expect(
     page.getByRole("heading", { name: "No skills found", exact: true }),
   ).toBeVisible();
-  await maximum.selectOption("10");
+  await maximum.selectOption("17");
   await expect(
     page.locator(".mobile-skill").filter({
       has: page.getByText("Full Planche", { exact: true }),

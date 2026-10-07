@@ -37,6 +37,15 @@ export const alternativeRoutes: Record<string, PrerequisiteRoute[]> = {
       prerequisites: ["tuck-front-lever", "chin-up"],
     },
   ],
+  "advanced-tuck-dragon-flag": [
+    {
+      id: "tuck-body-control",
+      label: "Dynamic tuck preparation",
+      description:
+        "Use controlled full tuck dragon-flag repetitions as an alternative to the chart's tuck eccentric preparation. Maintain shoulder support and body tension while opening both hips into the advanced tuck.",
+      prerequisites: ["tuck-dragon-flag"],
+    },
+  ],
   "handstand-push-up": [
     {
       id: "freestanding-press",
@@ -84,9 +93,11 @@ addSetup(
     "planche-lean",
     "pseudo-planche-push-up",
     "frog-stand",
+    "straight-arm-frog-stand",
     "tuck-planche",
     "advanced-tuck-planche",
     "straddle-planche",
+    "half-lay-planche",
     "full-planche",
     "90-degree-hold",
     "pike-hold",
@@ -105,28 +116,59 @@ addSetup(
   },
 );
 
-addSetup(["tuck-planche-push-up"], {
+const floorPlanchePushUps = [
+  "tuck-planche-push-up",
+  "advanced-tuck-planche-push-up",
+  "straddle-planche-push-up",
+  "half-lay-planche-push-up",
+  "full-planche-push-up",
+];
+
+addSetup(floorPlanchePushUps, {
   id: "floor",
   label: "Floor",
   equipment: ["floor"],
   description:
-    "Use firm, level ground with room for a controlled exit. Keep both feet suspended and maintain the tuck and forward shoulder position through the bent-arm range; the floor limits depth compared with parallettes.",
+    "Use firm, level ground with room for a controlled exit. Keep both feet suspended and preserve the named body shape and forward shoulder position through the bent-arm range; the floor limits depth compared with parallettes.",
 });
 
-addSetup(["tuck-l-sit", "l-sit", "v-sit"], {
-  id: "floor",
-  label: "Floor",
-  equipment: ["floor"],
-  description:
-    "Use firm, level ground and keep both feet clear throughout the skill. Less hand clearance increases the compression and wrist demands; this is the full movement, without resting the legs on the floor.",
-});
-
-addSetup(["tuck-l-sit", "l-sit", "v-sit"], {
+addSetup(floorPlanchePushUps, {
   id: "dip-bars",
   label: "Dip bars",
   equipment: ["dip-bars"],
   description:
-    "Use stable parallel bars for straight-arm support, with enough space for both legs. Extra hand clearance changes the setup, while the suspended body position and leg-height target stay the same.",
+    "Use stable, load-rated parallel bars with clearance for the whole body. Preserve the named planche shape and horizontal body position through the press; both feet remain suspended throughout.",
+});
+
+const supportedCompressionSkills = [
+  "tuck-l-sit",
+  "l-sit",
+  "straddle-l-sit",
+  "v-sit",
+  "v-sit-45",
+  "v-sit-75",
+  "v-sit-100",
+  "v-sit-120",
+  "v-sit-140",
+  "v-sit-155",
+  "v-sit-170",
+  "manna",
+];
+
+addSetup(supportedCompressionSkills, {
+  id: "floor",
+  label: "Floor",
+  equipment: ["floor"],
+  description:
+    "Use firm, level ground and keep both feet clear throughout the skill. Preserve the named leg angle, body shape, and straight-arm support; less hand clearance increases compression and wrist demands. For Manna, leave room behind the hands for the full posterior lean.",
+});
+
+addSetup(supportedCompressionSkills, {
+  id: "dip-bars",
+  label: "Dip bars",
+  equipment: ["dip-bars"],
+  description:
+    "Use stable parallel bars for straight-arm support, with enough space for both legs and any posterior lean. Extra hand clearance changes the setup, while the named leg angle and suspended body position remain the same.",
 });
 
 addSetup(
@@ -137,13 +179,13 @@ addSetup(
     "pull-up-negative",
     "chin-up",
     "l-sit-pull-up",
-    "archer-pull-up",
     "typewriter-pull-up",
     "one-arm-pull-up-negative",
     "one-arm-pull-up",
     "tuck-front-lever",
     "advanced-tuck-front-lever",
     "straddle-front-lever",
+    "half-lay-front-lever",
     "full-front-lever",
     "front-lever-raise",
     "full-front-lever-row",
@@ -169,6 +211,7 @@ addSetup(
     "tuck-back-lever",
     "advanced-tuck-back-lever",
     "straddle-back-lever",
+    "half-lay-back-lever",
     "back-lever",
   ],
   {
@@ -180,12 +223,31 @@ addSetup(
   },
 );
 
-addSetup(["inverted-row"], {
-  id: "low-fixed-bar",
-  label: "Low fixed bar",
+addSetup(
+  ["inverted-row", "archer-row", "straddle-one-arm-row", "one-arm-row"],
+  {
+    id: "low-fixed-bar",
+    label: "Low fixed bar",
+    equipment: ["dip-bars"],
+    description:
+      "Use a fixed, load-rated parallel bar low enough to row underneath with feet grounded. Match the body angle and full pulling range; a high pull-up bar alone is not a suitable row setup.",
+  },
+);
+
+addSetup(["one-arm-chin-up-negative", "one-arm-chin-up"], {
+  id: "fixed-bar",
+  label: "Fixed bar",
+  equipment: ["pull-up-bar"],
+  description:
+    "Use a securely fixed bar with an underhand grip and room for a still, full-body hang. Keep the free hand released and preserve the one-arm chin-up range; unlike rings, the bar fixes the grip and cannot rotate during the movement.",
+});
+
+addSetup(["full-range-handstand-push-up"], {
+  id: "dip-bars",
+  label: "Dip bars",
   equipment: ["dip-bars"],
   description:
-    "Use a fixed, load-rated parallel bar low enough to row underneath with feet grounded. Match the body angle and full pulling range; a high pull-up bar alone is not a suitable row setup.",
+    "Use stable parallel bars with enough height and clearance to lower the shoulders to hand height before pressing back to balance. Preserve the full freestanding range; the head reaching the floor would shorten this skill's range.",
 });
 
 export function getPrerequisiteRoutes(skill: Skill): PrerequisiteRoute[] {

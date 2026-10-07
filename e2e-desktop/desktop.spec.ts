@@ -161,9 +161,7 @@ test("the offline desktop app keeps its renderer isolated and preserves training
       .locator(".react-flow__node-skill .difficulty")
       .evaluateAll((nodes) =>
         nodes.map((node) =>
-          Number(
-            node.getAttribute("aria-label")?.match(/Difficulty (\d+)/)?.[1],
-          ),
+          Number(node.getAttribute("aria-label")?.match(/Level (\d+)/)?.[1]),
         ),
       );
     expect(levels.length).toBeGreaterThan(0);
@@ -315,7 +313,7 @@ test("the offline desktop app keeps its renderer isolated and preserves training
         name: "Maximum skill level",
         exact: true,
       }),
-    ).toHaveValue("10");
+    ).toHaveValue("17");
     const restoredPanel = await openPullUp(restarted);
     await expect(
       restoredPanel.getByRole("textbox", {

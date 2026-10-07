@@ -52,6 +52,7 @@ export function createDemoProfile(): UserProfile {
       "hollow-body-hold": "mastered",
       "dead-hang": "mastered",
       "scapular-pull-up": "mastered",
+      "pull-up-negative": "mastered",
       "inverted-row": "mastered",
       "pull-up": "mastered",
       "pike-hold": "mastered",

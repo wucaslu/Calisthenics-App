@@ -1,8 +1,14 @@
-/** Sources read online on 2026-10-06. Pinned URLs preserve the reviewed versions.
- * These are archived/community references, not an official universal scale.
- * See docs/progressions.md for source scope and custom routes.
+import { OG2_REFERENCE_URL, og2Levels } from "@/data/overcomingGravity";
+
+/** The uploaded OG2 workbook was reviewed on 2026-10-07.
+ * Earlier pinned community references remain supplementary movement references.
+ * See docs/progressions.md for source scope, exact cells, and custom routes.
  */
 export const researchSources: Record<string, { title: string; url: string }> = {
+  og2: {
+    title: "Overcoming Gravity 2nd Edition · uploaded exercise chart",
+    url: OG2_REFERENCE_URL,
+  },
   routine: {
     title: "Recommended Routine · archived exercise levels",
     url: "https://github.com/mazurio/bodyweight-fitness-android/blob/19806813ff36b6c52d1b59e2731f731f05913a54/app/src/main/res/raw/bodyweight_fitness_recommended_routine.json",
@@ -120,36 +126,13 @@ reference(
 reference(["full-planche", "iron-cross", "maltese", "v-sit"], ["statics"]);
 reference(["pelican-planche"], ["pelican"]);
 
-// Published levels apply only inside the named progression. They are not app difficulty bands.
-const publishedLevels: Record<string, string> = {
-  "pull-up-negative": "Pull-up progression · Level 1",
-  "pull-up": "Pull-up progression · Level 2",
-  "l-sit-pull-up": "Pull-up progression · Level 3",
-  "pull-over": "Pull-up progression · Level 4",
-  dip: "Dipping progression · Level 1",
-  "ring-dip": "Dipping progression · Level 2",
-  "ring-l-sit-dip": "Dipping progression · Level 3",
-  "ring-support-hold": "Support practice · Level 2",
-  "rings-turned-out-support": "Support practice · Level 3",
-  "tuck-l-sit": "L-sit progression · Level 3",
-  "l-sit": "L-sit progression · Level 4",
-  "push-up": "Pushing progression · Level 3",
-  "diamond-push-up": "Pushing progression · Level 4",
-  "ring-push-up": "Pushing progression · Level 6",
-  "rings-turned-out-push-up": "Pushing progression · Level 7",
-  "inverted-row": "Row progression · Level 3",
-  "tuck-front-lever": "Row progression · Level 5",
-  "tuck-ice-cream-maker": "Row progression · Level 6",
-  "tuck-front-lever-row": "Row progression · Level 7",
-  "advanced-tuck-front-lever-row": "Row progression · Level 8",
-  "bodyweight-squat": "Squat progression · Level 2",
-  "deep-step-up": "Squat progression · Level 3",
-  "freestanding-handstand": "Handstand progression · Level 3",
-};
-for (const [id, level] of Object.entries(publishedLevels)) {
+// Chart levels now drive the main level score. Unlisted skills remain estimates.
+for (const [id, entry] of Object.entries(og2Levels)) {
   const existing = skillReferences[id]?.sources ?? [];
+  const label =
+    entry.kind === "book" ? "OG2 book chart" : "Community extension";
   skillReferences[id] = {
-    sources: [...new Set(["routine", ...existing])],
-    level,
+    sources: [...new Set(["og2", ...existing])],
+    level: `${label} · Level ${entry.level} · ${entry.cell} (${entry.name})${entry.variant ? ` · ${entry.variant}` : ""}`,
   };
 }

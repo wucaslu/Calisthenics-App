@@ -813,10 +813,24 @@ button svg {
 .difficulty-compact {
   flex-shrink: 0;
 }
+.difficulty-detailed {
+  flex-wrap: wrap;
+  max-width: 100%;
+  row-gap: 5px;
+}
+.difficulty-source {
+  color: #b8cbdc;
+  padding: 2px 5px;
+  border: 1px solid #425563;
+  border-radius: 3px;
+  font-size: 8px;
+  line-height: 1.2;
+}
 .difficulty-bars {
   display: flex;
   align-items: center;
   gap: 2px;
+  flex-shrink: 0;
 }
 .difficulty-bars i {
   display: block;

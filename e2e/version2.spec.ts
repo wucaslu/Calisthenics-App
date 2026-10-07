@@ -529,6 +529,7 @@ test("resetting a prerequisite preserves mastery while another full route remain
     "dead-hang": "mastered",
     "scapular-pull-up": "mastered",
     "chin-up": "mastered",
+    "pull-up-negative": "mastered",
     "pull-up": "mastered",
     "hollow-body-hold": "mastered",
     "tuck-front-lever": "mastered",

@@ -52,7 +52,7 @@ export function SkillNode({ data }: NodeProps<SkillGraphNode>) {
           {skill.name}
         </span>
         <span className="node-bottom">
-          <Difficulty level={skill.difficulty} />
+          <Difficulty level={skill.difficulty} source={skill.levelSource} />
           <MovementBadge type={skill.movementType} />
           {data.missingEquipment && (
             <span className="node-equipment">

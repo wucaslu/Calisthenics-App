@@ -14,9 +14,10 @@ import {
 import {
   DIFFICULTY_EXPLANATION,
   getDifficultyTier,
+  getLevelSourceLabel,
   MAX_DIFFICULTY,
 } from "@/lib/difficulty";
-import type { Category, MovementType, SkillState } from "@/types/skill";
+import type { Category, MovementType, Skill, SkillState } from "@/types/skill";
 
 export const movementLabels: Record<MovementType, string> = {
   dynamic: "Dynamic",
@@ -87,19 +88,21 @@ export function SkillIcon({
 }
 export function Difficulty({
   level,
+  source,
   text = false,
 }: {
   level: number;
+  source?: Skill["levelSource"];
   text?: boolean;
 }) {
   return (
     <span
       className={`difficulty ${text ? "difficulty-detailed" : "difficulty-compact"}`}
-      aria-label={`Difficulty ${level} of ${MAX_DIFFICULTY}`}
-      title={`App difficulty: ${level}/${MAX_DIFFICULTY} · ${getDifficultyTier(level)}. ${DIFFICULTY_EXPLANATION} Published progression levels use their own scales.`}
+      aria-label={`Level ${level} of ${MAX_DIFFICULTY}, ${getDifficultyTier(level)}, ${getLevelSourceLabel(source)}`}
+      title={`Level ${level}/${MAX_DIFFICULTY} · ${getDifficultyTier(level)} · ${getLevelSourceLabel(source)}. ${DIFFICULTY_EXPLANATION}`}
     >
       <span className="difficulty-score">
-        {level}/{MAX_DIFFICULTY}
+        Level {level}/{MAX_DIFFICULTY}
       </span>
       {text && (
         <>
@@ -112,6 +115,9 @@ export function Difficulty({
             ))}
           </span>
           <span>{getDifficultyTier(level)}</span>
+          <span className="difficulty-source">
+            {getLevelSourceLabel(source)}
+          </span>
         </>
       )}
     </span>
