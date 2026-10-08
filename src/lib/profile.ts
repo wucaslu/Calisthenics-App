@@ -11,7 +11,6 @@ import {
   getLoggedPersonalRecords,
 } from "@/lib/records";
 import { sanitizeWeeklySchedule } from "@/lib/schedule";
-import { sanitizeSavedGraphViews } from "@/lib/graphViews";
 import type {
   Equipment,
   PersonalRecords,
@@ -254,7 +253,6 @@ export function parseProfile(
     }
     const practiceLog = sanitizePracticeEntries(candidate.practiceLog);
     const weeklySchedule = sanitizeWeeklySchedule(candidate.weeklySchedule);
-    const savedGraphViews = sanitizeSavedGraphViews(candidate.savedGraphViews);
     return syncLoggedRecords(
       {
         version: 2,
@@ -265,7 +263,6 @@ export function parseProfile(
         equipment,
         archivedSkills,
         ...(Object.keys(weeklySchedule).length ? { weeklySchedule } : {}),
-        ...(savedGraphViews.length ? { savedGraphViews } : {}),
       },
       practiceLog.map((entry) => entry.skillId),
       today,

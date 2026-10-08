@@ -83,11 +83,6 @@ export const equipmentLabels: Record<Equipment, string> = {
   gym: "Gym equipment",
 };
 
-// App ratings override chart scores while preserving the original source reference.
-const appDifficultyRatings: Partial<Record<string, DifficultyLevel>> = {
-  hefesto: 11,
-};
-
 // Add definitions here. Reverse unlock links are derived below to avoid two sources of truth.
 function define(
   id: string,
@@ -108,15 +103,13 @@ function define(
   if (!technique)
     throw new Error(`Missing technique guidance for skill: ${id}`);
   const sourceLevel = og2Levels[id];
-  const appDifficulty = appDifficultyRatings[id];
-  const referenceLevel = skillReferences[id]?.level;
   return {
     id,
     name,
     category,
     branch,
-    difficulty: appDifficulty ?? sourceLevel?.level ?? fallbackDifficulty,
-    levelSource: appDifficulty === undefined ? sourceLevel?.kind : undefined,
+    difficulty: sourceLevel?.level ?? fallbackDifficulty,
+    levelSource: sourceLevel?.kind,
     movementType,
     prerequisites,
     equipment,
@@ -129,10 +122,7 @@ function define(
     requirements: [{ exercise: name, target }],
     exercises: drills,
     references: skillReferences[id]?.sources ?? [],
-    referenceLevel:
-      appDifficulty !== undefined && referenceLevel
-        ? `App estimate · Level ${appDifficulty}. Chart reference: ${referenceLevel}`
-        : referenceLevel,
+    referenceLevel: skillReferences[id]?.level,
   };
 }
 const hold = (
@@ -1277,13 +1267,32 @@ export const skills: Skill[] = [
     ],
   ),
   define(
+    "incline-pelican-curl",
+    "Incline Pelican Curl",
+    "pull",
+    "pelican",
+    5,
+    "dynamic",
+    ["ring-push-up", "german-hang"],
+    ["rings"],
+    "Curl on low rings with the feet grounded and the torso more upright than a regular Pelican Curl. Keep a straight body line and a fixed incline as the arms move behind the torso.",
+    "5 controlled repetitions at a consistent incline",
+    [
+      reps(
+        "Incline Pelican Curl",
+        "3–5",
+        "Keep the feet still and shoulders controlled; curl back without pushing through the legs.",
+      ),
+    ],
+  ),
+  define(
     "pelican-curl",
     "Pelican Curl",
     "pull",
     "pelican",
     6,
     "dynamic",
-    ["ring-push-up", "german-hang"],
+    ["incline-pelican-curl"],
     ["rings"],
     "A bodyweight curl on low rings with the arms travelling behind the torso. The toes stay grounded as part of the exercise, like a ring push-up; maintain a fixed body angle and controlled shoulder extension.",
     "5 controlled repetitions with a consistent body angle",
@@ -1292,6 +1301,25 @@ export const skills: Skill[] = [
         "Pelican Curl",
         "3–5",
         "Keep the body angle fixed and toes grounded throughout. Lower slowly and curl back without pushing with the legs.",
+      ),
+    ],
+  ),
+  define(
+    "feet-elevated-pelican-curl",
+    "Feet-Elevated Pelican Curl",
+    "pull",
+    "pelican",
+    7,
+    "dynamic",
+    ["pelican-curl"],
+    ["rings", "gym"],
+    "Perform a Pelican Curl on low rings with both feet elevated on a secure support. Maintain a straight, near-horizontal body line and underhand ring grip as the elbows extend behind the torso. The feet stay supported throughout; this is the workbook's feet-elevated preparation for a supinated back lever.",
+    "5 controlled repetitions with both feet elevated",
+    [
+      reps(
+        "Feet-Elevated Pelican Curl",
+        "3–5",
+        "Use a stable foot support, keep hips level, and reverse the descent without a leg push.",
       ),
     ],
   ),
@@ -1373,6 +1401,63 @@ export const skills: Skill[] = [
         "Hefesto",
         "1–2",
         "Pull from a controlled behind-the-body hang with both feet clear, without a kip or second-hand support.",
+      ),
+    ],
+  ),
+  define(
+    "back-lever-hefesto",
+    "Back Lever Hefesto",
+    "pull",
+    "hefesto",
+    10,
+    "dynamic",
+    ["hefesto", "back-lever"],
+    ["pull-up-bar"],
+    "Start in a full horizontal back lever with an underhand grip on a fixed bar. Bend both elbows and pull through the behind-the-body transition into support, keeping legs straight and together without dropping first into a German hang.",
+    "2 controlled pulls from a held full back lever",
+    [
+      reps(
+        "Back Lever Hefesto",
+        "1–2",
+        "Pause horizontally before pulling; keep hips level and both feet clear through the transition.",
+      ),
+    ],
+  ),
+  define(
+    "archer-hefesto",
+    "Archer Hefesto",
+    "pull",
+    "hefesto",
+    11,
+    "dynamic",
+    ["back-lever-hefesto"],
+    ["rings"],
+    "Pull through the behind-the-body Hefesto transition on rings toward one working arm while the opposite arm stays straight and retains its ring. Keep both feet suspended, control the independent handles, and practice both sides.",
+    "1 controlled archer repetition on each side",
+    [
+      reps(
+        "Archer Hefesto",
+        "1 per side",
+        "Keep the opposite elbow straight, retain both grips, and avoid twisting or swinging into the pull.",
+      ),
+    ],
+  ),
+  define(
+    "hand-on-wrist-hefesto",
+    "Hand-on-Wrist Hefesto",
+    "pull",
+    "hefesto",
+    12,
+    "dynamic",
+    ["archer-hefesto"],
+    ["pull-up-bar"],
+    "Perform the behind-the-body Hefesto pull with one underhand grip on a fixed bar while the other hand holds the working wrist. Keep that wrist contact throughout the repetition and train both sides. This is the workbook's wrist-supported progression, distinct from an unsupported one-arm Hefesto.",
+    "1 controlled wrist-supported repetition on each side",
+    [
+      reps(
+        "Hand-on-Wrist Hefesto",
+        "1 per side",
+        "Keep the assisting hand on the working wrist, both feet clear, and the shoulder transition controlled.",
       ),
     ],
   ),

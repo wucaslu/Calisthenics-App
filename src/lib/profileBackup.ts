@@ -3,7 +3,6 @@ import { retiredSkillNames } from "@/data/retiredSkills";
 import { validatePracticeEntry } from "@/lib/practice";
 import { parseProfile } from "@/lib/profile";
 import { WEEKDAYS } from "@/lib/schedule";
-import { isSavedGraphViews } from "@/lib/graphViews";
 import type { Weekday } from "@/types/skill";
 import type { UserProfile } from "@/types/skill";
 
@@ -110,11 +109,6 @@ export function readProfileBackup(raw: string): UserProfile {
         return invalid();
     }
   }
-  if (
-    Object.hasOwn(candidate, "savedGraphViews") &&
-    !isSavedGraphViews(candidate.savedGraphViews)
-  )
-    return invalid();
   const profile = parseProfile(JSON.stringify(candidate));
   return profile ?? invalid();
 }

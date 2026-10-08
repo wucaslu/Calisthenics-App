@@ -1,10 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { expect, test, type Page } from "@playwright/test";
-import type {
-  GraphViewport,
-  SavedGraphView,
-  UserProfile,
-} from "../src/types/skill";
+import type { UserProfile } from "../src/types/skill";
 
 const profileKey = "calisthenics-skill-tree:v1";
 const accessibilityKey = "calisthenics-skill-tree:accessibility";
@@ -36,7 +32,7 @@ function trainingProfile(): UserProfile {
   };
 }
 
-function savedView(): SavedGraphView {
+function legacySavedView() {
   return {
     id: "planche-view",
     name: "Planche practice",
@@ -91,38 +87,6 @@ function preferences(page: Page) {
     name: "Accessibility preferences",
     exact: true,
   });
-}
-
-function bookmarks(page: Page) {
-  return page.getByRole("region", { name: "Saved graph views", exact: true });
-}
-
-async function saveView(page: Page, name: string) {
-  const panel = bookmarks(page);
-  await panel.getByRole("textbox", { name: "Saved view name" }).fill(name);
-  await panel
-    .getByRole("button", { name: "Save current view", exact: true })
-    .click();
-}
-
-async function viewport(page: Page): Promise<GraphViewport> {
-  return page.locator(".react-flow__viewport").evaluate((element) => {
-    const matrix = new DOMMatrix(getComputedStyle(element).transform);
-    return { x: matrix.e, y: matrix.f, zoom: matrix.a };
-  });
-}
-
-async function expectViewport(page: Page, expected: GraphViewport) {
-  await expect
-    .poll(async () => {
-      const current = await viewport(page);
-      return Math.max(
-        Math.abs(current.x - expected.x),
-        Math.abs(current.y - expected.y),
-        Math.abs(current.zoom - expected.zoom),
-      );
-    })
-    .toBeLessThan(0.05);
 }
 
 async function expectNoOverflow(page: Page) {
@@ -315,226 +279,62 @@ test("large text and high contrast keep mobile controls and skill details usable
   expect(await storedProfile(page)).toEqual(original);
 });
 
-test("saved views capture filters, selection, and actual pan and zoom, then load without an automatic reset", async ({
+test("removed saved graph views are ignored on load and backup import without changing training data", async ({
   page,
 }) => {
-  await seed(page);
-  await page.addInitScript(
-    (key) => localStorage.setItem(key, JSON.stringify({ motion: "reduce" })),
-    accessibilityKey,
-  );
+  const original = trainingProfile();
+  await seed(page, { ...original, savedGraphViews: [legacySavedView()] });
   await page.goto("/");
   await ready(page);
-  const original = await storedProfile(page);
-  await page
-    .getByRole("textbox", { name: "Search all skills" })
-    .fill("planche");
-  await page
-    .getByRole("combobox", { name: "Skill branch", exact: true })
-    .selectOption("planche");
-  await page
-    .getByRole("combobox", { name: "Maximum skill level", exact: true })
-    .selectOption("5");
-  await page
-    .getByRole("checkbox", { name: "Available only", exact: true })
-    .check();
-  await page.getByRole("button", { name: "Goal paths", exact: true }).click();
-  await page.getByRole("button", { name: "Fit View", exact: true }).click();
-  await page.locator('[data-id="planche-lean"] button').click();
-  await expect(page.locator(".detail-panel")).toBeVisible();
-  const beforeZoom = await viewport(page);
-  await page.getByRole("button", { name: "Zoom In", exact: true }).click();
-  await expect
-    .poll(async () => (await viewport(page)).zoom)
-    .toBeGreaterThan(beforeZoom.zoom);
-  const pane = page.locator(".react-flow__pane");
-  await pane.scrollIntoViewIfNeeded();
-  const bounds = (await pane.boundingBox())!;
-  const beforePan = await viewport(page);
-  await page.mouse.move(bounds.x + bounds.width - 25, bounds.y + 25);
-  await page.mouse.down();
-  await page.mouse.move(bounds.x + bounds.width - 85, bounds.y + 75, {
-    steps: 5,
-  });
-  await page.mouse.up();
-  const captured = await viewport(page);
-  expect(
-    Math.max(
-      Math.abs(captured.x - beforePan.x),
-      Math.abs(captured.y - beforePan.y),
-    ),
-  ).toBeGreaterThan(20);
-  await saveView(page, "  Push focus  ");
-  const panel = bookmarks(page);
   await expect(
-    panel.getByRole("status", { name: "Saved views status" }),
-  ).toHaveText("Saved Push focus.");
-  const stored = (await storedProfile(page)).savedGraphViews![0];
-  expect(stored).toEqual(
-    expect.objectContaining({
-      name: "Push focus",
-      group: "all",
-      branch: "planche",
-      query: "planche",
-      maxDifficulty: 5,
-      availableOnly: true,
-      highlightPath: false,
-      selectedSkillId: "planche-lean",
-    }),
-  );
-  expect(stored.viewport!.x).toBeCloseTo(captured.x, 2);
-  expect(stored.viewport!.y).toBeCloseTo(captured.y, 2);
-  expect(stored.viewport!.zoom).toBeCloseTo(captured.zoom, 3);
-  expect({
-    ...(await storedProfile(page)),
-    savedGraphViews: undefined,
-  }).toEqual({ ...original, savedGraphViews: undefined });
-
-  await saveView(page, "push FOCUS");
-  await expect(panel.getByRole("alert")).toHaveText(
-    "A view with this name already exists. Choose another name.",
-  );
-  expect((await storedProfile(page)).savedGraphViews).toHaveLength(1);
-  await saveView(page, " ");
-  await expect(panel.getByRole("alert")).toHaveText(
-    "Enter a name for this view.",
-  );
-  await page.getByRole("textbox", { name: "Search all skills" }).fill("squat");
-  await page
-    .getByRole("combobox", { name: "Maximum skill level", exact: true })
-    .selectOption("17");
-  await page
-    .getByRole("checkbox", { name: "Available only", exact: true })
-    .uncheck();
-  await page.getByRole("button", { name: "Goal paths", exact: true }).click();
-  await panel
-    .getByRole("button", { name: "Load Push focus", exact: true })
-    .click();
+    page.getByRole("region", { name: "Saved graph views", exact: true }),
+  ).toHaveCount(0);
   await expect(
-    page.getByRole("textbox", { name: "Search all skills" }),
-  ).toHaveValue("planche");
-  await expect(
-    page.getByRole("combobox", { name: "Skill group", exact: true }),
-  ).toHaveValue("all");
-  await expect(
-    page.getByRole("combobox", { name: "Skill branch", exact: true }),
-  ).toHaveValue("planche");
-  await expect(
-    page.getByRole("combobox", { name: "Maximum skill level", exact: true }),
-  ).toHaveValue("5");
-  await expect(
-    page.getByRole("checkbox", { name: "Available only", exact: true }),
-  ).toBeChecked();
-  await expect(
-    page.getByRole("button", { name: "Goal paths", exact: true }),
-  ).toHaveAttribute("aria-pressed", "false");
-  await expect(
-    page
-      .locator(".detail-panel")
-      .getByRole("heading", { name: "Planche Lean", exact: true }),
-  ).toBeVisible();
-  await expectViewport(page, captured);
-  await page
-    .locator(".detail-panel")
-    .getByRole("button", { name: "Close skill details", exact: true })
-    .click();
-  await expectViewport(page, captured);
-  await panel
-    .getByRole("button", { name: "Rename Push focus", exact: true })
-    .click();
-  await panel
-    .getByRole("textbox", { name: "New name for Push focus", exact: true })
-    .fill("Planche practice");
-  await panel.getByRole("button", { name: "Save name", exact: true }).click();
-  await expect(
-    panel.getByRole("button", { name: "Load Planche practice", exact: true }),
-  ).toBeVisible();
-  expect((await storedProfile(page)).savedGraphViews![0]).toEqual({
-    ...stored,
-    name: "Planche practice",
-  });
-  await page.reload();
-  await ready(page);
-  await expect(
-    panel.getByRole("button", { name: "Load Planche practice", exact: true }),
-  ).toBeVisible();
-  await panel
-    .getByRole("button", { name: "Delete Planche practice", exact: true })
-    .click();
-  await expect(
-    panel.getByRole("list", { name: "Saved graph views", exact: true }),
+    page.getByRole("button", { name: "Save current view", exact: true }),
   ).toHaveCount(0);
   expect(await storedProfile(page)).toEqual(original);
-});
 
-test("saved graph views survive backup transfer and apply current availability without changing training data", async ({
-  page,
-  context,
-}) => {
-  const initial = { ...trainingProfile(), savedGraphViews: [savedView()] };
-  await seed(page, initial);
-  await page.goto("/");
-  await ready(page);
-  const other = await context.newPage();
-  await other.goto("/");
-  await ready(other);
-  await other.evaluate((key) => {
-    const profile = JSON.parse(localStorage.getItem(key)!);
-    profile.progress = { "push-up": "mastered" };
-    localStorage.setItem(key, JSON.stringify(profile));
-  }, profileKey);
-  await expect
-    .poll(async () => (await storedProfile(page)).progress)
-    .toEqual({ "push-up": "mastered" });
-  await bookmarks(page)
-    .getByRole("button", { name: "Load Planche practice", exact: true })
-    .click();
-  await expect(
-    page.getByRole("checkbox", { name: "Available only", exact: true }),
-  ).toBeChecked();
-  await expect(page.locator(".detail-panel")).toHaveCount(0);
-  await expect(page.locator('[data-id="planche-lean"]')).toHaveCount(0);
-  const saved = await storedProfile(page);
-  expect(saved).toEqual({ ...initial, progress: { "push-up": "mastered" } });
+  await navigate(page, "Preferences");
+  await preferences(page)
+    .getByRole("combobox", { name: "Contrast", exact: true })
+    .selectOption("high");
   await navigate(page, "Overview");
   const backup = page.getByRole("region", {
     name: "Profile backup",
     exact: true,
   });
+  page.once("dialog", (dialog) => dialog.accept());
+  await backup.locator('input[type="file"]').setInputFiles({
+    name: "legacy-profile.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        ...original,
+        savedGraphViews: [legacySavedView(), { id: "broken-view" }],
+      }),
+    ),
+  });
+  await expect(backup.getByRole("status")).toHaveText(
+    "Profile imported and saved on this device.",
+  );
+  expect(await storedProfile(page)).toEqual(original);
+  await expect(page.locator("html")).toHaveAttribute("data-contrast", "high");
   const downloadPromise = page.waitForEvent("download");
   await backup
     .getByRole("button", { name: "Export JSON", exact: true })
     .click();
   const download = await downloadPromise;
-  const exported = await readFile((await download.path())!, "utf8");
-  expect(JSON.parse(exported)).toEqual(saved);
-  expect(JSON.parse(exported)).not.toHaveProperty("accessibility");
-  await navigate(page, "Skill tree");
-  await bookmarks(page)
-    .getByRole("button", { name: "Delete Planche practice", exact: true })
-    .click();
-  await navigate(page, "Overview");
-  page.once("dialog", (dialog) => dialog.accept());
-  await backup.locator('input[type="file"]').setInputFiles({
-    name: "saved-views.json",
-    mimeType: "application/json",
-    buffer: Buffer.from(exported),
-  });
-  await expect(backup.getByRole("status")).toHaveText(
-    "Profile imported and saved on this device.",
-  );
+  const exported = JSON.parse(await readFile((await download.path())!, "utf8"));
+  expect(exported).toEqual(original);
+  expect(exported).not.toHaveProperty("savedGraphViews");
+  expect(exported).not.toHaveProperty("accessibility");
   await navigate(page, "Skill tree");
   await expect(
-    bookmarks(page).getByRole("button", {
-      name: "Load Planche practice",
-      exact: true,
-    }),
-  ).toBeVisible();
-  expect(await storedProfile(page)).toEqual(saved);
-  await other.close();
+    page.getByRole("region", { name: "Saved graph views", exact: true }),
+  ).toHaveCount(0);
 });
 
-test("corrupt local preferences and saved entries recover without adding graph fields to legacy profiles", async ({
+test("corrupt local accessibility preferences recover to defaults without altering training data", async ({
   page,
 }) => {
   await seed(page);
@@ -553,34 +353,10 @@ test("corrupt local preferences and saved entries recover without adding graph f
   await expect(
     preferences(page).getByRole("combobox", { name: "Text size", exact: true }),
   ).toHaveValue("standard");
-  expect(await storedProfile(page)).not.toHaveProperty("savedGraphViews");
-  await navigate(page, "Skill tree");
-  await expect(bookmarks(page)).toContainText("No saved views yet.");
-  await page.evaluate(
-    ({ key, valid }) => {
-      const profile = JSON.parse(localStorage.getItem(key)!);
-      profile.savedGraphViews = [
-        valid,
-        { id: "bad-view", name: "Broken" },
-        { ...valid, id: "duplicate-view" },
-      ];
-      localStorage.setItem(key, JSON.stringify(profile));
-    },
-    { key: profileKey, valid: savedView() },
-  );
-  await page.reload();
-  await ready(page);
-  await expect(bookmarks(page).getByRole("listitem")).toHaveCount(1);
-  await expect(
-    bookmarks(page).getByRole("button", {
-      name: "Load Planche practice",
-      exact: true,
-    }),
-  ).toBeVisible();
-  expect((await storedProfile(page)).savedGraphViews).toEqual([savedView()]);
+  expect(await storedProfile(page)).toEqual(trainingProfile());
 });
 
-test("blocked storage still honors motion before hydration and permits session preferences and exportable views", async ({
+test("blocked storage still honors motion before hydration and permits session preferences and profile export", async ({
   page,
   context,
 }) => {
@@ -633,16 +409,7 @@ test("blocked storage still honors motion before hydration and permits session p
     "true",
   );
   await navigate(page, "Skill tree");
-  await expect(bookmarks(page)).toContainText(
-    "Saved views last for this session.",
-  );
-  await saveView(page, "Session view");
-  await expect(
-    bookmarks(page).getByRole("button", {
-      name: "Load Session view",
-      exact: true,
-    }),
-  ).toBeVisible();
+  await expect(page.locator(".react-flow__edge.animated")).toHaveCount(0);
   await navigate(page, "Overview");
   const backup = page.getByRole("region", {
     name: "Profile backup",
@@ -656,16 +423,7 @@ test("blocked storage still honors motion before hydration and permits session p
   const exported: UserProfile = JSON.parse(
     await readFile((await download.path())!, "utf8"),
   );
-  expect(exported.savedGraphViews).toEqual([
-    expect.objectContaining({ name: "Session view" }),
-  ]);
+  expect(exported).toHaveProperty("version", 2);
+  expect(exported).not.toHaveProperty("savedGraphViews");
   expect(exported).not.toHaveProperty("accessibility");
-  await navigate(page, "Skill tree");
-  await expect(page.locator(".react-flow__edge.animated")).toHaveCount(0);
-  await bookmarks(page)
-    .getByRole("button", { name: "Load Session view", exact: true })
-    .click();
-  await expect(
-    bookmarks(page).getByRole("status", { name: "Saved views status" }),
-  ).toHaveText("Loaded Session view.");
 });

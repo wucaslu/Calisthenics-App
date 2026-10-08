@@ -13,6 +13,23 @@ import {
 } from "@/lib/profile";
 import type { PracticeEntry } from "@/types/skill";
 
+describe("removed saved graph views", () => {
+  it("discards legacy view data from local storage without altering the current profile", () => {
+    const profile = createDemoProfile();
+    profile.personalRecords = { "push-up": "13 reps" };
+    profile.weeklySchedule = { monday: ["push-up"] };
+    for (const savedGraphViews of [
+      [{ id: "old-view", name: "My graph", viewport: { x: 0, y: 0, zoom: 1 } }],
+      null,
+      "broken",
+    ]) {
+      expect(
+        parseProfile(JSON.stringify({ ...profile, savedGraphViews })),
+      ).toEqual(profile);
+    }
+  });
+});
+
 describe("personal records", () => {
   it("archives one-leg records and retains downstream mastery through the shorter routes", () => {
     const profile = createDemoProfile();

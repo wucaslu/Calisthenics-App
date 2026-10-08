@@ -393,7 +393,7 @@ test("researched milestones show published levels, independent routes, and named
     "Community extension · Level 9 · BI13 (Hefesto (GH pullout))",
   );
   await expect(panel.locator(".detail-meta .difficulty-source")).toHaveText(
-    "App estimate",
+    "Community chart",
   );
 });
 

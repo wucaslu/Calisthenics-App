@@ -1,6 +1,6 @@
 # Progression reference
 
-Workbook and technique sources reviewed **7 October 2026**. The catalog has **139 skills**: Pull 46, Push 57, Legs 13, and Core 23. It includes 38 additional workbook milestones. Levels match 83 book-chart entries and 13 community additions; 43 skills use app estimates.
+Workbook levels rechecked **8 October 2026**; technique sources reviewed **7 October 2026**. The catalog has **144 skills**: Pull 51, Push 57, Legs 13, and Core 23. It includes five new Pelican/Hefesto steps alongside the earlier 38 workbook milestones. Levels match 84 book-chart entries and 20 community additions; 40 skills use app estimates.
 
 ## Workbook source
 
@@ -51,7 +51,7 @@ Matched skills use workbook levels **1–17**. Unmatched skills show **App estim
 | Ring Archer Pull-up          | 7     | OG2 book        | W11, R Archer Pull-ups                             |
 | One-Arm Chin-up              | 9     | OG2 book        | W13, OAC; supinated grip                           |
 | Two-Hand Shrimp Squat        | 6     | Community chart | BC10, 2 Hand Shrimp                                |
-| Hefesto                      | 11    | App estimate    | App adjustment; BI13 community chart level is 9    |
+| Hefesto                      | 9     | Community chart | BI13, Hefesto (GH pullout)                         |
 | Dragon Flag                  | 6     | Community chart | BF10, Full Dragon Flag                             |
 | Bar Archer Pull-up           | 6     | App estimate    | Fixed-bar movement                                 |
 | Pronated One-Arm Pull-up     | 10    | App estimate    | Different grip from the chart's OAC                |
@@ -61,28 +61,48 @@ Matched skills use workbook levels **1–17**. Unmatched skills show **App estim
 
 Iron Cross Negative is estimated at 9, Maltese Negative at 15, and Straddle Maltese at 16. These preparation steps remain distinct from the sourced full skills. `src/lib/difficulty.ts` defines the shared scale, tiers, and labels.
 
+### Pelican and Hefesto workbook progression
+
+All eight entries in BI9–BI16 are now mapped at their exact row levels. The first three use rings with supported feet; the later entries distinguish the starting position and how the second arm contributes.
+
+| Level | Cell | Skill                      | App setup                                               |
+| ----- | ---- | -------------------------- | ------------------------------------------------------- |
+| 5     | BI9  | Incline Pelican Curl       | Rings, grounded feet, upright incline                   |
+| 6     | BI10 | Pelican Curl               | Rings, grounded feet                                    |
+| 7     | BI11 | Feet-Elevated Pelican Curl | Rings + gym bench, both feet supported                  |
+| 8     | BI12 | Hefesto Negative           | Fixed bar, controlled descent behind the body           |
+| 9     | BI13 | Hefesto                    | Fixed bar, underhand pull from a German hang            |
+| 10    | BI14 | Back Lever Hefesto         | Fixed bar, full horizontal back-lever start             |
+| 11    | BI15 | Archer Hefesto             | Rings, opposite elbow straight with both grips retained |
+| 12    | BI16 | Hand-on-Wrist Hefesto      | Fixed bar, second hand supporting the working wrist     |
+
+The chart supplies names and levels; these apparatus and form details are app choices. Technique links for rare variants are explicitly labeled as adaptations. BI13’s level 9 replaces the former app override of 11. The book’s R13 **GH Pullout** is not added as a duplicate fixed-bar skill.
+
+Ring Rows at U6 also maps the app’s Inverted Row to book level 2. After these additions, the 144-skill catalog has 104 exact chart matches: 84 book and 20 community. The other 40 retain labeled estimates because their grip, apparatus, range, or movement is absent or ambiguous in this workbook.
+
 ## Routes
 
 Workbook ordering and levels inform the catalog. Prerequisite edges, alternatives, drills, and repetition/hold benchmarks are **app preparation choices**, not exact workbook requirements. Mastery remains manual.
 
-| Family                   | Route                                                                                                                                                                                    |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Bar muscle-up            | Pull-up Negative → Pull-up → Chest-to-Bar → Explosive → High → Muscle-up → Strict Muscle-up. Muscle-up also requires Straight-Bar Dip.                                                   |
-| Ring muscle-up           | False-Grip Hang + Ring Pull-up + Ring Dip → Ring Muscle-up; independent of bar muscle-up.                                                                                                |
-| Rows                     | Archer Row → Straddle One-Arm Row → One-Arm Row. Front-lever rows have separate tuck, advanced-tuck, and full-body entries.                                                              |
-| Front/back lever         | Tuck → Advanced Tuck → Straddle → Half-Lay → Full. Half-lay bends both knees. German Hang precedes Skin the Cat.                                                                         |
-| Floor/ring planche       | Separate routes: Frog Stand → Straight-Arm Frog Stand → Tuck → Advanced Tuck → Straddle → Half-Lay → Full. Ring stages also require corresponding floor preparation.                     |
-| Planche push-ups         | Separate floor/ring routes: Tuck → Advanced Tuck → Straddle → Half-Lay → Full, with supporting static positions.                                                                         |
-| One-arm pulling/pressing | Ring Archer Pull-up → One-Arm Chin-up Negative → One-Arm Chin-up stays separate from pronated pulling. Straddle One-Arm Push-up prepares the legs-together version.                      |
-| Handstand pressing       | Pike → Decline Pike → head-to-floor pressing. Full-Range Handstand Push-up requires raised supports.                                                                                     |
-| 90 Degree Hold           | Advanced Tuck Planche + Tuck Planche Push-up → horizontal straight-body bent-arm hold, without an abdominal elbow brace; floor or suitable parallettes.                                  |
-| Pelican Push Up          | Ring Full Planche + Back Lever + Pelican Press → dynamic planche → back lever → planche, with controlled endpoints.                                                                      |
-| L-sit/V-sit/Manna        | Tuck L-Sit → L-Sit → Straddle L-Sit → 45° → 75° → 100° → 120° → 140° → 155° → 170° V-Sit → Manna. Generic V-Sit remains separate.                                                        |
-| Legs                     | Split Squat → Deep Step-up → Pistol Negative → Pistol. Shrimp → Two-Hand Shrimp is separate. Dragon Squat uses pistol strength and reverse-lunge balance.                                |
-| Posterior chain          | Glute Bridge → Nordic Negative → Nordic Curl.                                                                                                                                            |
-| Hanging core/Dragon Flag | Hanging Knee Raise → Hanging Leg Raise → Toes-to-Bar → Hanging Windshield Wiper. Tuck Dragon Flag Negative → Advanced Tuck → Straddle → Full; dynamic Tuck Dragon Flag remains separate. |
+| Family                   | Route                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bar muscle-up            | Pull-up Negative → Pull-up → Chest-to-Bar → Explosive → High → Muscle-up → Strict Muscle-up. Muscle-up also requires Straight-Bar Dip.                                                                                                                                                                                                  |
+| Ring muscle-up           | False-Grip Hang + Ring Pull-up + Ring Dip → Ring Muscle-up; independent of bar muscle-up.                                                                                                                                                                                                                                               |
+| Rows                     | Archer Row → Straddle One-Arm Row → One-Arm Row. Front-lever rows have separate tuck, advanced-tuck, and full-body entries.                                                                                                                                                                                                             |
+| Front/back lever         | Tuck → Advanced Tuck → Straddle → Half-Lay → Full. Half-lay bends both knees. German Hang precedes Skin the Cat.                                                                                                                                                                                                                        |
+| Floor/ring planche       | Separate routes: Frog Stand → Straight-Arm Frog Stand → Tuck → Advanced Tuck → Straddle → Half-Lay → Full. Ring stages also require corresponding floor preparation.                                                                                                                                                                    |
+| Planche push-ups         | Separate floor/ring routes: Tuck → Advanced Tuck → Straddle → Half-Lay → Full, with supporting static positions.                                                                                                                                                                                                                        |
+| One-arm pulling/pressing | Ring Archer Pull-up → One-Arm Chin-up Negative → One-Arm Chin-up stays separate from pronated pulling. Straddle One-Arm Push-up prepares the legs-together version.                                                                                                                                                                     |
+| Handstand pressing       | Pike → Decline Pike → head-to-floor pressing. Full-Range Handstand Push-up requires raised supports.                                                                                                                                                                                                                                    |
+| 90 Degree Hold           | Advanced Tuck Planche + Tuck Planche Push-up → horizontal straight-body bent-arm hold, without an abdominal elbow brace; floor or suitable parallettes.                                                                                                                                                                                 |
+| Pelican/Hefesto          | Incline Pelican Curl → Pelican Curl → Feet-Elevated Pelican Curl provides optional extra preparation for Hefesto Negative alongside Straight-Bar Dip. The original German Hang + Straight-Bar Dip route still unlocks the negative without the ring preparation. Hefesto → Back Lever Hefesto → Archer Hefesto → Hand-on-Wrist Hefesto. |
+| Pelican Push Up          | Ring Full Planche + Back Lever + Pelican Press → dynamic planche → back lever → planche, with controlled endpoints.                                                                                                                                                                                                                     |
+| L-sit/V-sit/Manna        | Tuck L-Sit → L-Sit → Straddle L-Sit → 45° → 75° → 100° → 120° → 140° → 155° → 170° V-Sit → Manna. Generic V-Sit remains separate.                                                                                                                                                                                                       |
+| Legs                     | Split Squat → Deep Step-up → Pistol Negative → Pistol. Shrimp → Two-Hand Shrimp is separate. Dragon Squat uses pistol strength and reverse-lunge balance.                                                                                                                                                                               |
+| Posterior chain          | Glute Bridge → Nordic Negative → Nordic Curl.                                                                                                                                                                                                                                                                                           |
+| Hanging core/Dragon Flag | Hanging Knee Raise → Hanging Leg Raise → Toes-to-Bar → Hanging Windshield Wiper. Tuck Dragon Flag Negative → Advanced Tuck → Straddle → Full; dynamic Tuck Dragon Flag remains separate.                                                                                                                                                |
 
-Every prerequisite within a route must be mastered; any one complete route unlocks the target. Alternatives exist for Tuck Front Lever, Bar Archer Pull-up, Tuck Ice Cream Maker, Handstand Push-up, Ring Dip, Pistol Squat Negative, and Advanced Tuck Dragon Flag. Resetting a prerequisite preserves dependent progress if another route remains complete.
+Every prerequisite within a route must be mastered; any one complete route unlocks the target. Alternatives exist for Tuck Front Lever, Bar Archer Pull-up, Tuck Ice Cream Maker, Handstand Push-up, Ring Dip, Pistol Squat Negative, Advanced Tuck Dragon Flag, and Hefesto Negative. Resetting a prerequisite preserves dependent progress if another route remains complete.
 
 Goal planning selects one route at each step, includes supporting dependencies, and stops at mastered skills. It favors fewer steps requiring unavailable equipment, then fewer outstanding requirements; the standard route wins ties. The tree shows all routes, with alternatives dashed; goal highlights show the selected route.
 
@@ -94,9 +114,9 @@ Each equipment substitution specifies a complete setup and execution notes. Elig
 
 ## Exclusions
 
-Exclude assisted, weighted, and one-leg intermediate nodes: bands, walls, spotters, handrails, and foot-supported suspended skills. Keep intrinsic unilateral exercises such as **Pistol, Shrimp, and Dragon Squat**.
+Exclude generic assisted, weighted, and one-leg intermediate nodes: bands, walls, spotters, handrails, and foot-supported suspended skills. Keep intrinsic unilateral exercises such as **Pistol, Shrimp, and Dragon Squat**.
 
-Keep tucks, straddles, half-lays with both knees bent, and controlled negatives. Normal foot contact in push-ups, rows/curls, pike positions, and squats is part of the movement. A decline-pike box increases shoulder load; a Nordic ankle anchor fixes the feet. Nordic Negative allows a hand catch after descent; full Nordic Curl excludes a hand push on return.
+Keep tucks, straddles, half-lays with both knees bent, and controlled negatives. Normal foot contact in push-ups, rows/curls, pike positions, and squats is part of the movement. The requested Hefesto progression includes the workbook’s feet-elevated Pelican Curl and hand-on-wrist variant; keep their foot/wrist support explicit rather than labeling them as fully suspended or unsupported one-arm skills. A decline-pike box increases shoulder load; a Nordic ankle anchor fixes the feet. Nordic Negative allows a hand catch after descent; full Nordic Curl excludes a hand push on return.
 
 Manual record text may contain weight, such as `12 reps + 10 kg`. The practice log has no weight metric, and saving practice replaces that text with the logged best.
 
@@ -112,7 +132,7 @@ Schedules and suggestions do not create logs or change mastery. Catalog and leve
 
 ## Storage and migration
 
-The profile remains **version 2** at `calisthenics-skill-tree:v1`. Version 1 profiles migrate with an empty practice log. Optional `weeklySchedule` and `savedGraphViews` fields default to empty. Local recovery drops invalid entries individually; JSON import validates before replacing the profile. Browser and desktop profiles transfer through **Overview → Profile backup**.
+The profile remains **version 2** at `calisthenics-skill-tree:v1`. Version 1 profiles migrate with an empty practice log. Optional `weeklySchedule` defaults to empty. The removed `savedGraphViews` field is ignored in local profiles and older backups; other valid profile data is retained. Local recovery drops invalid entries individually; JSON import validates before replacing the profile. Browser and desktop profiles transfer through **Overview → Profile backup**.
 
 Retain movement meanings and persisted IDs:
 
@@ -124,13 +144,11 @@ New prerequisites can relock old training/mastery. Preserve those states in `arc
 
 Retired IDs remain archived: `one-leg-front-lever`, `one-leg-back-lever`, `one-leg-l-sit`, `single-leg-glute-bridge`, removed assisted milestones, and the old tuck `front-lever-row`. Keep their records and valid logs attached to those IDs. Remove retired goals from the active list. Archives persist in backups and do not count toward active completion or recommendations.
 
-### Views and device preferences
-
-Saved graph views store filters, goal highlighting, selection, and optional finite pan/zoom. Loading reevaluates current availability and closes hidden selections. Saving/loading leaves progress unchanged. Invalid local views are dropped; malformed imported views reject the backup.
+### Device preferences
 
 Theme uses `calisthenics-skill-tree:theme`; accessibility uses `calisthenics-skill-tree:accessibility`. They synchronize across tabs and apply before paint. Accessibility settings stay outside profile backups. Invalid preference fields recover to defaults; blocked storage permits session use. Reduced motion always respects the system preference. Resetting accessibility leaves theme and training data intact.
 
-Desktop **0.2.1** keeps its storage origin and `%APPDATA%\Calisthenics Skill Tree` directory. Replacing the executable preserves its profile. It does not preserve newer weekly schedules or saved graph views; keep the original backup when transferring to it. Desktop updates require a separate request.
+Desktop **0.2.1** keeps its storage origin and `%APPDATA%\Calisthenics Skill Tree` directory. Replacing the executable preserves its profile. It does not preserve newer weekly schedules; keep the original backup when transferring to it. Desktop updates require a separate request.
 
 ## Technique sources
 
@@ -146,7 +164,7 @@ Guidance uses reachable written instructions and archived text. Several coaching
 
 ## Maintain the catalog
 
-1. Add exact source cells, text, levels, origin, and variants to `src/data/overcomingGravity.ts`; generate links in `src/data/references.ts`. A mapped level overrides the fallback estimate. Explicit app ratings in `src/data/skills.ts` take precedence and retain the original chart reference.
+1. Add exact source cells, text, levels, origin, and variants to `src/data/overcomingGravity.ts`; generate links in `src/data/references.ts`. A mapped level always overrides the fallback estimate; app ratings cannot override the workbook.
 2. Add stable definitions to `src/data/skills.ts` or `src/data/og2Skills.ts`; muscles to their muscle maps; setup/form/mistakes to the category technique map; routes and equipment to `src/data/trainingOptions.ts`.
 3. Calibrate unmatched integer estimates from 1–17 against the anchors above. Keep tiers and source wording in `src/lib/difficulty.ts`.
 4. Check source matches, exclusions, apparatus/range, duplicate IDs, dependency reachability/cycles, alternatives, graph layout, equipment, and migration. Never reuse a persisted ID for a different movement.

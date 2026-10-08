@@ -3,6 +3,15 @@ import type { EquipmentSetup, PrerequisiteRoute, Skill } from "@/types/skill";
 // These are app preparation routes, rather than universal strength standards.
 // Each route is a complete AND group; separate routes are alternatives (OR).
 export const alternativeRoutes: Record<string, PrerequisiteRoute[]> = {
+  "hefesto-negative": [
+    {
+      id: "pelican-curl-preparation",
+      label: "Pelican curl preparation",
+      description:
+        "Build controlled shoulder extension through incline, regular, and feet-elevated Pelican Curls. Straight-bar support is still required before lowering on the bar.",
+      prerequisites: ["feet-elevated-pelican-curl", "straight-bar-dip"],
+    },
+  ],
   "tuck-front-lever": [
     {
       id: "chin-up-foundation",

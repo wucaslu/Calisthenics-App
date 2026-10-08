@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-Explore **139 calisthenics skills** in Pull (46), Push (57), Legs (13), and Core (23). Track progress, personal records, practice, and weekly training plans. Built with Next.js, TypeScript, React, Tailwind CSS, and React Flow.
+Explore **144 calisthenics skills** in Pull (51), Push (57), Legs (13), and Core (23). Track progress, personal records, practice, and weekly training plans. Built with Next.js, TypeScript, React, Tailwind CSS, and React Flow.
 
 The app stores data locally. No account, database, API key, or backend is required.
 
@@ -32,7 +32,7 @@ Fonts are bundled locally. The app makes no external application requests. If th
 
 The portable Windows 64-bit app requires no Node.js, terminal, server, or administrator access. Its tree, records, practice log, and analytics work offline; reference links open in your browser.
 
-**Desktop updates require a separate request.** Web changes do not rebuild the executable. Light mode, availability filtering, automatic practice records, record history, weekly schedules and suggestions, technique guidance, accessibility preferences, and saved graph views await a desktop update. Version 0.2.1 does not preserve weekly schedules or saved graph views from newer backups; keep the original JSON file when transferring to it.
+**Desktop updates require a separate request.** Web changes do not rebuild the executable. Light mode, availability filtering, automatic practice records, record history, weekly schedules and suggestions, technique guidance, accessibility preferences, and the expanded Hefesto progression await a desktop update. Version 0.2.1 does not preserve weekly schedules from newer backups; keep the original JSON file when transferring to it.
 
 Desktop data lives in `%APPDATA%\Calisthenics Skill Tree`. Replacing the executable preserves that data. Browser and desktop profiles are separate; use **Overview → Profile backup** to transfer them. The executable is not code-signed.
 
@@ -47,15 +47,13 @@ Desktop data lives in `%APPDATA%\Calisthenics Skill Tree`. Replacing the executa
 - Set goals to highlight a preparation path and get equipment-compatible recommendations.
 - Drag the graph or use zoom and Fit View controls. Mobile uses a skill list. Open or close the sidebar with the top-bar navigation button.
 
-Levels use the **Overcoming Gravity 2nd Edition** workbook where matched: 83 **OG2 book**, 13 **Community chart**, and 43 **App estimate** entries. Hefesto uses an adjusted app rating of 11 and retains its chart reference at 9. Details show exact workbook cells. Assisted, weighted, and one-leg intermediate progressions are excluded; Pistol, Shrimp, and Dragon Squat remain.
+Levels use the **Overcoming Gravity 2nd Edition** workbook where matched: 84 **OG2 book**, 20 **Community chart**, and 40 **App estimate** entries. Hefesto follows the chart at level 9. Its preparation and advanced steps run from Incline Pelican Curl (5) through Hand-on-Wrist Hefesto (12). Details show exact workbook cells. Weighted, generic assisted, and one-leg intermediate progressions are excluded; Pistol, Shrimp, and Dragon Squat remain. The workbook’s feet-supported Pelican Curls and hand-on-wrist Hefesto are included as specific progression variants.
 
 See [progression references](docs/progressions.md) for source mappings, route decisions, exclusions, and migration rules. Mastery examples are practice guides; logs do not assess mastery automatically.
 
 ### Customize the view
 
 Use the sun/moon button for light or dark mode. In **Preferences**, choose reduced motion, higher contrast, larger text, or a desktop skill list. System reduced-motion settings are always respected. Theme and accessibility choices save on this device and synchronize across tabs; accessibility settings are excluded from profile backups.
-
-Use **Saved graph views** above the tree to save up to 20 named views. Load, rename, or delete them there. Views store filters, goal highlighting, visible selection, and graph pan/zoom, and are included in profile backups. Loading checks your current progress and closes a selection hidden by the saved filters.
 
 ### Record practice and review analytics
 
@@ -73,9 +71,9 @@ Choose weekdays and skills per day, then **Generate suggestions**. The preview p
 
 ## Save and back up data
 
-Progress, goals, equipment, records, practice, schedules, and saved views persist in localStorage and synchronize across tabs. If storage is blocked, the app reports that changes last for the current session. Clearing browser site data deletes that browser's copy; there is no automatic device synchronization.
+Progress, goals, equipment, records, practice, and schedules persist in localStorage and synchronize across tabs. If storage is blocked, the app reports that changes last for the current session. Clearing browser site data deletes that browser's copy; there is no automatic device synchronization.
 
-Use **Overview → Profile backup → Export JSON** to keep a copy. **Import JSON** validates version 1 or 2 backups and asks before replacing the current profile. Invalid files and cancelled imports preserve existing data. Retired or relocked skill records remain in **Overview → Previous skill records**.
+Use **Overview → Profile backup → Export JSON** to keep a copy. **Import JSON** validates version 1 or 2 backups and asks before replacing the current profile. Invalid files and cancelled imports preserve existing data. Retired or relocked skill records remain in **Overview → Previous skill records**. Older backups that contain saved graph views still import; the removed view data is ignored.
 
 The demo starts with nine mastered fundamentals, two training skills, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Floor, pull-up bar, and parallettes are selected. **Gym** supplies a bar, dip bars, parallettes, and a secure dragon-flag bench; select rings separately.
 
@@ -104,7 +102,7 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium \
 npm run test:e2e
 ```
 
-`npm run format` formats source and documentation. Unit and browser tests cover catalog provenance, progression rules, persistence, practice, analytics, scheduling, filters, preferences, saved views, and responsive interactions.
+`npm run format` formats source and documentation. Unit and browser tests cover catalog provenance, progression rules, persistence, practice, analytics, scheduling, filters, preferences, and responsive interactions.
 
 ### Project structure
 

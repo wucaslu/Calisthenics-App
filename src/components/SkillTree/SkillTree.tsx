@@ -57,7 +57,6 @@ import type {
   Branch,
   Category,
   DifficultyLevel,
-  GraphViewport,
   UserProfile,
 } from "@/types/skill";
 
@@ -129,9 +128,6 @@ interface Props {
   theme: Theme;
   reducedMotion: boolean;
   skillList: boolean;
-  onViewportChange: (viewport: GraphViewport) => void;
-  onViewportRestored?: (key: string) => void;
-  restoredViewport?: { key: string; viewport?: GraphViewport };
   typographyKey?: string;
   availableOnly: boolean;
   setAvailableOnly: (value: boolean) => void;
@@ -153,58 +149,29 @@ function FitTree({
   viewKey,
   focusGoalPath,
   reducedMotion,
-  restoredViewport,
-  onViewportRestored,
   typographyKey,
 }: {
   viewKey: string;
   focusGoalPath: boolean;
   reducedMotion: boolean;
-  restoredViewport?: Props["restoredViewport"];
-  onViewportRestored?: Props["onViewportRestored"];
   typographyKey?: string;
 }) {
-  const { getNodes, setViewport, viewportInitialized } = useReactFlow<
+  const { getNodes, viewportInitialized } = useReactFlow<
     SkillGraphNode | GroupGraphNode
   >();
   const fit = useFitCanvas(reducedMotion);
   const initialized = useNodesInitialized();
   const width = useStore((state) => state.width);
   const height = useStore((state) => state.height);
-  const handledRequest = useRef<string | undefined>(undefined);
   const fittedView = useRef<string | undefined>(undefined);
   const fittingKey = `${viewKey}:${focusGoalPath}:${typographyKey ?? "default"}`;
-  const restoreKey = restoredViewport?.key;
-  const savedX = restoredViewport?.viewport?.x;
-  const savedY = restoredViewport?.viewport?.y;
-  const savedZoom = restoredViewport?.viewport?.zoom;
   useEffect(() => {
     if (!initialized || !viewportInitialized || !width || !height) return;
-    const pendingRestore =
-      restoreKey !== undefined && handledRequest.current !== restoreKey;
-    if (!pendingRestore && fittedView.current === fittingKey) return;
+    if (fittedView.current === fittingKey) return;
     let measurementFrame = 0;
     const id = requestAnimationFrame(() => {
       // Allow measured nodes to settle after a text-size change or new filter.
       measurementFrame = requestAnimationFrame(() => {
-        if (pendingRestore) {
-          handledRequest.current = restoreKey;
-          if (
-            savedX !== undefined &&
-            savedY !== undefined &&
-            savedZoom !== undefined
-          ) {
-            fittedView.current = fittingKey;
-            void setViewport(
-              { x: savedX, y: savedY, zoom: savedZoom },
-              { duration: 0 },
-            ).then((applied) => {
-              if (applied && restoreKey !== undefined)
-                onViewportRestored?.(restoreKey);
-            });
-            return;
-          }
-        }
         fittedView.current = fittingKey;
         const current = getNodes();
         const pathNodes = current.filter(
@@ -235,13 +202,7 @@ function FitTree({
               : focusGroups.has(node.data.category)
             : focusIds.has(node.id),
         );
-        const fitResult = fit(
-          focusGoalPath && pathNodes.length ? focused : current,
-        );
-        if (pendingRestore && restoreKey !== undefined)
-          void fitResult?.then((applied) => {
-            if (applied) onViewportRestored?.(restoreKey);
-          });
+        void fit(focusGoalPath && pathNodes.length ? focused : current);
       });
     });
     return () => {
@@ -257,12 +218,6 @@ function FitTree({
     height,
     fit,
     getNodes,
-    setViewport,
-    restoreKey,
-    savedX,
-    savedY,
-    savedZoom,
-    onViewportRestored,
   ]);
   return null;
 }
@@ -304,12 +259,7 @@ export function SkillTree(props: Props) {
     availableOnly,
     reducedMotion,
     skillList,
-    onViewportChange,
   } = props;
-  const reportViewport = useCallback(
-    (_event: unknown, viewport: GraphViewport) => onViewportChange(viewport),
-    [onViewportChange],
-  );
   const visible = useMemo(
     () =>
       getVisibleSkills(
@@ -559,7 +509,6 @@ export function SkillTree(props: Props) {
                 <ReactFlow<SkillGraphNode | GroupGraphNode>
                   nodes={nodes}
                   onNodesChange={onNodesChange}
-                  onMoveEnd={reportViewport}
                   edges={edges}
                   nodeTypes={nodeTypes}
                   nodesDraggable={false}
@@ -590,8 +539,6 @@ export function SkillTree(props: Props) {
                         ))
                     }
                     reducedMotion={reducedMotion}
-                    restoredViewport={props.restoredViewport}
-                    onViewportRestored={props.onViewportRestored}
                     typographyKey={props.typographyKey}
                   />
                 </ReactFlow>

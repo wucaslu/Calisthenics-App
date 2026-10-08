@@ -131,8 +131,8 @@ export function AccessibilityPreferences({
       </fieldset>
 
       <p className={styles.hint}>
-        These preferences apply to this browser. Your training progress and
-        saved graph views stay unchanged when you reset them.
+        These preferences apply to this browser. Your training progress stays
+        unchanged when you reset them.
       </p>
       {!storageAvailable && (
         <p className={styles.warning}>

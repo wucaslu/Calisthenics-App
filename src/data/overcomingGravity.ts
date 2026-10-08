@@ -1,9 +1,9 @@
 import type { DifficultyLevel } from "@/types/skill";
 
-/** Reviewed from the user-supplied workbook on 7 October 2026.
+/** Rechecked against the user-supplied workbook on 8 October 2026.
  * Cells E:AY belong to the book charts; BA:BM are explicitly proposed additions.
  * Level = row - 4, except the explicit Maltese L17 label at AM20.
- * Only selected unassisted, unweighted variants are mapped.
+ * Selected unweighted variants, including the requested wrist-supported Hefesto, are mapped.
  */
 export interface Og2Level {
   level: DifficultyLevel;
@@ -42,6 +42,13 @@ export const og2Levels: Record<string, Og2Level> = {
     name: "Bar Pull-ups",
     kind: "book",
     family: "Pull-ups",
+  },
+  "inverted-row": {
+    level: 2,
+    cell: "U6",
+    name: "Ring Rows",
+    kind: "book",
+    family: "Rows",
   },
   "pike-push-up": {
     level: 1,
@@ -262,10 +269,52 @@ export const og2Levels: Record<string, Og2Level> = {
     kind: "community",
     family: "Bodyweight bicep curls",
   },
+  "incline-pelican-curl": {
+    level: 5,
+    cell: "BI9",
+    name: "Incline pelican curl",
+    kind: "community",
+    family: "Bodyweight bicep curls",
+  },
+  "feet-elevated-pelican-curl": {
+    level: 7,
+    cell: "BI11",
+    name: "Feet elevated Pelican (Sup BL)",
+    kind: "community",
+    family: "Bodyweight bicep curls",
+  },
+  "hefesto-negative": {
+    level: 8,
+    cell: "BI12",
+    name: "Hefesto negative (BL pullout)",
+    kind: "community",
+    family: "Bodyweight bicep curls",
+  },
   hefesto: {
     level: 9,
     cell: "BI13",
     name: "Hefesto (GH pullout)",
+    kind: "community",
+    family: "Bodyweight bicep curls",
+  },
+  "back-lever-hefesto": {
+    level: 10,
+    cell: "BI14",
+    name: "Back lever hefesto",
+    kind: "community",
+    family: "Bodyweight bicep curls",
+  },
+  "archer-hefesto": {
+    level: 11,
+    cell: "BI15",
+    name: "Archer hefesto",
+    kind: "community",
+    family: "Bodyweight bicep curls",
+  },
+  "hand-on-wrist-hefesto": {
+    level: 12,
+    cell: "BI16",
+    name: "Hand on wrist hefesto",
     kind: "community",
     family: "Bodyweight bicep curls",
   },

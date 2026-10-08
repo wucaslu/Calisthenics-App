@@ -505,6 +505,22 @@ export const pullTechnique: Record<string, TechniqueGuidance> = {
     "Hold both knees straight and the legs together in one horizontal line from shoulders to feet.",
     "Letting the hips sag, piking the body, or arching the lower back instead of maintaining the long straight line.",
   ),
+  "incline-pelican-curl": {
+    setup: [
+      "Use securely mounted low rings with the feet grounded. Start with the torso inclined upward so less bodyweight loads the arms than in a horizontal Pelican Curl.",
+    ],
+    cues: [
+      "Hold a straight line from shoulders to feet and keep the same incline through each repetition.",
+      "Extend the elbows gradually as the arms travel behind the torso, stopping within a controlled shoulder range.",
+      "Curl back by bending both elbows without moving the feet or pushing through the legs.",
+    ],
+    mistakes: [
+      "Changing body angle during a repetition or folding at the hips to reduce the load.",
+      "Dropping into shoulder extension or bouncing out of the bottom position.",
+    ],
+    sources: ["pull-rr-row", "pull-gym-rings"],
+    sourceScope: adapted("incline ring pulling and shoulder-extension"),
+  },
   "pelican-curl": {
     setup: [
       "Use secure low rings and begin in a straight-body, feet-grounded ring support with the toes on the floor. Choose a ring height and body angle that allow controlled shoulder extension.",
@@ -520,6 +536,24 @@ export const pullTechnique: Record<string, TechniqueGuidance> = {
     ],
     sources: ["pull-rr-row", "pull-gym-rings"],
     sourceScope: adapted("feet-grounded ring pulling and shoulder-extension"),
+  },
+  "feet-elevated-pelican-curl": {
+    setup: [
+      "Set low rings and a stable support under both feet so the body can remain near horizontal. Use an underhand ring grip and ensure the support cannot slide.",
+    ],
+    cues: [
+      "Keep both feet on the support throughout, with the hips open and the trunk in a straight line.",
+      "Lower slowly as the elbows extend and the arms move behind the torso within your controlled shoulder range.",
+      "Curl back without a leg push or a change in hip height; keep both rings moving together.",
+    ],
+    mistakes: [
+      "Lifting the feet to turn the preparation into a suspended back lever or letting the foot support shift.",
+      "Sagging or piking the hips, or falling into an uncontrolled shoulder stretch.",
+    ],
+    sources: ["pull-rr-row", "pull-gym-rings"],
+    sourceScope: adapted(
+      "feet-supported ring pulling and supinated back-lever preparation",
+    ),
   },
   "hefesto-negative": {
     setup: [
@@ -553,6 +587,58 @@ export const pullTechnique: Record<string, TechniqueGuidance> = {
     sources: ["pull-gym-rings"],
     sourceScope: adapted(
       "behind-the-body pulling and controlled shoulder-extension",
+    ),
+  },
+  "back-lever-hefesto": {
+    setup: [
+      "Use a secure fixed bar with an underhand grip. Establish a full horizontal back lever with straight legs together and enough clearance to pull into support.",
+    ],
+    cues: [
+      "Pause in the horizontal starting position rather than sinking into a German hang before the pull.",
+      "Bend both elbows together and keep the trunk braced as the shoulders pass through the behind-the-body transition.",
+      "Finish in stable support without a kick, then return through a range you can control.",
+    ],
+    mistakes: [
+      "Dropping the hips or swinging from a lower hang before initiating the pull.",
+      "Turning one shoulder first or forcing the transition through an uncontrolled stretch.",
+    ],
+    sources: ["pull-gym-rings"],
+    sourceScope: adapted("back-lever and behind-the-body pulling"),
+  },
+  "archer-hefesto": {
+    setup: [
+      "Use equal, securely mounted rings with room to separate the handles. Retain both grips in a controlled behind-the-body position with the feet suspended.",
+    ],
+    cues: [
+      "Bend the working elbow to pull toward that ring while the opposite elbow stays straight.",
+      "Control the independent handles and keep the hips quiet as the shoulders move through the transition.",
+      "Return deliberately while retaining both grips, then repeat with the other arm working.",
+    ],
+    mistakes: [
+      "Bending both elbows equally so the movement becomes a regular two-arm Hefesto.",
+      "Releasing the opposite ring or twisting and swinging to complete the pull.",
+    ],
+    sources: ["pull-gym-rings"],
+    sourceScope: adapted(
+      "asymmetric ring pulling and behind-the-body shoulder-extension",
+    ),
+  },
+  "hand-on-wrist-hefesto": {
+    setup: [
+      "Use a secure fixed bar. Grip underhand with the working hand and hold its wrist with the opposite hand before loading the behind-the-body position.",
+    ],
+    cues: [
+      "Maintain the second hand's wrist contact throughout the pull and return.",
+      "Bend the working elbow while keeping the feet suspended and the torso quiet through the shoulder transition.",
+      "Finish in controlled support and train the opposite side with the same grip arrangement.",
+    ],
+    mistakes: [
+      "Moving the assisting hand onto the bar or releasing the wrist, changing the exercise.",
+      "Kicking or twisting into the transition, or forcing shoulder depth you cannot control.",
+    ],
+    sources: ["pull-gym-rings"],
+    sourceScope: adapted(
+      "wrist-supported pulling and behind-the-body shoulder-extension",
     ),
   },
   "archer-pull-up": {

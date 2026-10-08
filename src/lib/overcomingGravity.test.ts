@@ -10,6 +10,67 @@ import {
 } from "@/lib/progression";
 
 describe("uploaded Overcoming Gravity chart", () => {
+  it("uses the workbook difficulty and source for every mapped skill without app overrides", () => {
+    for (const [id, entry] of Object.entries(og2Levels)) {
+      expect(skillById[id].difficulty, id).toBe(entry.level);
+      expect(skillById[id].levelSource, id).toBe(entry.kind);
+      expect(skillById[id].referenceLevel, id).toContain(entry.cell);
+    }
+    expect(og2Levels["inverted-row"]).toMatchObject({
+      level: 2,
+      cell: "U6",
+      name: "Ring Rows",
+      kind: "book",
+    });
+  });
+
+  it("includes the complete workbook Pelican-to-Hefesto progression with distinct form and apparatus", () => {
+    for (const [id, level, cell] of [
+      ["incline-pelican-curl", 5, "BI9"],
+      ["pelican-curl", 6, "BI10"],
+      ["feet-elevated-pelican-curl", 7, "BI11"],
+      ["hefesto-negative", 8, "BI12"],
+      ["hefesto", 9, "BI13"],
+      ["back-lever-hefesto", 10, "BI14"],
+      ["archer-hefesto", 11, "BI15"],
+      ["hand-on-wrist-hefesto", 12, "BI16"],
+    ] as const) {
+      expect(og2Levels[id]).toMatchObject({ level, cell, kind: "community" });
+      expect(skillById[id].category).toBe("pull");
+      expect(skillById[id].movementType).toBe("dynamic");
+    }
+    expect(skillById["feet-elevated-pelican-curl"].description).toContain(
+      "feet stay supported",
+    );
+    expect(
+      hasEquipment(skillById["feet-elevated-pelican-curl"], ["rings"]),
+    ).toBe(false);
+    expect(
+      hasEquipment(skillById["feet-elevated-pelican-curl"], ["rings", "gym"]),
+    ).toBe(true);
+    expect(skillById["back-lever-hefesto"].description).toContain(
+      "full horizontal back lever",
+    );
+    expect(skillById["archer-hefesto"].equipment).toEqual(["rings"]);
+    expect(skillById["hand-on-wrist-hefesto"].equipment).toEqual([
+      "pull-up-bar",
+    ]);
+    expect(skillById["hand-on-wrist-hefesto"].description).toContain(
+      "other hand holds the working wrist",
+    );
+    expect(
+      skillById["hefesto-negative"].alternativeRoutes?.[0].prerequisites,
+    ).toEqual(["feet-elevated-pelican-curl", "straight-bar-dip"]);
+    for (const id of ["feet-elevated-pelican-curl", "hand-on-wrist-hefesto"]) {
+      let progress = {};
+      for (const skill of getGoalPath(id, progress)) {
+        expect(getSkillState(skill, progress)).toBe("available");
+        progress = updateSkillProgress(progress, skill.id, "mastered");
+      }
+      expect(getSkillState(skillById[id], progress)).toBe("mastered");
+    }
+  });
+
   it("uses the book levels and cells for matched movements, including the explicit level 17 Maltese entry", () => {
     for (const [id, level, cell] of [
       ["diamond-push-up", 2, "AI6"],
@@ -86,18 +147,15 @@ describe("uploaded Overcoming Gravity chart", () => {
       "v-sit",
       "one-arm-pull-up",
       "muscle-up",
-      "hefesto",
     ])
       expect(skillById[id].levelSource).toBeUndefined();
-    expect(skillById.hefesto.difficulty).toBe(11);
+    expect(skillById.hefesto.difficulty).toBe(9);
+    expect(skillById.hefesto.levelSource).toBe("community");
     expect(og2Levels.hefesto).toMatchObject({
       level: 9,
       kind: "community",
       cell: "BI13",
     });
-    expect(skillById.hefesto.referenceLevel).toContain(
-      "App estimate · Level 11",
-    );
     expect(skillById.hefesto.referenceLevel).toContain(
       "Community extension · Level 9 · BI13",
     );

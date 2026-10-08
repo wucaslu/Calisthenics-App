@@ -28,9 +28,9 @@ const chartCases = [
   {
     id: "hefesto",
     name: "Hefesto",
-    level: 11,
-    tier: "Advanced",
-    source: "App estimate",
+    level: 9,
+    tier: "Intermediate",
+    source: "Community chart",
     cell: "BI13",
   },
 ] as const;
@@ -126,9 +126,9 @@ for (const mobile of [false, true]) {
               has: page.getByText("Hefesto", { exact: true }),
             })
           : page.locator('[data-id="hefesto"]');
-        await maximum.selectOption("10");
+        await maximum.selectOption("8");
         await expect(hefesto).toHaveCount(0);
-        await maximum.selectOption("11");
+        await maximum.selectOption("9");
         await expect(hefesto).toBeAttached();
         await maximum.selectOption("17");
       }

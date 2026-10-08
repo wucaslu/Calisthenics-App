@@ -41,28 +41,6 @@ export type Weekday =
   | "sunday";
 export type WeeklySchedule = Partial<Record<Weekday, string[]>>;
 
-export interface GraphViewport {
-  x: number;
-  y: number;
-  zoom: number;
-}
-
-export interface GraphViewSettings {
-  group: Category | "all";
-  branch: Branch | "all";
-  query: string;
-  maxDifficulty: DifficultyLevel;
-  highlightPath: boolean;
-  availableOnly: boolean;
-  selectedSkillId: string | null;
-  viewport?: GraphViewport;
-}
-
-export interface SavedGraphView extends GraphViewSettings {
-  id: string;
-  name: string;
-}
-
 export interface MuscleProfile {
   target: string;
   primary: string[];
@@ -143,7 +121,6 @@ export interface UserProfile {
   archivedSkills: Record<string, ArchivedSkill>;
   practiceLog: PracticeEntry[];
   weeklySchedule?: WeeklySchedule;
-  savedGraphViews?: SavedGraphView[];
 }
 
 export interface ArchivedSkill {

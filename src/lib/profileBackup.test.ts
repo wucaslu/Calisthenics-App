@@ -5,7 +5,6 @@ import {
   PROFILE_BACKUP_MAX_BYTES,
   readProfileBackup,
 } from "@/lib/profileBackup";
-import type { SavedGraphView } from "@/types/skill";
 
 describe("profile backups", () => {
   it("round-trips all profile data for transfer between browser and desktop", () => {
@@ -271,73 +270,48 @@ describe("profile backups", () => {
       ).toThrow("not a supported");
   });
 
-  it("round-trips graph bookmarks without changing their filters, camera, or currently locked selection", () => {
-    const profile = createDemoProfile();
-    profile.savedGraphViews = [
-      {
-        id: "front-lever-view",
-        name: "Front lever goal",
-        group: "pull",
-        branch: "front-lever",
-        query: "lever",
-        maxDifficulty: 12,
-        highlightPath: true,
-        availableOnly: true,
-        selectedSkillId: "full-front-lever",
-        viewport: { x: -200, y: 50.5, zoom: 0.7 },
-      },
-    ];
-    const snapshot = structuredClone(profile);
-    expect(readProfileBackup(createProfileBackup(profile))).toEqual(profile);
-    expect(profile).toEqual(snapshot);
-    expect(profile.progress["full-front-lever"]).toBeUndefined();
-  });
-
-  it("accepts legacy backups without graph bookmarks and normalizes an empty bookmark array", () => {
-    const profile = createDemoProfile();
-    for (const version of [1, 2]) {
-      expect(
-        readProfileBackup(JSON.stringify({ ...profile, version })),
-      ).toEqual(profile);
-      expect(
-        readProfileBackup(
-          JSON.stringify({ ...profile, version, savedGraphViews: [] }),
-        ),
-      ).toEqual(profile);
-    }
-  });
-
-  it("rejects damaged or duplicate graph bookmarks as a whole", () => {
-    const view: SavedGraphView = {
+  it("imports old backups without saved graph views and preserves all other profile data", () => {
+    const profile = savePracticeToProfile(createDemoProfile(), {
+      id: "existing-practice",
+      skillId: "push-up",
+      date: "2026-01-02",
+      sets: 2,
+      repetitions: 13,
+      notes: "Keep training history",
+    });
+    profile.weeklySchedule = { monday: ["push-up"] };
+    profile.archivedSkills = {
+      "wall-handstand": { name: "Wall Handstand", personalRecord: "40 sec" },
+    };
+    const savedView = {
       id: "pull-view",
       name: "Pull view",
       group: "pull",
       branch: "front-lever",
-      query: "",
+      query: "lever",
       maxDifficulty: 17,
-      highlightPath: false,
+      highlightPath: true,
       availableOnly: false,
-      selectedSkillId: null,
+      selectedSkillId: "full-front-lever",
+      viewport: { x: -200, y: 50.5, zoom: 0.7 },
     };
-    for (const savedGraphViews of [
-      null,
-      {},
-      [view, view],
-      [{ ...view, group: "fake" }],
-      [{ ...view, group: "legs" }],
-      [{ ...view, name: " " }],
-      [{ ...view, query: "q".repeat(161) }],
-      [{ ...view, selectedSkillId: "constructor" }],
-      [{ ...view, selectedSkillId: "one-leg-front-lever" }],
-      [{ ...view, viewport: { x: 0, y: 0, zoom: 0 } }],
-      [{ ...view, viewport: null }],
-      [{ ...view, maxDifficulty: 4.5 }],
-      [view, { ...view, id: "other", name: "PULL VIEW" }],
-    ])
-      expect(() =>
-        readProfileBackup(
-          JSON.stringify({ ...createDemoProfile(), savedGraphViews }),
-        ),
-      ).toThrow("not a supported");
+    for (const version of [1, 2]) {
+      for (const savedGraphViews of [
+        undefined,
+        [],
+        [savedView],
+        [savedView, savedView],
+        [{ id: "broken-view" }],
+        null,
+        {},
+      ]) {
+        const restored = readProfileBackup(
+          JSON.stringify({ ...profile, version, savedGraphViews }),
+        );
+        expect(restored).toEqual(profile);
+        expect(JSON.parse(createProfileBackup(restored))).toEqual(profile);
+        expect(restored).not.toHaveProperty("savedGraphViews");
+      }
+    }
   });
 });
