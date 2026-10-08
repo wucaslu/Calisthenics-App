@@ -10,7 +10,7 @@ describe("skill tree maximum level", () => {
   it("shows the complete catalog by default and at the workbook's level 17 ceiling", () => {
     expect(getVisibleSkills("all")).toEqual(skills);
     expect(getVisibleSkills("all", "", "all", MAX_DIFFICULTY)).toEqual(skills);
-    expect(skills).toHaveLength(161);
+    expect(skills).toHaveLength(168);
   });
 
   it("enforces an inclusive ceiling for every group and branch, including cross-group prerequisites", () => {

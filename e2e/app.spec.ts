@@ -254,7 +254,7 @@ for (const mobile of [false, true]) {
       {
         id: "pelican-planche",
         name: "Pelican Push Up",
-        score: 17,
+        score: 16,
         movement: "Dynamic",
         record: "1 full cycle",
       },

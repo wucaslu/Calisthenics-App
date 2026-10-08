@@ -1,6 +1,7 @@
 import type { MuscleProfile } from "@/types/skill";
 import { og2Muscles } from "@/data/og2Muscles";
 import { oneArmMuscles } from "@/data/oneArmMuscles";
+import { advancedStaticMuscles } from "@/data/advancedStaticMuscles";
 
 // Major muscle roles are practical estimates for the technique described in each
 // skill. Grip, joint angle, range of motion, and individual form affect the load.
@@ -772,6 +773,7 @@ const windshieldWiper: MuscleProfile = {
 export const skillMuscles: Record<string, MuscleProfile> = {
   ...og2Muscles,
   ...oneArmMuscles,
+  ...advancedStaticMuscles,
   "dead-hang": deadHang,
   "scapular-pull-up": scapularPull,
   "scapular-push-up": scapularPush,

@@ -129,7 +129,7 @@ export function getOneArmPullCoreSkills(
       "dragon-flag",
       10,
       "static",
-      ["hollow-body-hold", "back-lever"],
+      ["hollow-body-hold", "full-front-lever"],
       ["floor"],
       "Lie face up and press both palms into the floor beside the hips with straight elbows to hold the hips and straight legs clear. Keep contact through the shoulders and upper back with the neck unloaded; the hands press into the floor rather than gripping an anchor behind the head.",
       "5-second low straight-body hold with both palms beside the hips",

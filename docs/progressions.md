@@ -1,6 +1,6 @@
 # Progression reference
 
-Workbook levels rechecked **8 October 2026**; technique sources reviewed **7 October 2026**. The catalog has **161 skills**: Pull 54, Push 66, Legs 13, and Core 28. It includes 15 new one-arm milestones and their Full Ab Wheel / Dragon Press foundations alongside the earlier Pelican/Hefesto and OG2 additions. Levels match 96 book-chart entries and 25 community additions; 40 skills use app estimates.
+Workbook levels rechecked **8 October 2026**; technique sources reviewed **8 October 2026**. The catalog has **168 skills**: Pull 61, Push 66, Legs 13, and Core 28. It includes six bar/floor Victorian variants and Straight Arm Touch alongside the one-arm, Pelican/Hefesto, and OG2 additions. Levels match 96 book-chart entries and 31 community additions; 41 skills use app estimates.
 
 ## Workbook source
 
@@ -40,24 +40,25 @@ Matched skills use workbook levels **1–17**. Unmatched skills show **App estim
 | 10–13  | Advanced     | Iron Cross 10, Floor Full Planche 11, Manna 13                 |
 | 14–17  | Elite        | Ring Full Planche 14, Ring Full Planche Push-up 16, Maltese 17 |
 
-| Skill                        | Level | Origin          | Cell or reason                                     |
-| ---------------------------- | ----- | --------------- | -------------------------------------------------- |
-| Floor Full Planche           | 11    | OG2 book        | AE15, Full PL                                      |
-| Ring Full Planche            | 14    | OG2 book        | AF18, Full PL                                      |
-| Iron Cross                   | 10    | OG2 book        | Z14, Iron Cross Hold                               |
-| Maltese                      | 17    | OG2 book        | AM20, explicit Maltese (L17)                       |
-| Handstand Push-up            | 6     | OG2 book        | G10, Free HeSPU; head-to-floor range               |
-| Full-Range Handstand Push-up | 7     | OG2 book        | G11, Free HSPU; raised supports                    |
-| Ring Archer Pull-up          | 7     | OG2 book        | W11, R Archer Pull-ups                             |
-| One-Arm Chin-up              | 9     | OG2 book        | W13, OAC; supinated grip                           |
-| Two-Hand Shrimp Squat        | 6     | Community chart | BC10, 2 Hand Shrimp                                |
-| Hefesto                      | 9     | Community chart | BI13, Hefesto (GH pullout)                         |
-| Dragon Flag                  | 6     | Community chart | BF10, Full Dragon Flag                             |
-| Bar Archer Pull-up           | 6     | App estimate    | Fixed-bar movement                                 |
-| Pronated One-Arm Pull-up     | 10    | App estimate    | Different grip from the chart's OAC                |
-| Generic V-Sit                | 8     | App estimate    | No specified chart angle                           |
-| 90 Degree Hold               | 8     | App estimate    | Static bent-arm planche                            |
-| Pelican Push Up              | 17    | App estimate    | Planche → back lever → planche transition on rings |
+| Skill                        | Level | Origin          | Cell or reason                                      |
+| ---------------------------- | ----- | --------------- | --------------------------------------------------- |
+| Floor Full Planche           | 11    | OG2 book        | AE15, Full PL                                       |
+| Ring Full Planche            | 14    | OG2 book        | AF18, Full PL                                       |
+| Iron Cross                   | 10    | OG2 book        | Z14, Iron Cross Hold                                |
+| Maltese                      | 17    | OG2 book        | AM20, explicit Maltese (L17)                        |
+| Handstand Push-up            | 6     | OG2 book        | G10, Free HeSPU; head-to-floor range                |
+| Full-Range Handstand Push-up | 7     | OG2 book        | G11, Free HSPU; raised supports                     |
+| Ring Archer Pull-up          | 7     | OG2 book        | W11, R Archer Pull-ups                              |
+| One-Arm Chin-up              | 9     | OG2 book        | W13, OAC; supinated grip                            |
+| Two-Hand Shrimp Squat        | 6     | Community chart | BC10, 2 Hand Shrimp                                 |
+| Hefesto                      | 9     | Community chart | BI13, Hefesto (GH pullout)                          |
+| Dragon Flag                  | 6     | Community chart | BF10, Full Dragon Flag                              |
+| Bar Archer Pull-up           | 6     | App estimate    | Fixed-bar movement                                  |
+| Pronated One-Arm Pull-up     | 10    | App estimate    | Different grip from the chart's OAC                 |
+| Generic V-Sit                | 8     | App estimate    | No specified chart angle                            |
+| 90 Degree Hold               | 8     | App estimate    | Static bent-arm planche                             |
+| Pelican Push Up              | 16    | App estimate    | Planche → back lever → planche transition on rings  |
+| Straight Arm Touch (SAT)     | 16    | App estimate    | Wide-grip fixed-bar hold with hips touching the bar |
 
 Iron Cross Negative is estimated at 9, Maltese Negative at 15, and Straddle Maltese at 16. These preparation steps remain distinct from the sourced full skills. `src/lib/difficulty.ts` defines the shared scale, tiers, and labels.
 
@@ -78,7 +79,7 @@ All eight entries in BI9–BI16 are now mapped at their exact row levels. The fi
 
 The chart supplies names and levels; these apparatus and form details are app choices. Technique links for rare variants are explicitly labeled as adaptations. BI13’s level 9 replaces the former app override of 11. The book’s R13 **GH Pullout** is not added as a duplicate fixed-bar skill.
 
-Ring Rows at U6 also maps the app’s Inverted Row to book level 2. After these additions, the 161-skill catalog has 121 exact chart matches: 96 book and 25 community. The other 40 retain labeled estimates because their grip, apparatus, range, or movement is absent or ambiguous in this workbook.
+Ring Rows at U6 also maps the app’s Inverted Row to book level 2. After these additions, the 168-skill catalog has 127 exact chart matches: 96 book and 31 community. The other 41 retain labeled estimates because their grip, apparatus, range, or movement is absent or ambiguous in this workbook.
 
 ### One-arm workbook additions
 
@@ -102,11 +103,28 @@ These 15 milestones retain the chart’s exact levels and separate grip, apparat
 | BL17 | 13    | One-Arm Dragon Press           |
 | BL20 | 16    | One-Arm Planche                |
 
-`OA Straight MU` is represented as an archer-style ring muscle-up: one arm stays straight and **both grips remain attached**. The workbook’s short label does not establish an unsupported single-arm muscle-up; the app labels its interpretation and technique as adaptations. Dragon Press is a supine floor press with shoulder/upper-back contact and palms beside the hips; it is distinct from an anchored Dragon Flag. The one-arm variant releases one supporting hand.
+`OA Straight MU` is represented as an archer-style ring muscle-up: one arm stays straight and **both grips remain attached**. The workbook’s short label does not establish an unsupported single-arm muscle-up; the app labels its interpretation and technique as adaptations. Dragon Press is a supine floor press with shoulder/upper-back contact and palms beside the hips; it is distinct from an anchored Dragon Flag. Its prerequisites are Hollow Body Hold and Full Front Lever. The one-arm variant releases one supporting hand.
 
 Wall-assisted one-arm dips (AK10 and AK12), weighted chin-ups, and the unspecific E10 handstand-progressions header remain excluded. AU8 is an explicit exception to the generic one-leg-intermediate exclusion: one hand and the opposite foot support the plank while the other arm and leg are raised. The one-forearm Victorian entry is not relabeled as a straight-arm one-arm skill.
 
 Ab Wheel is a separate equipment selection. Gym does not imply access to it, and a one-arm rollout needs a roller designed for a secure single-hand grip. Full and one-arm rollouts use standing starts and returns, with knees clear; a shortened kneeling rollout is preparation, rather than the full chart milestone.
+
+### Victorian and Straight Arm Touch
+
+The **Victorian & SAT** branch includes the requested bar and floor progressions from the workbook’s community section:
+
+| Cell | Level | Milestone                      |
+| ---- | ----- | ------------------------------ |
+| BJ13 | 9     | Protracted Victorian on Bars   |
+| BJ15 | 11    | Victorian on Bars              |
+| BJ17 | 13    | Wide Victorian on Bars         |
+| BJ18 | 14    | Floor Victorian on One Forearm |
+| BJ20 | 16    | Floor Victorian on Forearms    |
+| BJ21 | 17    | Straight-Arm Floor Victorian   |
+
+The chart supplies labels and levels, but does not detail the contact positions. The app defines the bar variants with hands gripping parallel rails and forearms supported on them; the floor variants keep the hips, feet, and upper back clear. BJ18 uses one forearm and the opposite palm in the app’s explicit mixed-contact interpretation. It is not relabeled as an unsupported one-arm hold. Technique guidance marks these contact choices as adaptations. The two forearm variants use independent routes from Wide Victorian on Bars because chart levels alone do not establish a prerequisite chain.
+
+**Straight Arm Touch (SAT)** follows the existing [community skill catalog](https://github.com/G0RB-SMG/Calisthenics-Skill-Tree/blob/0217535ccb58ec5ee897e3c852afef99724f3282/skills.js): face-up horizontal hold on a single bar, ultra-wide grip, straight elbows, and hips touching the bar. Its level **16 is an app estimate**, calibrated above Wide Victorian on Bars (13) and below Straight-Arm Floor Victorian (17); the catalog’s separate difficulty scale is not treated as a workbook level. Its app preparation route uses Wide Victorian on Bars and Full Front Lever. The ring Victorian entry at BJ19 is outside the requested bar/floor selection.
 
 ## Routes
 
@@ -193,6 +211,6 @@ Guidance uses reachable written instructions and archived text. Several coaching
 ## Maintain the catalog
 
 1. Add exact source cells, text, levels, origin, and variants to `src/data/overcomingGravity.ts`; generate links in `src/data/references.ts`. A mapped level always overrides the fallback estimate; app ratings cannot override the workbook.
-2. Add stable definitions to `src/data/skills.ts`, `src/data/og2Skills.ts`, or the `src/data/oneArm*` modules; muscles to their muscle maps; setup/form/mistakes to the category technique map; routes and equipment to `src/data/trainingOptions.ts`.
+2. Add stable definitions to `src/data/skills.ts`, `src/data/og2Skills.ts`, `src/data/advancedStaticSkills.ts`, or the `src/data/oneArm*` modules; muscles to their muscle maps; setup/form/mistakes to the category technique map; routes and equipment to `src/data/trainingOptions.ts`.
 3. Calibrate unmatched integer estimates from 1–17 against the anchors above. Keep tiers and source wording in `src/lib/difficulty.ts`.
 4. Check source matches, exclusions, apparatus/range, duplicate IDs, dependency reachability/cycles, alternatives, graph layout, equipment, and migration. Never reuse a persisted ID for a different movement.

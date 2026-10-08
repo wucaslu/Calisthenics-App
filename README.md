@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-Explore **161 calisthenics skills** in Pull (54), Push (66), Legs (13), and Core (28). Track progress, personal records, practice, and weekly training plans. Built with Next.js, TypeScript, React, Tailwind CSS, and React Flow.
+Explore **168 calisthenics skills** in Pull (61), Push (66), Legs (13), and Core (28). Track progress, personal records, practice, and weekly training plans. Built with Next.js, TypeScript, React, Tailwind CSS, and React Flow.
 
 The app stores data locally. No account, database, API key, or backend is required.
 
@@ -47,7 +47,7 @@ Desktop data lives in `%APPDATA%\Calisthenics Skill Tree`. Replacing the executa
 - Set goals to highlight a preparation path and get equipment-compatible recommendations.
 - Drag the graph or use zoom and Fit View controls. Mobile uses a skill list. Open or close the sidebar with the top-bar navigation button.
 
-Levels use the **Overcoming Gravity 2nd Edition** workbook where matched: 96 **OG2 book**, 25 **Community chart**, and 40 **App estimate** entries. Hefesto follows the chart at level 9. Its preparation and advanced steps run from Incline Pelican Curl (5) through Hand-on-Wrist Hefesto (12). Details show exact workbook cells. Weighted, generic assisted, and one-leg intermediate progressions are excluded; Pistol, Shrimp, and Dragon Squat remain. The workbook’s feet-supported Pelican Curls, hand-on-wrist Hefesto, and One-Arm One-Leg Plank are included as specific progression variants. Fifteen new one-arm milestones cover handstands, ring push-ups, side dips, elbow levers, muscle-ups, levers, planche, and core work; Full Ab Wheel and Dragon Press prepare their one-arm versions.
+Levels use the **Overcoming Gravity 2nd Edition** workbook where matched: 96 **OG2 book**, 31 **Community chart**, and 41 **App estimate** entries. Hefesto follows the chart at level 9. Its preparation and advanced steps run from Incline Pelican Curl (5) through Hand-on-Wrist Hefesto (12). Details show exact workbook cells. Weighted, generic assisted, and one-leg intermediate progressions are excluded; Pistol, Shrimp, and Dragon Squat remain. The workbook’s feet-supported Pelican Curls, hand-on-wrist Hefesto, and One-Arm One-Leg Plank are included as specific progression variants. Fifteen new one-arm milestones cover handstands, ring push-ups, side dips, elbow levers, muscle-ups, levers, planche, and core work; Full Ab Wheel and Dragon Press prepare their one-arm versions. Victorian & SAT adds the chart’s six bar/floor Victorian variants at levels 9–17 and Straight Arm Touch at estimated level 16. Pelican Push Up is estimated at 16.
 
 See [progression references](docs/progressions.md) for source mappings, route decisions, exclusions, and migration rules. Mastery examples are practice guides; logs do not assess mastery automatically.
 
@@ -120,7 +120,7 @@ Data rules are independent of React. Graph layout uses progression lanes with pr
 
 ### Add a skill
 
-1. Add a stable ID and definition to `src/data/skills.ts`, `src/data/og2Skills.ts`, or the `src/data/oneArm*` catalog modules: group, branch, level 1–17, Dynamic/Static type, prerequisites, equipment, description, mastery example, and drills.
+1. Add a stable ID and definition to `src/data/skills.ts`, `src/data/og2Skills.ts`, `src/data/advancedStaticSkills.ts`, or the `src/data/oneArm*` catalog modules: group, branch, level 1–17, Dynamic/Static type, prerequisites, equipment, description, mastery example, and drills.
 2. Add target/primary/secondary muscles and category-specific technique guidance for the same ID. Label guidance adapted from a related movement.
 3. For a workbook match, add the exact cell, level, origin, and variant to `src/data/overcomingGravity.ts`. Otherwise calibrate an **App estimate** against the [level anchors](docs/progressions.md#difficulty-levels).
 4. Add complete alternative routes and equipment setups to `src/data/trainingOptions.ts` when needed. Keep all dependency routes acyclic.

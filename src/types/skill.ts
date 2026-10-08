@@ -10,6 +10,7 @@ export type Branch =
   | "ring-planche"
   | "front-lever"
   | "back-lever"
+  | "victorian"
   | "handstand"
   | "muscle-up"
   | "core"

@@ -4,6 +4,7 @@ import { skillTechnique } from "@/data/technique";
 import { og2Levels } from "@/data/overcomingGravity";
 import { getOg2Skills } from "@/data/og2Skills";
 import { getOneArmSkills } from "@/data/oneArmSkills";
+import { getAdvancedStaticSkills } from "@/data/advancedStaticSkills";
 import {
   alternativeRoutes,
   equipmentSetups,
@@ -29,6 +30,7 @@ export const branchLabels: Record<Branch, string> = {
   "ring-planche": "Ring Planche",
   "front-lever": "Front lever",
   "back-lever": "Back Lever",
+  victorian: "Victorian & SAT",
   handstand: "Handstand",
   "muscle-up": "Muscle-up",
   core: "Hanging core",
@@ -53,6 +55,7 @@ export const branches: Branch[] = [
   "one-arm-pull-up",
   "front-lever",
   "back-lever",
+  "victorian",
   "hefesto",
   "one-arm-dip",
   "ab-wheel",
@@ -1353,7 +1356,7 @@ export const skills: Skill[] = [
     "Pelican Push Up",
     "push",
     "pelican",
-    17,
+    16,
     "dynamic",
     ["ring-full-planche", "back-lever", "pelican-press"],
     ["rings"],
@@ -2229,6 +2232,7 @@ export const skills: Skill[] = [
   ),
   ...getOg2Skills(define, hold, reps),
   ...getOneArmSkills(define, hold, reps),
+  ...getAdvancedStaticSkills(define, hold, reps),
 ];
 
 export const skillById: Record<string, Skill> = Object.assign(

@@ -882,4 +882,57 @@ export const og2Levels: Record<string, Og2Level> = {
     kind: "community",
     family: "One arm statics",
   },
+  "protracted-victorian-on-bars": {
+    level: 9,
+    cell: "BJ13",
+    name: "protracted VC on bars",
+    kind: "community",
+    family: "Victorian cross (VC) variations",
+    variant:
+      "Protracted parallel-bar Victorian; bar contact is an app interpretation",
+  },
+  "victorian-on-bars": {
+    level: 11,
+    cell: "BJ15",
+    name: "VC on bars",
+    kind: "community",
+    family: "Victorian cross (VC) variations",
+    variant: "Parallel-bar Victorian; bar contact is an app interpretation",
+  },
+  "wide-victorian-on-bars": {
+    level: 13,
+    cell: "BJ17",
+    name: "wide VC on bars",
+    kind: "community",
+    family: "Victorian cross (VC) variations",
+    variant:
+      "Wide parallel-bar Victorian; bar contact is an app interpretation",
+  },
+  "floor-victorian-one-forearm": {
+    level: 14,
+    cell: "BJ18",
+    name: "floor VC one forearm",
+    kind: "community",
+    family: "Victorian cross (VC) variations",
+    variant:
+      "One forearm and opposite palm support; mixed-contact app interpretation",
+  },
+  "floor-victorian-forearms": {
+    level: 16,
+    cell: "BJ20",
+    name: "floor VC on forearms",
+    kind: "community",
+    family: "Victorian cross (VC) variations",
+    variant:
+      "Both forearms support the floor Victorian; form is an app interpretation",
+  },
+  "floor-victorian-straight-arms": {
+    level: 17,
+    cell: "BJ21",
+    name: "floor VC straight arms",
+    kind: "community",
+    family: "Victorian cross (VC) variations",
+    variant:
+      "Palm-supported floor Victorian with straight elbows; form is an app interpretation",
+  },
 };
