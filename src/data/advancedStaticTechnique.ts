@@ -3,7 +3,7 @@ import type { TechniqueGuidance, TechniqueSource } from "@/types/skill";
 export const advancedStaticTechniqueSources: Record<string, TechniqueSource> = {
   "advanced-statics-catalog": {
     title:
-      "Community skill catalog · Straight Arm Touch and Victorian definitions",
+      "Community skill catalog · Wide-Grip Front Lever, SAT, and Victorian definitions",
     url: "https://raw.githubusercontent.com/G0RB-SMG/Calisthenics-Skill-Tree/0217535ccb58ec5ee897e3c852afef99724f3282/skills.js",
   },
 };
@@ -89,6 +89,26 @@ export const advancedStaticTechnique: Record<string, TechniqueGuidance> = {
   "floor-victorian-one-forearm": floorVictorian(true),
   "floor-victorian-forearms": floorVictorian(false),
   "floor-victorian-straight-arms": floorVictorian(false, true),
+  "wide-grip-front-lever": {
+    setup: [
+      "Use a secure fixed bar with room for both hands well beyond shoulder width; begin from a full front lever at a grip width you already control.",
+      "Record the hand spacing and increase it gradually while keeping the same strict full-body lever shape.",
+    ],
+    cues: [
+      "Keep both elbows straight and the torso face up beneath the bar.",
+      "Keep the shoulders, hips, and feet approximately horizontal with straight legs together and the hips clear of the bar.",
+      "Pull actively through both hands, control the shoulder blades, and brace the abdomen and glutes without piking or rotating.",
+      "Return to a controlled shorter lever or hang before the hips drop or either elbow bends.",
+    ],
+    mistakes: [
+      "Using a normal shoulder-width grip while claiming the wide-grip milestone.",
+      "Dropping below horizontal, spreading or bending the legs, piking the hips, or bending the elbows as the grip widens.",
+      "Swinging into the hold or widening the hands beyond a position that preserves the full body line.",
+    ],
+    sources: ["advanced-statics-catalog", "pull-rr-row", "core-positioning"],
+    sourceScope:
+      "The community catalog directly describes a wide-grip full front lever on a single bar and identifies it as preparation for SAT. Entry, exit, and bracing cues adapt the linked front-lever and body-position instructions. Level 12 is an app estimate; the catalog uses a different difficulty scale and the workbook has no matching wide-grip entry.",
+  },
   "straight-arm-touch": {
     setup: [
       "Use a securely mounted fixed bar long enough for an ultra-wide grip, with a clear entry and exit area; establish controlled wide-grip front-lever loading before seeking hip contact.",
@@ -106,6 +126,6 @@ export const advancedStaticTechnique: Record<string, TechniqueGuidance> = {
     ],
     sources: ["advanced-statics-catalog", "pull-rr-row", "core-positioning"],
     sourceScope:
-      "The pinned community catalog directly defines SAT as a face-up horizontal ultra-wide-grip fixed-bar hold with straight arms and hips touching the bar. Entry, exit, and preparation cues adapt the linked front-lever and body-position instructions. The app's level 16 and route from wide bar Victorian plus full front lever are estimates, rather than workbook mappings or the catalog's ring-Victorian prerequisite.",
+      "The community catalog directly defines SAT as a face-up horizontal ultra-wide-grip fixed-bar hold with straight arms and hips touching the bar. Its cues call for a strict wide-grip full front lever; its listed dependency is Ring Victorian. The app uses the wide-grip preparation cue for a bar-only route and does not equate a forearm-supported bar Victorian with that ring hold. Entry and exit cues adapt the linked front-lever and body-position instructions. Level 16 and this preparation route are app choices, rather than workbook mappings or a demonstrated coaching program.",
   },
 };

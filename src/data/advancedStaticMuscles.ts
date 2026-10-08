@@ -64,4 +64,17 @@ export const advancedStaticMuscles: Record<string, MuscleProfile> = {
       "Forearm finger flexors",
     ],
   },
+  "wide-grip-front-lever": {
+    target: "Wide-grip straight-arm pulling and horizontal lever control",
+    primary: ["Latissimus dorsi (lats)", "Biceps", "Teres major"],
+    secondary: [
+      "Posterior deltoids (rear shoulders)",
+      "Lower trapezius",
+      "Rotator cuff",
+      "Rectus abdominis (abs)",
+      "Obliques",
+      "Gluteus maximus (glutes)",
+      "Forearm finger flexors",
+    ],
+  },
 };

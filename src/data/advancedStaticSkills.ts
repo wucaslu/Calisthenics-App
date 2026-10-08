@@ -137,15 +137,39 @@ export function getAdvancedStaticSkills(
       ],
     ),
     define(
+      "wide-grip-front-lever",
+      "Wide-Grip Front Lever",
+      "pull",
+      "front-lever",
+      12,
+      "static",
+      ["full-front-lever"],
+      ["pull-up-bar"],
+      "Hold a full face-up front lever on one fixed bar with both hands well beyond shoulder width. Keep both elbows straight, the legs together, and the shoulders, hips, and feet in a horizontal line. Record the grip width and preserve the full body shape as you widen the hands.",
+      "5-second full horizontal hold at a recorded wide grip with straight elbows",
+      [
+        hold(
+          "Gradual front-lever grip-width increases",
+          "3–5 sec",
+          "Begin at a width where a full front lever stays controlled, widen the hands gradually, and keep the same horizontal body line with the hips clear of the bar.",
+        ),
+        hold(
+          "Wide-grip front lever",
+          "3–5 sec",
+          "Hold with the hands well beyond shoulder width, legs straight and together, and elbows straight; return to a controlled hang before the hips drop.",
+        ),
+      ],
+    ),
+    define(
       "straight-arm-touch",
       "Straight Arm Touch (SAT)",
       "pull",
-      "victorian",
+      "front-lever",
       16,
       "static",
-      ["wide-victorian-on-bars", "full-front-lever"],
+      ["wide-grip-front-lever"],
       ["pull-up-bar"],
-      "Hold a face-up horizontal straight body on one fixed bar with an ultra-wide grip, both elbows straight, and the hips touching the bar. This follows the pinned community catalog's literal Straight Arm Touch definition. Its level 16 and route from wide bar Victorian plus full front lever are app estimates, separate from the workbook's Victorian levels.",
+      "Hold a face-up horizontal straight body on one fixed bar with an ultra-wide grip, both elbows straight, and the hips touching the bar. Keep the legs straight and together and maintain actual hip-to-bar contact without turning the hold into a bent-arm row or an angled lever. Prepare through a strict Wide-Grip Front Lever.",
       "3-second horizontal hip-to-bar hold with an ultra-wide grip and straight elbows",
       [
         hold(

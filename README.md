@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-Explore **167 calisthenics skills** in Pull (60), Push (66), Legs (13), and Core (28). Track progress, personal records, practice, and weekly training plans. Built with Next.js, TypeScript, React, Tailwind CSS, and React Flow.
+Explore **168 calisthenics skills** in Pull (61), Push (66), Legs (13), and Core (28). Track progress, personal records, practice, and weekly training plans. Built with Next.js, TypeScript, React, Tailwind CSS, and React Flow.
 
 The app stores data locally. No account, database, API key, or backend is required.
 
@@ -47,7 +47,7 @@ Desktop data lives in `%APPDATA%\Calisthenics Skill Tree`. Replacing the executa
 - Set goals to highlight a preparation path and get equipment-compatible recommendations.
 - Drag the graph or use zoom and Fit View controls. Mobile uses a skill list. Open or close the sidebar with the top-bar navigation button.
 
-Levels use the **Overcoming Gravity 2nd Edition** workbook where matched: 96 **OG2 book**, 30 **Community chart**, and 41 **App estimate** entries. Hefesto follows the chart at level 9. Its preparation and advanced steps run from Incline Pelican Curl (5) through Hand-on-Wrist Hefesto (12). Details show exact workbook cells. Weighted, generic assisted, and one-leg intermediate progressions are excluded; Pistol, Shrimp, and Dragon Squat remain. The workbook’s feet-supported Pelican Curls, hand-on-wrist Hefesto, and One-Arm One-Leg Plank are included as specific progression variants. Fourteen one-arm milestones cover handstands, ring push-ups, side dips, elbow levers, muscle-ups, levers, planche, and core work; Full Ab Wheel and Dragon Press prepare their one-arm versions. Victorian & SAT adds the chart’s six bar/floor Victorian variants at levels 9–17 and Straight Arm Touch at estimated level 16. Pelican Push Up is estimated at 16.
+Levels use the **Overcoming Gravity 2nd Edition** workbook where matched: 96 **OG2 book**, 30 **Community chart**, and 42 **App estimate** entries. Hefesto follows the chart at level 9. Its preparation and advanced steps run from Incline Pelican Curl (5) through Hand-on-Wrist Hefesto (12). Details show exact workbook cells. Weighted, generic assisted, and one-leg intermediate progressions are excluded; Pistol, Shrimp, and Dragon Squat remain. The workbook’s feet-supported Pelican Curls, hand-on-wrist Hefesto, and One-Arm One-Leg Plank are included as specific progression variants. Fourteen one-arm milestones cover handstands, ring push-ups, side dips, elbow levers, muscle-ups, levers, planche, and core work; Full Ab Wheel and Dragon Press prepare their one-arm versions. The Victorian branch contains the chart’s six bar/floor supports at levels 9–17 and the Dragon Press variants. Front Lever contains Full Front Lever → Wide-Grip Front Lever (estimated 12) → Straight Arm Touch (estimated 16). Pelican Push Up is estimated at 16.
 
 See [progression references](docs/progressions.md) for source mappings, route decisions, exclusions, and migration rules. Mastery examples are practice guides; logs do not assess mastery automatically.
 

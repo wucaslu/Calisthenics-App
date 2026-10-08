@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { skillById } from "@/data/skills";
 import { og2Levels } from "@/data/overcomingGravity";
-import { getGoalPath } from "@/lib/graph";
+import { getGoalPath, getVisibleSkills } from "@/lib/graph";
+import { createDemoProfile, parseProfile } from "@/lib/profile";
+import { createProfileBackup, readProfileBackup } from "@/lib/profileBackup";
 import {
   getSkillState,
   hasEquipment,
@@ -43,6 +45,7 @@ describe("Victorian and SAT preparation", () => {
   it("unlocks every requested variant along a complete route and relocks it after a prerequisite reset", () => {
     for (const id of [
       ...chartMilestones.map(([id]) => id),
+      "wide-grip-front-lever",
       "straight-arm-touch",
     ]) {
       let progress: Progress = {};
@@ -72,5 +75,58 @@ describe("Victorian and SAT preparation", () => {
     );
     expect(forearmPath).not.toContain("floor-victorian-one-forearm");
     expect(forearmPath).toContain("wide-victorian-on-bars");
+  });
+
+  it("plans SAT using only a bar and floor while keeping Victorian supports in their own lanes", () => {
+    const satPath = getGoalPath("straight-arm-touch", {}, [
+      "floor",
+      "pull-up-bar",
+    ]);
+    const ids = satPath.map((skill) => skill.id);
+    expect(ids).toContain("full-front-lever");
+    expect(ids).toContain("wide-grip-front-lever");
+    expect(
+      satPath.every((skill) => hasEquipment(skill, ["floor", "pull-up-bar"])),
+    ).toBe(true);
+    expect(ids).not.toContain("wide-victorian-on-bars");
+    expect(
+      getVisibleSkills("pull", "", "front-lever").map((skill) => skill.id),
+    ).toContain("straight-arm-touch");
+    expect(
+      getVisibleSkills("pull", "", "victorian").map((skill) => skill.id),
+    ).not.toContain("straight-arm-touch");
+    const coreSupports = getVisibleSkills("core", "", "victorian").map(
+      (skill) => skill.id,
+    );
+    expect(coreSupports).toEqual(
+      expect.arrayContaining(["dragon-press", "one-arm-dragon-press"]),
+    );
+    expect(coreSupports).not.toContain("dragon-flag");
+  });
+
+  it("preserves old SAT records and archives mastery without granting the new wide-grip milestone", () => {
+    const profile = createDemoProfile();
+    for (const skill of getGoalPath(
+      "wide-victorian-on-bars",
+      profile.progress,
+    )) {
+      profile.progress = updateSkillProgress(
+        profile.progress,
+        skill.id,
+        "mastered",
+      );
+    }
+    profile.progress["straight-arm-touch"] = "mastered";
+    profile.personalRecords["straight-arm-touch"] = "2 seconds";
+    profile.goals = ["straight-arm-touch"];
+    const parsed = parseProfile(JSON.stringify(profile))!;
+    expect(parsed.progress["wide-grip-front-lever"]).toBeUndefined();
+    expect(parsed.progress["straight-arm-touch"]).toBeUndefined();
+    expect(parsed.personalRecords["straight-arm-touch"]).toBe("2 seconds");
+    expect(parsed.archivedSkills["straight-arm-touch"]).toMatchObject({
+      progress: "mastered",
+    });
+    expect(parsed.goals).toEqual(["straight-arm-touch"]);
+    expect(readProfileBackup(createProfileBackup(parsed))).toEqual(parsed);
   });
 });

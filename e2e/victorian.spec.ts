@@ -8,6 +8,7 @@ const milestones = [
   ["floor-victorian-one-forearm", 14, "BJ18"],
   ["floor-victorian-forearms", 16, "BJ20"],
   ["floor-victorian-straight-arms", 17, "BJ21"],
+  ["wide-grip-front-lever", 12, null],
   ["straight-arm-touch", 16, null],
 ] as const;
 
@@ -26,9 +27,25 @@ for (const mobile of [false, true]) {
     await expect(group).toHaveValue("pull");
     const branch = page.getByRole("combobox", { name: "Skill branch" });
     await expect(branch.locator('option[value="victorian"]')).toHaveText(
-      "Victorian & SAT",
+      "Victorian",
     );
     await branch.selectOption("victorian");
+    const skillElement = (id: string) =>
+      mobile
+        ? page.locator(".mobile-skill").filter({
+            has: page.getByText(skillById[id].name, { exact: true }),
+          })
+        : page.locator(`[data-id="${id}"]`);
+    await expect(skillElement("straight-arm-touch")).toHaveCount(0);
+    await branch.selectOption("front-lever");
+    await expect(skillElement("wide-grip-front-lever")).toHaveCount(1);
+    await expect(skillElement("straight-arm-touch")).toHaveCount(1);
+    await expect(skillElement("wide-victorian-on-bars")).toHaveCount(0);
+    await group.selectOption("core");
+    await branch.selectOption("victorian");
+    await expect(skillElement("dragon-press")).toHaveCount(1);
+    await expect(skillElement("one-arm-dragon-press")).toHaveCount(1);
+    await expect(skillElement("dragon-flag")).toHaveCount(0);
     const search = page.getByRole("textbox", { name: "Search all skills" });
     for (const [id, level, cell] of milestones) {
       const skill = skillById[id];
@@ -66,6 +83,26 @@ for (const mobile of [false, true]) {
         panel.getByRole("region", { name: "Technique & form" }),
       ).toBeVisible();
       if (id === "straight-arm-touch") {
+        await expect(
+          panel.getByRole("button", {
+            name: "Wide-Grip Front Lever",
+            exact: true,
+          }),
+        ).toBeVisible();
+        await expect(
+          panel.getByRole("button", {
+            name: "Wide Victorian on Bars",
+            exact: true,
+          }),
+        ).toHaveCount(0);
+        await expect(skillElement("wide-victorian-on-bars")).toHaveCount(0);
+        if (!mobile)
+          await expect(
+            page.getByRole("img", {
+              name: "Edge from wide-grip-front-lever to straight-arm-touch",
+              exact: true,
+            }),
+          ).toBeAttached();
         await expect(panel.locator(".detail-description")).toContainText(
           "hips",
         );

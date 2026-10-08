@@ -30,7 +30,8 @@ export const researchSources: Record<string, { title: string; url: string }> = {
     url: "https://github.com/G0RB-SMG/Calisthenics-Skill-Tree/blob/0217535ccb58ec5ee897e3c852afef99724f3282/skills.js",
   },
   sat: {
-    title: "Community skill catalog · Straight Arm Touch",
+    title:
+      "Community skill catalog · Wide-Grip Front Lever and Straight Arm Touch",
     url: "https://github.com/G0RB-SMG/Calisthenics-Skill-Tree/blob/0217535ccb58ec5ee897e3c852afef99724f3282/skills.js",
   },
 };
@@ -129,7 +130,7 @@ reference(
 );
 reference(["full-planche", "iron-cross", "maltese", "v-sit"], ["statics"]);
 reference(["pelican-planche"], ["pelican"]);
-reference(["straight-arm-touch"], ["sat"]);
+reference(["wide-grip-front-lever", "straight-arm-touch"], ["sat"]);
 
 // Chart levels now drive the main level score. Unlisted skills remain estimates.
 for (const [id, entry] of Object.entries(og2Levels)) {

@@ -1,6 +1,6 @@
 # Progression reference
 
-Workbook levels rechecked **8 October 2026**; technique sources reviewed **8 October 2026**. The catalog has **167 skills**: Pull 60, Push 66, Legs 13, and Core 28. It includes six bar/floor Victorian variants and Straight Arm Touch alongside the one-arm, Pelican/Hefesto, and OG2 additions. Levels match 96 book-chart entries and 30 community additions; 41 skills use app estimates.
+Workbook levels rechecked **8 October 2026**; technique sources reviewed **8 October 2026**. The catalog has **168 skills**: Pull 61, Push 66, Legs 13, and Core 28. It includes six bar/floor Victorian variants and Straight Arm Touch alongside the one-arm, Pelican/Hefesto, and OG2 additions. Levels match 96 book-chart entries and 30 community additions; 42 skills use app estimates.
 
 ## Workbook source
 
@@ -59,6 +59,7 @@ Matched skills use workbook levels **1–17**. Unmatched skills show **App estim
 | 90 Degree Hold               | 8     | App estimate    | Static bent-arm planche                             |
 | Pelican Push Up              | 16    | App estimate    | Planche → back lever → planche transition on rings  |
 | Straight Arm Touch (SAT)     | 16    | App estimate    | Wide-grip fixed-bar hold with hips touching the bar |
+| Wide-Grip Front Lever        | 12    | App estimate    | Full straight-body lever on a wide-grip fixed bar   |
 
 Iron Cross Negative is estimated at 9, Maltese Negative at 15, and Straddle Maltese at 16. These preparation steps remain distinct from the sourced full skills. `src/lib/difficulty.ts` defines the shared scale, tiers, and labels.
 
@@ -79,7 +80,7 @@ All eight entries in BI9–BI16 are now mapped at their exact row levels. The fi
 
 The chart supplies names and levels; these apparatus and form details are app choices. Technique links for rare variants are explicitly labeled as adaptations. BI13’s level 9 replaces the former app override of 11. The book’s R13 **GH Pullout** is not added as a duplicate fixed-bar skill.
 
-Ring Rows at U6 also maps the app’s Inverted Row to book level 2. After these additions, the 167-skill catalog has 126 exact chart matches: 96 book and 30 community. The other 41 retain labeled estimates because their grip, apparatus, range, or movement is absent or ambiguous in this workbook.
+Ring Rows at U6 also maps the app’s Inverted Row to book level 2. After these additions, the 168-skill catalog has 126 exact chart matches: 96 book and 30 community. The other 42 retain labeled estimates because their grip, apparatus, range, or movement is absent or ambiguous in this workbook.
 
 ### One-arm workbook additions
 
@@ -110,7 +111,7 @@ Ab Wheel is a separate equipment selection. Gym does not imply access to it, and
 
 ### Victorian and Straight Arm Touch
 
-The **Victorian & SAT** branch includes the requested bar and floor progressions from the workbook’s community section:
+The **Victorian** branch includes the requested bar and floor progressions from the workbook’s community section:
 
 | Cell | Level | Milestone                      |
 | ---- | ----- | ------------------------------ |
@@ -123,7 +124,13 @@ The **Victorian & SAT** branch includes the requested bar and floor progressions
 
 The chart supplies labels and levels, but does not detail the contact positions. The app defines the bar variants with hands gripping parallel rails and forearms supported on them; the floor variants keep the hips, feet, and upper back clear. BJ18 uses one forearm and the opposite palm in the app’s explicit mixed-contact interpretation. It is not relabeled as an unsupported one-arm hold. Technique guidance marks these contact choices as adaptations. The two forearm variants use independent routes from Wide Victorian on Bars because chart levels alone do not establish a prerequisite chain.
 
-**Straight Arm Touch (SAT)** follows the existing [community skill catalog](https://github.com/G0RB-SMG/Calisthenics-Skill-Tree/blob/0217535ccb58ec5ee897e3c852afef99724f3282/skills.js): face-up horizontal hold on a single bar, ultra-wide grip, straight elbows, and hips touching the bar. Its level **16 is an app estimate**, calibrated above Wide Victorian on Bars (13) and below Straight-Arm Floor Victorian (17); the catalog’s separate difficulty scale is not treated as a workbook level. Its app preparation route uses Wide Victorian on Bars and Full Front Lever. The ring Victorian entry at BJ19 is outside the requested bar/floor selection.
+**Straight Arm Touch (SAT)** follows the [community skill catalog](https://github.com/G0RB-SMG/Calisthenics-Skill-Tree/blob/0217535ccb58ec5ee897e3c852afef99724f3282/skills.js): face-up horizontal hold on a single bar, ultra-wide grip, straight elbows, and hips touching the bar. The same source defines Wide-Grip Front Lever and explicitly calls for a strict wide-grip full lever in SAT’s cues. Its listed SAT dependency is Ring Victorian, which is distinct from the app’s forearm-supported bar variations.
+
+The app’s **Front Lever** branch now provides **Full Front Lever → Wide-Grip Front Lever → SAT** as a bar preparation route. Wide-Grip Front Lever is estimated at **12**, alongside advanced straight-arm pulling; SAT retains its estimate of **16**. Neither has a workbook match, and the source catalog’s separate difficulty scale is not converted into workbook levels. This route follows the source’s preparation cue and is an app choice, rather than a demonstrated coaching program. It requires a fixed bar and floor throughout; forearm-supported Victorians do not unlock SAT. The ring Victorian entry at BJ19 remains outside the requested bar/floor selection.
+
+Victorian bar and floor supports keep their own branch next to Front Lever. Dragon Press and One-Arm Dragon Press join the **Core / Victorian** lane, separate from the anchored Dragon Flag branch. One-Arm Dragon Press continues to require Dragon Press plus One-Arm Front Lever. Stable IDs preserve records and goals; an older SAT mastery is archived if the new wide-grip prerequisite is missing, without granting that new milestone automatically.
+
+Research reviewed on 8 October 2026: the pinned community catalog supplies the exact SAT and wide-grip definitions. The existing Strong Journal and advanced-static catalogs contain no exact matches. General web search, video search, and the live coaching site were unavailable from this environment, so they are not claimed as verified sources.
 
 ## Routes
 
@@ -135,6 +142,7 @@ Workbook ordering and levels inform the catalog. Prerequisite edges, alternative
 | Ring muscle-up           | False-Grip Hang + Ring Pull-up + Ring Dip → Ring Muscle-up; independent of bar muscle-up.                                                                                                                                                                                                                                               |
 | Rows                     | Archer Row → Straddle One-Arm Row → One-Arm Row. Front-lever rows have separate tuck, advanced-tuck, and full-body entries.                                                                                                                                                                                                             |
 | Front/back lever         | Tuck → Advanced Tuck → Straddle → Half-Lay → Full. Half-lay bends both knees. German Hang precedes Skin the Cat.                                                                                                                                                                                                                        |
+| SAT                      | Full Front Lever → Wide-Grip Front Lever → Straight Arm Touch; fixed bar throughout. Victorian supports remain a separate family.                                                                                                                                                                                                       |
 | Floor/ring planche       | Separate routes: Frog Stand → Straight-Arm Frog Stand → Tuck → Advanced Tuck → Straddle → Half-Lay → Full. Ring stages also require corresponding floor preparation.                                                                                                                                                                    |
 | Planche push-ups         | Separate floor/ring routes: Tuck → Advanced Tuck → Straddle → Half-Lay → Full, with supporting static positions.                                                                                                                                                                                                                        |
 | One-arm pulling/pressing | Ring Archer Pull-up → One-Arm Chin-up Negative → One-Arm Chin-up stays separate from pronated pulling. Straddle One-Arm Push-up prepares the legs-together version.                                                                                                                                                                     |
