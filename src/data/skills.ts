@@ -1305,8 +1305,8 @@ export const skills: Skill[] = [
     ],
   ),
   define(
-    "pelican-planche",
-    "Pelican Planche",
+    "pelican-push-up",
+    "Pelican Push Up",
     "push",
     "pelican",
     16,
@@ -1322,7 +1322,7 @@ export const skills: Skill[] = [
         "Establish a stable planche on rings with straight elbows and a horizontal body before attempting the transition.",
       ),
       reps(
-        "Pelican planche transitions",
+        "Pelican Push Up transitions",
         "1",
         "Move from the planche through a controlled bent-arm transition to the back lever, pause, and reverse under control. Keep feet clear and stop before losing shoulder position.",
       ),
