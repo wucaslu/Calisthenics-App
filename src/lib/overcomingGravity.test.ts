@@ -86,8 +86,21 @@ describe("uploaded Overcoming Gravity chart", () => {
       "v-sit",
       "one-arm-pull-up",
       "muscle-up",
+      "hefesto",
     ])
       expect(skillById[id].levelSource).toBeUndefined();
+    expect(skillById.hefesto.difficulty).toBe(11);
+    expect(og2Levels.hefesto).toMatchObject({
+      level: 9,
+      kind: "community",
+      cell: "BI13",
+    });
+    expect(skillById.hefesto.referenceLevel).toContain(
+      "App estimate · Level 11",
+    );
+    expect(skillById.hefesto.referenceLevel).toContain(
+      "Community extension · Level 9 · BI13",
+    );
     expect(getLevelSourceLabel("book")).toBe("OG2 book");
     expect(getLevelSourceLabel("community")).toBe("Community chart");
     expect(getLevelSourceLabel()).toBe("App estimate");

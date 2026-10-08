@@ -25,6 +25,7 @@ import {
   PanelLeftOpen,
   RotateCcw,
   Search,
+  Settings2,
   ShieldCheck,
   Sun,
   Target,
@@ -43,11 +44,23 @@ import { WeeklySchedule } from "@/components/WeeklySchedule/WeeklySchedule";
 import { categories, categoryLabels, skillById, skills } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { useTheme } from "@/hooks/useTheme";
+import { useAccessibility } from "@/hooks/useAccessibility";
+import { AccessibilityPreferences } from "@/components/AccessibilityPreferences/AccessibilityPreferences";
+import { SavedGraphViews } from "@/components/SavedGraphViews/SavedGraphViews";
+import { getVisibleSkills } from "@/lib/graph";
+import { GRAPH_VIEW_QUERY_MAX_LENGTH } from "@/lib/graphViews";
 import { getLocalToday, getPracticeSkillName } from "@/lib/practice";
 import { MAX_DIFFICULTY } from "@/lib/difficulty";
 import { getSkillState } from "@/lib/progression";
 import { canScheduleSkill } from "@/lib/schedule";
-import type { Branch, Category, DifficultyLevel } from "@/types/skill";
+import type {
+  Branch,
+  Category,
+  DifficultyLevel,
+  GraphViewport,
+  GraphViewSettings,
+  SavedGraphView,
+} from "@/types/skill";
 
 type View =
   | "tree"
@@ -56,7 +69,8 @@ type View =
   | "equipment"
   | "schedule"
   | "practice"
-  | "analytics";
+  | "analytics"
+  | "preferences";
 const navigation = [
   { id: "tree" as const, label: "Skill tree", Icon: GitBranch },
   { id: "overview" as const, label: "Overview", Icon: LayoutDashboard },
@@ -65,6 +79,7 @@ const navigation = [
   { id: "analytics" as const, label: "Analytics", Icon: BarChart3 },
   { id: "goals" as const, label: "My goals", Icon: Target },
   { id: "equipment" as const, label: "Equipment", Icon: Dumbbell },
+  { id: "preferences" as const, label: "Preferences", Icon: Settings2 },
 ];
 const pageCopy = {
   tree: {
@@ -109,6 +124,12 @@ const pageCopy = {
     description:
       "Compare your weekly and monthly consistency, repetitions, and hold time.",
   },
+  preferences: {
+    eyebrow: "MAKE IT COMFORTABLE",
+    title: "Choose how you explore.",
+    description:
+      "Adjust text, contrast, movement, and the way you browse skills on this device.",
+  },
 };
 function subscribeDesktop(callback: () => void) {
   const media = window.matchMedia("(min-width: 768px)");
@@ -119,6 +140,7 @@ const desktopSnapshot = () => window.matchMedia("(min-width: 768px)").matches;
 
 export function AppShell() {
   const { theme, toggleTheme } = useTheme();
+  const accessibility = useAccessibility();
   const {
     profile,
     hydrated,
@@ -134,6 +156,9 @@ export function AppShell() {
     addScheduledSkill,
     removeScheduledSkill,
     applyScheduleSuggestion,
+    saveGraphView,
+    renameGraphView,
+    removeGraphView,
   } = useProgress();
   const [view, setView] = useState<View>("tree");
   const [group, setGroup] = useState<Category | "all">("push");
@@ -143,6 +168,20 @@ export function AppShell() {
     useState<DifficultyLevel>(MAX_DIFFICULTY);
   const [highlightPath, setHighlightPath] = useState(true);
   const [availableOnly, setAvailableOnly] = useState(false);
+  const [graphViewport, setGraphViewport] = useState<GraphViewport>();
+  const [restoredViewport, setRestoredViewport] = useState<{
+    key: string;
+    viewport?: GraphViewport;
+  }>();
+  const graphLoadRequest = useRef(0);
+  const onViewportChange = useCallback((viewport: GraphViewport) => {
+    setGraphViewport(viewport);
+  }, []);
+  const onViewportRestored = useCallback((key: string) => {
+    setRestoredViewport((request) =>
+      request?.key === key ? undefined : request,
+    );
+  }, []);
   const [selection, setSelection] = useState<string | null | undefined>(
     undefined,
   );
@@ -170,6 +209,56 @@ export function AppShell() {
       ? skillById[selectedId]
       : null;
   const copy = pageCopy[view];
+  const currentGraphView: GraphViewSettings = {
+    group,
+    branch,
+    query,
+    maxDifficulty,
+    highlightPath,
+    availableOnly,
+    selectedSkillId:
+      selectedSkill &&
+      getVisibleSkills(
+        group,
+        query,
+        branch,
+        maxDifficulty,
+        availableOnly ? profile.progress : undefined,
+      ).some((skill) => skill.id === selectedSkill.id)
+        ? selectedSkill.id
+        : null,
+    ...(graphViewport ? { viewport: graphViewport } : {}),
+  };
+
+  function loadGraphView(saved: SavedGraphView) {
+    const visibleIds = new Set(
+      getVisibleSkills(
+        saved.group,
+        saved.query,
+        saved.branch,
+        saved.maxDifficulty,
+        saved.availableOnly ? profile.progress : undefined,
+      ).map((skill) => skill.id),
+    );
+    setGroup(saved.group);
+    setBranch(saved.branch);
+    setQuery(saved.query);
+    setMaxDifficulty(saved.maxDifficulty);
+    setHighlightPath(saved.highlightPath);
+    setAvailableOnly(saved.availableOnly);
+    setSelection(
+      saved.selectedSkillId && visibleIds.has(saved.selectedSkillId)
+        ? saved.selectedSkillId
+        : null,
+    );
+    setGraphViewport(saved.viewport);
+    setRestoredViewport({
+      key: `saved-view-${++graphLoadRequest.current}`,
+      viewport: saved.viewport,
+    });
+    setView("tree");
+    setMenuOpen(false);
+  }
   const previousLogSkills = [
     ...new Set([
       ...profile.practiceLog.map((entry) => entry.skillId),
@@ -242,10 +331,18 @@ export function AppShell() {
   const navigate = (next: View) => {
     setView(next);
     setMenuOpen(false);
-    if (next !== "tree") setSelection(null);
+    if (next !== "tree") {
+      setSelection(null);
+      setRestoredViewport(undefined);
+    }
     if (next === "practice") setPracticeSkillId(null);
   };
+  const resetGraphCamera = () => {
+    setRestoredViewport(undefined);
+    setGraphViewport(undefined);
+  };
   const selectGroup = (next: Category | "all") => {
+    resetGraphCamera();
     setGroup(next);
     setBranch("all");
     setQuery("");
@@ -253,6 +350,7 @@ export function AppShell() {
     setMenuOpen(false);
   };
   const exploreGoal = (id: string) => {
+    resetGraphCamera();
     const skill = skillById[id];
     setGroup(skill.category);
     setBranch(skill.branch);
@@ -262,6 +360,7 @@ export function AppShell() {
   const exploreScheduledSkill = (id: string) => {
     const skill = skillById[id];
     if (!skill) return;
+    resetGraphCamera();
     setGroup(skill.category);
     setBranch(skill.branch);
     setQuery("");
@@ -376,7 +475,7 @@ export function AppShell() {
             onClick={() => {
               if (
                 window.confirm(
-                  "Restore the demo profile? This replaces your saved progress, personal records, practice log, weekly schedule, goals, and equipment on this device.",
+                  "Restore the demo profile? This replaces your saved progress, personal records, practice log, weekly schedule, saved graph views, goals, and equipment on this device.",
                 )
               ) {
                 restoreDemo();
@@ -429,7 +528,9 @@ export function AppShell() {
               aria-label="Search all skills"
               placeholder="Find a skill..."
               value={query}
+              maxLength={GRAPH_VIEW_QUERY_MAX_LENGTH}
               onChange={(event) => {
+                resetGraphCamera();
                 setQuery(event.target.value);
                 setView("tree");
                 setGroup("all");
@@ -441,7 +542,10 @@ export function AppShell() {
               <button
                 aria-label="Clear skill search"
                 className="icon-button"
-                onClick={() => setQuery("")}
+                onClick={() => {
+                  resetGraphCamera();
+                  setQuery("");
+                }}
               >
                 <X size={13} />
               </button>
@@ -482,13 +586,30 @@ export function AppShell() {
           <ProgressStats profile={profile} />
           {view === "tree" && (
             <>
+              <SavedGraphViews
+                views={profile.savedGraphViews ?? []}
+                currentView={currentGraphView}
+                hydrated={hydrated}
+                storageAvailable={storageAvailable}
+                onSave={saveGraphView}
+                onLoad={loadGraphView}
+                onRename={renameGraphView}
+                onDelete={removeGraphView}
+              />
               <div
                 className={`tree-layout ${selectedSkill ? "with-details" : ""}`}
               >
                 <SkillTree
                   theme={theme}
+                  reducedMotion={accessibility.reducedMotion}
+                  skillList={accessibility.preferences.skillList}
+                  typographyKey={accessibility.preferences.textSize}
+                  onViewportChange={onViewportChange}
+                  onViewportRestored={onViewportRestored}
+                  restoredViewport={restoredViewport}
                   availableOnly={availableOnly}
                   setAvailableOnly={(value) => {
+                    resetGraphCamera();
                     setAvailableOnly(value);
                     if (
                       value &&
@@ -502,10 +623,14 @@ export function AppShell() {
                   group={group}
                   setGroup={selectGroup}
                   branch={branch}
-                  setBranch={setBranch}
+                  setBranch={(value) => {
+                    resetGraphCamera();
+                    setBranch(value);
+                  }}
                   query={query}
                   maxDifficulty={maxDifficulty}
                   setMaxDifficulty={(value) => {
+                    resetGraphCamera();
                     setMaxDifficulty(value);
                     if (selectedId && skillById[selectedId]?.difficulty > value)
                       setSelection(null);
@@ -513,7 +638,10 @@ export function AppShell() {
                   selectedId={selectedSkill?.id ?? null}
                   onSelect={onSelect}
                   highlightPath={highlightPath}
-                  setHighlightPath={setHighlightPath}
+                  setHighlightPath={(value) => {
+                    resetGraphCamera();
+                    setHighlightPath(value);
+                  }}
                 />
                 {selectedSkill && (
                   <SkillDetails
@@ -551,6 +679,16 @@ export function AppShell() {
               onSelect={exploreGoal}
               onGoals={() => navigate("goals")}
               onEquipment={() => navigate("equipment")}
+            />
+          )}
+          {view === "preferences" && (
+            <AccessibilityPreferences
+              preferences={accessibility.preferences}
+              hydrated={accessibility.hydrated}
+              storageAvailable={accessibility.storageAvailable}
+              reducedMotion={accessibility.reducedMotion}
+              onChange={accessibility.setPreference}
+              onReset={accessibility.resetPreferences}
             />
           )}
           {view === "goals" && (

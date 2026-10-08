@@ -22,7 +22,7 @@
 .intro,
 .hint {
   color: var(--muted);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
@@ -41,7 +41,7 @@
 
 .goalLabel {
   color: var(--text-secondary, #9aaabd);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
 }
 
 .goals ul {
@@ -60,7 +60,7 @@
   border-radius: 5px;
   background: var(--surface-blue, #25313e);
   color: var(--text-blue, #bacfe6);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
@@ -75,7 +75,7 @@
 .controls legend,
 .limit {
   color: var(--text-primary, #c7cdd5);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   font-weight: 600;
 }
 
@@ -101,7 +101,7 @@
   border-radius: 6px;
   background: var(--surface-soft, #12181e);
   color: var(--text-secondary, #9aaabd);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   line-height: 1.5;
   cursor: pointer;
 }
@@ -155,7 +155,7 @@
   background: var(--surface-soft, #12181e);
   color: var(--foreground);
   font: inherit;
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   font-weight: 400;
 }
 
@@ -172,7 +172,7 @@
   border-radius: 6px;
   background: var(--button-primary, #c3d9f0);
   color: var(--on-accent, #162433);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   font-weight: 650;
   line-height: 1.6;
 }
@@ -194,7 +194,7 @@
 
 .status {
   color: var(--text-blue, #bfd7ed);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
@@ -228,13 +228,13 @@
 
 .previewHeading h3 {
   color: var(--text-strong, #d8e7f5);
-  font-size: 13px;
+  font-size: calc(13px * var(--text-scale, 1));
   font-weight: 650;
 }
 
 .previewHeading > span {
   color: var(--text-secondary, #98a9ba);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
 }
 
 .previewDays {
@@ -262,14 +262,14 @@
 
 .dayHeading h4 {
   color: var(--text-strong, #d8e7f5);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   font-weight: 650;
 }
 
 .dayHeading span,
 .rest {
   color: var(--text-secondary, #98a9ba);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   line-height: 1.6;
 }
 
@@ -288,7 +288,7 @@
 
 .skill h5 {
   color: var(--text-primary, #c4d4e4);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   font-weight: 650;
   line-height: 1.6;
 }
@@ -300,17 +300,17 @@
   gap: 8px;
   margin: 5px 0;
   color: var(--text-secondary, #9aaabd);
-  font-size: 10px;
+  font-size: calc(10px * var(--text-scale, 1));
 }
 
 .skillMeta :global(.movement-badge),
 .skillMeta :global(.state-badge) {
-  font-size: 10px;
+  font-size: calc(10px * var(--text-scale, 1));
 }
 
 .skill p {
   color: var(--muted);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   line-height: 1.7;
 }
 
@@ -322,7 +322,7 @@
   border-radius: 6px;
   background: var(--surface-amber, #29231a);
   color: var(--text-amber, #e7cfaa);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
@@ -385,7 +385,7 @@
   }
 
   .limit select {
-    font-size: 16px;
+    font-size: calc(16px * var(--text-scale, 1));
   }
 
   .applyRow {

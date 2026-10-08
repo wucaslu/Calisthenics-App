@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Background,
   BackgroundVariant,
@@ -57,6 +57,7 @@ import type {
   Branch,
   Category,
   DifficultyLevel,
+  GraphViewport,
   UserProfile,
 } from "@/types/skill";
 
@@ -84,7 +85,7 @@ function GroupNode({ data }: NodeProps<GroupGraphNode>) {
 }
 const nodeTypes = { skill: SkillNode, category: GroupNode };
 
-function useFitCanvas() {
+function useFitCanvas(reducedMotion: boolean) {
   const { getNodesBounds, setViewport } = useReactFlow<
     SkillGraphNode | GroupGraphNode
   >();
@@ -102,18 +103,16 @@ function useFitCanvas() {
         0.2,
       );
       return setViewport(viewport, {
-        duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? 0
-          : 250,
+        duration: reducedMotion ? 0 : 250,
       });
     },
-    [getNodesBounds, setViewport, width, height],
+    [getNodesBounds, setViewport, width, height, reducedMotion],
   );
 }
 
-function CanvasControls() {
+function CanvasControls({ reducedMotion }: { reducedMotion: boolean }) {
   const { getNodes } = useReactFlow<SkillGraphNode | GroupGraphNode>();
-  const fit = useFitCanvas();
+  const fit = useFitCanvas(reducedMotion);
   return (
     <Controls showInteractive={false} showFitView={false}>
       <ControlButton
@@ -128,6 +127,12 @@ function CanvasControls() {
 }
 interface Props {
   theme: Theme;
+  reducedMotion: boolean;
+  skillList: boolean;
+  onViewportChange: (viewport: GraphViewport) => void;
+  onViewportRestored?: (key: string) => void;
+  restoredViewport?: { key: string; viewport?: GraphViewport };
+  typographyKey?: string;
   availableOnly: boolean;
   setAvailableOnly: (value: boolean) => void;
   profile: UserProfile;
@@ -147,51 +152,118 @@ interface Props {
 function FitTree({
   viewKey,
   focusGoalPath,
+  reducedMotion,
+  restoredViewport,
+  onViewportRestored,
+  typographyKey,
 }: {
   viewKey: string;
   focusGoalPath: boolean;
+  reducedMotion: boolean;
+  restoredViewport?: Props["restoredViewport"];
+  onViewportRestored?: Props["onViewportRestored"];
+  typographyKey?: string;
 }) {
-  const { getNodes, viewportInitialized } = useReactFlow<
+  const { getNodes, setViewport, viewportInitialized } = useReactFlow<
     SkillGraphNode | GroupGraphNode
   >();
-  const fit = useFitCanvas();
+  const fit = useFitCanvas(reducedMotion);
   const initialized = useNodesInitialized();
+  const width = useStore((state) => state.width);
+  const height = useStore((state) => state.height);
+  const handledRequest = useRef<string | undefined>(undefined);
+  const fittedView = useRef<string | undefined>(undefined);
+  const fittingKey = `${viewKey}:${focusGoalPath}:${typographyKey ?? "default"}`;
+  const restoreKey = restoredViewport?.key;
+  const savedX = restoredViewport?.viewport?.x;
+  const savedY = restoredViewport?.viewport?.y;
+  const savedZoom = restoredViewport?.viewport?.zoom;
   useEffect(() => {
-    if (!initialized || !viewportInitialized) return;
+    if (!initialized || !viewportInitialized || !width || !height) return;
+    const pendingRestore =
+      restoreKey !== undefined && handledRequest.current !== restoreKey;
+    if (!pendingRestore && fittedView.current === fittingKey) return;
+    let measurementFrame = 0;
     const id = requestAnimationFrame(() => {
-      const current = getNodes();
-      const pathNodes = current.filter(
-        (node): node is SkillGraphNode =>
-          node.type === "skill" && node.data.onPath,
-      );
-      const focusIds = new Set(
-        pathNodes.flatMap((node) => [
-          node.id,
-          ...getAncestors(node.id).filter(
-            (id) => skillById[id].category === node.data.skill.category,
-          ),
-        ]),
-      );
-      const focusGroups = new Set(
-        pathNodes.map((node) => node.data.skill.category),
-      );
-      const focused = current.filter((node) =>
-        node.type === "category"
-          ? node.data.branch
-            ? current.some(
-                (item) =>
-                  item.type === "skill" &&
-                  focusIds.has(item.id) &&
-                  item.data.skill.category === node.data.category &&
-                  item.data.skill.branch === node.data.branch,
-              )
-            : focusGroups.has(node.data.category)
-          : focusIds.has(node.id),
-      );
-      void fit(focusGoalPath && pathNodes.length ? focused : current);
+      // Allow measured nodes to settle after a text-size change or new filter.
+      measurementFrame = requestAnimationFrame(() => {
+        if (pendingRestore) {
+          handledRequest.current = restoreKey;
+          if (
+            savedX !== undefined &&
+            savedY !== undefined &&
+            savedZoom !== undefined
+          ) {
+            fittedView.current = fittingKey;
+            void setViewport(
+              { x: savedX, y: savedY, zoom: savedZoom },
+              { duration: 0 },
+            ).then((applied) => {
+              if (applied && restoreKey !== undefined)
+                onViewportRestored?.(restoreKey);
+            });
+            return;
+          }
+        }
+        fittedView.current = fittingKey;
+        const current = getNodes();
+        const pathNodes = current.filter(
+          (node): node is SkillGraphNode =>
+            node.type === "skill" && node.data.onPath,
+        );
+        const focusIds = new Set(
+          pathNodes.flatMap((node) => [
+            node.id,
+            ...getAncestors(node.id).filter(
+              (id) => skillById[id].category === node.data.skill.category,
+            ),
+          ]),
+        );
+        const focusGroups = new Set(
+          pathNodes.map((node) => node.data.skill.category),
+        );
+        const focused = current.filter((node) =>
+          node.type === "category"
+            ? node.data.branch
+              ? current.some(
+                  (item) =>
+                    item.type === "skill" &&
+                    focusIds.has(item.id) &&
+                    item.data.skill.category === node.data.category &&
+                    item.data.skill.branch === node.data.branch,
+                )
+              : focusGroups.has(node.data.category)
+            : focusIds.has(node.id),
+        );
+        const fitResult = fit(
+          focusGoalPath && pathNodes.length ? focused : current,
+        );
+        if (pendingRestore && restoreKey !== undefined)
+          void fitResult?.then((applied) => {
+            if (applied) onViewportRestored?.(restoreKey);
+          });
+      });
     });
-    return () => cancelAnimationFrame(id);
-  }, [viewKey, focusGoalPath, initialized, viewportInitialized, fit, getNodes]);
+    return () => {
+      cancelAnimationFrame(id);
+      cancelAnimationFrame(measurementFrame);
+    };
+  }, [
+    fittingKey,
+    focusGoalPath,
+    initialized,
+    viewportInitialized,
+    width,
+    height,
+    fit,
+    getNodes,
+    setViewport,
+    restoreKey,
+    savedX,
+    savedY,
+    savedZoom,
+    onViewportRestored,
+  ]);
   return null;
 }
 
@@ -230,7 +302,14 @@ export function SkillTree(props: Props) {
     onSelect,
     highlightPath,
     availableOnly,
+    reducedMotion,
+    skillList,
+    onViewportChange,
   } = props;
+  const reportViewport = useCallback(
+    (_event: unknown, viewport: GraphViewport) => onViewportChange(viewport),
+    [onViewportChange],
+  );
   const visible = useMemo(
     () =>
       getVisibleSkills(
@@ -331,7 +410,10 @@ export function SkillTree(props: Props) {
                   : "var(--tree-edge-locked)",
               strokeWidth: highlighted ? 1.8 : 1.3,
             },
-            animated: highlighted && profile.progress[id] === "training",
+            animated:
+              !reducedMotion &&
+              highlighted &&
+              profile.progress[id] === "training",
           };
         }),
     );
@@ -343,11 +425,17 @@ export function SkillTree(props: Props) {
     selectedId,
     onSelect,
     highlightPath,
+    reducedMotion,
     dimensions,
   ]);
 
   return (
-    <section className="tree-card" aria-label="Interactive skill tree">
+    <section
+      className={`tree-card${skillList ? " prefer-skill-list" : ""}`}
+      aria-label={
+        skillList ? "Calisthenics skill list" : "Interactive skill tree"
+      }
+    >
       <div className="tree-toolbar">
         <div className="tree-heading">
           <span className="live-dot" />
@@ -465,53 +553,65 @@ export function SkillTree(props: Props) {
       </div>
       {visible.length ? (
         <>
-          <div className="tree-canvas">
-            <ReactFlowProvider>
-              <ReactFlow<SkillGraphNode | GroupGraphNode>
-                nodes={nodes}
-                onNodesChange={onNodesChange}
-                edges={edges}
-                nodeTypes={nodeTypes}
-                nodesDraggable={false}
-                nodesConnectable={false}
-                nodesFocusable={false}
-                edgesFocusable={false}
-                elementsSelectable={false}
-                minZoom={0.06}
-                maxZoom={1.8}
-                colorMode={props.theme}
-                aria-label="Pannable calisthenics dependency graph"
-              >
-                <Background
-                  variant={BackgroundVariant.Dots}
-                  gap={20}
-                  size={1}
-                  color="var(--tree-grid)"
-                />
-                <CanvasControls />
-                <FitTree
-                  viewKey={`${group}:${branch}:${query}:${maxDifficulty}:${availableOnly ? visible.map((skill) => skill.id).join(",") : "all"}`}
-                  focusGoalPath={
-                    group !== "all" &&
-                    (branch === "all" ||
-                      profile.goals.some(
-                        (id) => skillById[id]?.branch === branch,
-                      ))
-                  }
-                />
-              </ReactFlow>
-            </ReactFlowProvider>
-            <div className="canvas-note">
-              <Move size={12} />
-              Drag to explore<span>·</span>Scroll to zoom
+          {!skillList && (
+            <div className="tree-canvas">
+              <ReactFlowProvider>
+                <ReactFlow<SkillGraphNode | GroupGraphNode>
+                  nodes={nodes}
+                  onNodesChange={onNodesChange}
+                  onMoveEnd={reportViewport}
+                  edges={edges}
+                  nodeTypes={nodeTypes}
+                  nodesDraggable={false}
+                  nodesConnectable={false}
+                  nodesFocusable={false}
+                  edgesFocusable={false}
+                  elementsSelectable={false}
+                  minZoom={0.06}
+                  maxZoom={1.8}
+                  zoomOnDoubleClick={!reducedMotion}
+                  colorMode={props.theme}
+                  aria-label="Pannable calisthenics dependency graph"
+                >
+                  <Background
+                    variant={BackgroundVariant.Dots}
+                    gap={20}
+                    size={1}
+                    color="var(--tree-grid)"
+                  />
+                  <CanvasControls reducedMotion={reducedMotion} />
+                  <FitTree
+                    viewKey={`${group}:${branch}:${query}:${maxDifficulty}:${availableOnly ? visible.map((skill) => skill.id).join(",") : "all"}`}
+                    focusGoalPath={
+                      group !== "all" &&
+                      (branch === "all" ||
+                        profile.goals.some(
+                          (id) => skillById[id]?.branch === branch,
+                        ))
+                    }
+                    reducedMotion={reducedMotion}
+                    restoredViewport={props.restoredViewport}
+                    onViewportRestored={props.onViewportRestored}
+                    typographyKey={props.typographyKey}
+                  />
+                </ReactFlow>
+              </ReactFlowProvider>
+              <div className="canvas-note">
+                <Move size={12} />
+                Drag to explore<span>·</span>Scroll to zoom
+              </div>
+              <span className="canvas-branch-label">
+                {group === "all"
+                  ? "PULL · PUSH · LEGS · CORE"
+                  : `${categoryLabels[group].toUpperCase()}${branch !== "all" ? ` / ${branchLabels[branch].toUpperCase()}` : ""} + PREREQUISITES`}
+              </span>
             </div>
-            <span className="canvas-branch-label">
-              {group === "all"
-                ? "PULL · PUSH · LEGS · CORE"
-                : `${categoryLabels[group].toUpperCase()}${branch !== "all" ? ` / ${branchLabels[branch].toUpperCase()}` : ""} + PREREQUISITES`}
-            </span>
-          </div>
-          <div className="mobile-skill-list">
+          )}
+          <div
+            className="mobile-skill-list"
+            role="group"
+            aria-label="Skills grouped by progression"
+          >
             <p className="mobile-tree-note">
               Choose a skill to explore its prerequisites and progressions.
             </p>
@@ -528,6 +628,7 @@ export function SkillTree(props: Props) {
                   <button
                     key={skill.id}
                     onClick={() => onSelect(skill.id)}
+                    aria-pressed={selectedId === skill.id}
                     className={`mobile-skill ${selectedId === skill.id ? "chosen" : ""}`}
                   >
                     <span className="skill-symbol">

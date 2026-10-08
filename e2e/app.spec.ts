@@ -151,7 +151,7 @@ for (const mobile of [false, true]) {
       },
       {
         id: "pelican-planche",
-        name: "Pelican Planche",
+        name: "Pelican Push Up",
         primary: "Biceps and brachialis",
         secondary: "Rotator cuff",
       },
@@ -253,8 +253,8 @@ for (const mobile of [false, true]) {
       },
       {
         id: "pelican-planche",
-        name: "Pelican Planche",
-        score: 16,
+        name: "Pelican Push Up",
+        score: 17,
         movement: "Dynamic",
         record: "1 full cycle",
       },
@@ -393,7 +393,7 @@ test("researched milestones show published levels, independent routes, and named
     "Community extension · Level 9 · BI13 (Hefesto (GH pullout))",
   );
   await expect(panel.locator(".detail-meta .difficulty-source")).toHaveText(
-    "Community chart",
+    "App estimate",
   );
 });
 
@@ -620,6 +620,7 @@ test("advanced branches open their details and retain separate personal records"
     await page
       .getByRole("combobox", { name: "Skill branch" })
       .selectOption(branch);
+    await page.locator(".tree-canvas").scrollIntoViewIfNeeded();
     await expect(page.locator(`[data-id="${id}"] button`)).toBeInViewport();
     await openTreeSkill(page, id, name);
     await expect(panel.locator(".movement-badge")).toHaveText(movement);
@@ -740,7 +741,7 @@ test("demo profile loads, graph zooms, and mastery unlocks downstream skills and
     panel.getByRole("heading", { name: "Planche Lean", exact: true }),
   ).toBeVisible();
   await panel.getByRole("button", { name: "Mark as Mastered" }).click();
-  await expect(page.getByRole("status")).toContainText("mastered");
+  await expect(page.locator(".notice-region")).toContainText("mastered");
   await openTreeSkill(page, "frog-stand", "Frog Stand");
   await panel.getByRole("button", { name: "Mark as Mastered" }).click();
   await openTreeSkill(

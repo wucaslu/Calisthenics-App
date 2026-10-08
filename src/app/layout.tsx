@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
+import { ACCESSIBILITY_INIT_SCRIPT } from "@/lib/accessibility";
 import "@fontsource-variable/manrope";
 import "./globals.css";
 
@@ -17,6 +18,10 @@ export default function RootLayout({
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+        />
+        <script
+          id="accessibility-init"
+          dangerouslySetInnerHTML={{ __html: ACCESSIBILITY_INIT_SCRIPT }}
         />
       </head>
       <body>{children}</body>

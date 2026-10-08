@@ -64,7 +64,7 @@ export function ProfileBackup({
         throw new Error("Choose a profile backup smaller than 5 MB.");
       const restored = readProfileBackup(await file.text());
       const confirmed = window.confirm(
-        "Import this profile backup? This replaces your current progress, personal records, practice log, weekly schedule, goals, equipment, and archived records on this device. Export your current profile first if you want to keep it.",
+        "Import this profile backup? This replaces your current progress, personal records, practice log, weekly schedule, saved graph views, goals, equipment, and archived records on this device. Export your current profile first if you want to keep it.",
       );
       if (!confirmed) {
         setError(false);
@@ -104,13 +104,14 @@ export function ProfileBackup({
       </div>
       <p className="muted-copy">
         Export your progress, personal records, practice log, weekly schedule,
-        goals, equipment, and archived records. Import the JSON backup to move
-        your profile to the desktop app or another browser. Import replaces the
-        profile on this device.
+        saved graph views, goals, equipment, and archived records. Import the
+        JSON backup to move your profile to the desktop app or another browser.
+        Import replaces the profile on this device.
       </p>
       <p className="muted-copy">
-        The current Windows executable does not preserve weekly schedules. Keep
-        the original backup when transferring to that version.
+        The current Windows executable does not preserve weekly schedules or
+        saved graph views. Keep the original backup when transferring to that
+        version.
       </p>
       <div className={styles.actions}>
         <button

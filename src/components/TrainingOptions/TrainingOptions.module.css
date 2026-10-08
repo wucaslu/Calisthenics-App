@@ -5,7 +5,7 @@
 .explanation {
   margin-bottom: 12px;
   color: var(--text-primary, #a7b3c0);
-  font-size: 10px;
+  font-size: calc(10px * var(--text-scale, 1));
   line-height: 1.8;
 }
 
@@ -37,7 +37,7 @@
 
 .heading h4 {
   color: var(--text-strong, #d8e2ee);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.6;
   overflow-wrap: anywhere;
@@ -48,7 +48,7 @@
   align-items: center;
   gap: 4px;
   color: var(--text-blue, #bacfe6);
-  font-size: 9px;
+  font-size: calc(9px * var(--text-scale, 1));
   line-height: 1.6;
 }
 
@@ -59,7 +59,7 @@
 .description {
   margin: 8px 0 10px;
   color: var(--text-secondary, #a5b1bf);
-  font-size: 10px;
+  font-size: calc(10px * var(--text-scale, 1));
   line-height: 1.8;
   overflow-wrap: anywhere;
 }
@@ -96,14 +96,14 @@
 @media (max-width: 767px) {
   .explanation,
   .description {
-    font-size: 11px;
+    font-size: calc(11px * var(--text-scale, 1));
   }
 
   .heading h4 {
-    font-size: 12px;
+    font-size: calc(12px * var(--text-scale, 1));
   }
 
   .status {
-    font-size: 10px;
+    font-size: calc(10px * var(--text-scale, 1));
   }
 }

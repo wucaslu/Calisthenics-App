@@ -27,7 +27,7 @@
 .metricHint {
   color: var(--muted);
   line-height: 1.65;
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
 }
 
 .stats {
@@ -50,17 +50,17 @@
 
 .stats > div > span {
   color: var(--text-blue, #b8c6d5);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
 }
 
 .stats strong {
-  font-size: 27px;
+  font-size: calc(27px * var(--text-scale, 1));
   color: var(--accent);
 }
 
 .stats small {
   color: var(--muted);
-  font-size: 10px;
+  font-size: calc(10px * var(--text-scale, 1));
   font-weight: 400;
   line-height: 1.5;
 }
@@ -70,7 +70,7 @@
 }
 
 .chart figcaption {
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   font-weight: 650;
 }
 
@@ -78,7 +78,7 @@
   display: block;
   margin-top: 5px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   font-weight: 400;
 }
 
@@ -99,13 +99,13 @@
 }
 
 .bars strong {
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   color: var(--accent);
 }
 
 .bars strong small {
   color: var(--muted);
-  font-size: 9px;
+  font-size: calc(9px * var(--text-scale, 1));
   font-weight: 400;
 }
 
@@ -134,7 +134,7 @@
 
 .bars time {
   color: var(--text-primary, #a9b2bd);
-  font-size: 10px;
+  font-size: calc(10px * var(--text-scale, 1));
   line-height: 1.5;
 }
 
@@ -167,7 +167,7 @@
   gap: 8px;
   min-width: 0;
   color: var(--text-primary, #c7cdd5);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   font-weight: 600;
 }
 
@@ -190,7 +190,7 @@
   background: var(--surface-soft, #12181e);
   color: var(--foreground);
   font: inherit;
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   font-weight: 400;
 }
 
@@ -232,7 +232,7 @@
   padding: 9px 12px;
   border: 1px solid var(--border-soft, #455466);
   border-radius: 6px;
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   font-weight: 650;
 }
 
@@ -274,7 +274,7 @@
   background: var(--surface-amber, #29231a);
   color: var(--text-amber, #e7cfaa);
   line-height: 1.6;
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
 }
 
 .error {
@@ -286,7 +286,7 @@
 
 .status {
   color: var(--text-blue, #bfd7ed);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   line-height: 1.6;
 }
 
@@ -316,12 +316,12 @@
 }
 
 .records strong {
-  font-size: 17px;
+  font-size: calc(17px * var(--text-scale, 1));
 }
 
 .records small {
   color: var(--text-secondary, #98a9ba);
-  font-size: 10px;
+  font-size: calc(10px * var(--text-scale, 1));
 }
 
 .history {
@@ -350,24 +350,24 @@
 
 .entryHeading strong {
   color: var(--text-strong, #d8e7f5);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
 }
 
 .entryHeading time {
   color: var(--text-secondary, #97a4b2);
-  font-size: 10px;
+  font-size: calc(10px * var(--text-scale, 1));
 }
 
 .entryMetrics {
   color: var(--text-blue, #bfcfdf);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   line-height: 1.6;
 }
 
 .notes {
   margin-top: 8px;
   color: var(--text-secondary, #a4aeba);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   line-height: 1.7;
   white-space: pre-wrap;
 }
@@ -383,7 +383,7 @@
   padding-top: 13px;
   border-top: 1px solid var(--border-soft, #55404a);
   color: var(--text-danger, #d6b6bf);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale, 1));
   line-height: 1.6;
 }
 
@@ -398,12 +398,12 @@
 
 .empty h3 {
   color: var(--text-blue, #c4d4e4);
-  font-size: 14px;
+  font-size: calc(14px * var(--text-scale, 1));
 }
 
 .empty p {
   color: var(--muted);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   line-height: 1.7;
   max-width: 310px;
 }
@@ -428,7 +428,7 @@
   }
 
   .bars time {
-    font-size: 8px;
+    font-size: calc(8px * var(--text-scale, 1));
   }
 
   .fieldPair {
@@ -439,7 +439,7 @@
   .fields select,
   .fields textarea,
   .filter select {
-    font-size: 16px;
+    font-size: calc(16px * var(--text-scale, 1));
     padding: 9px 7px;
   }
 

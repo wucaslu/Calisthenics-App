@@ -93,7 +93,7 @@ describe("skill technique guidance", () => {
     );
   });
 
-  it("keeps Pelican Planche a controlled transition between planche and back lever", () => {
+  it("keeps Pelican Push Up a controlled transition between planche and back lever", () => {
     const text = guidanceText("pelican-planche");
     expect(skillById["pelican-planche"].movementType).toBe("dynamic");
     expect(text).toMatch(/planche/i);

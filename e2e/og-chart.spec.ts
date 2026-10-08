@@ -28,9 +28,9 @@ const chartCases = [
   {
     id: "hefesto",
     name: "Hefesto",
-    level: 9,
-    tier: "Intermediate",
-    source: "Community chart",
+    level: 11,
+    tier: "Advanced",
+    source: "App estimate",
     cell: "BI13",
   },
 ] as const;
@@ -98,6 +98,10 @@ for (const mobile of [false, true]) {
         `Level ${entry.level}`,
       );
       await expect(panel.locator(".reference-level")).toContainText(entry.cell);
+      if (entry.id === "hefesto")
+        await expect(panel.locator(".reference-level")).toContainText(
+          "Community extension · Level 9",
+        );
       await expect(
         panel.getByRole("link", {
           name: "Overcoming Gravity 2nd Edition · uploaded exercise chart",
@@ -116,6 +120,18 @@ for (const mobile of [false, true]) {
           .evaluate((element) => element.scrollWidth <= element.clientWidth),
       ).toBe(true);
       if (mobile) await page.keyboard.press("Escape");
+      if (entry.id === "hefesto") {
+        const hefesto = mobile
+          ? page.locator(".mobile-skill").filter({
+              has: page.getByText("Hefesto", { exact: true }),
+            })
+          : page.locator('[data-id="hefesto"]');
+        await maximum.selectOption("10");
+        await expect(hefesto).toHaveCount(0);
+        await maximum.selectOption("11");
+        await expect(hefesto).toBeAttached();
+        await maximum.selectOption("17");
+      }
     }
 
     if (!mobile) {

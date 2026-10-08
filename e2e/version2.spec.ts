@@ -618,7 +618,7 @@ test("equipment substitutions unlock eligible practice and keep ring-specific sk
     }),
   ).toContainText("Available");
   for (const [id, name] of [
-    ["pelican-planche", "Pelican Planche"],
+    ["pelican-planche", "Pelican Push Up"],
     ["ring-muscle-up", "Ring Muscle-up"],
   ]) {
     panel = await openTreeSkill(page, id, name);

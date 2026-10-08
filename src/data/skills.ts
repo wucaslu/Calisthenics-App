@@ -83,6 +83,11 @@ export const equipmentLabels: Record<Equipment, string> = {
   gym: "Gym equipment",
 };
 
+// App ratings override chart scores while preserving the original source reference.
+const appDifficultyRatings: Partial<Record<string, DifficultyLevel>> = {
+  hefesto: 11,
+};
+
 // Add definitions here. Reverse unlock links are derived below to avoid two sources of truth.
 function define(
   id: string,
@@ -103,13 +108,15 @@ function define(
   if (!technique)
     throw new Error(`Missing technique guidance for skill: ${id}`);
   const sourceLevel = og2Levels[id];
+  const appDifficulty = appDifficultyRatings[id];
+  const referenceLevel = skillReferences[id]?.level;
   return {
     id,
     name,
     category,
     branch,
-    difficulty: sourceLevel?.level ?? fallbackDifficulty,
-    levelSource: sourceLevel?.kind,
+    difficulty: appDifficulty ?? sourceLevel?.level ?? fallbackDifficulty,
+    levelSource: appDifficulty === undefined ? sourceLevel?.kind : undefined,
     movementType,
     prerequisites,
     equipment,
@@ -122,7 +129,10 @@ function define(
     requirements: [{ exercise: name, target }],
     exercises: drills,
     references: skillReferences[id]?.sources ?? [],
-    referenceLevel: skillReferences[id]?.level,
+    referenceLevel:
+      appDifficulty !== undefined && referenceLevel
+        ? `App estimate · Level ${appDifficulty}. Chart reference: ${referenceLevel}`
+        : referenceLevel,
   };
 }
 const hold = (
@@ -1306,10 +1316,10 @@ export const skills: Skill[] = [
   ),
   define(
     "pelican-planche",
-    "Pelican Planche",
+    "Pelican Push Up",
     "push",
     "pelican",
-    16,
+    17,
     "dynamic",
     ["ring-full-planche", "back-lever", "pelican-press"],
     ["rings"],
@@ -1322,7 +1332,7 @@ export const skills: Skill[] = [
         "Establish a stable planche on rings with straight elbows and a horizontal body before attempting the transition.",
       ),
       reps(
-        "Pelican planche transitions",
+        "Pelican push up transitions",
         "1",
         "Move from the planche through a controlled bent-arm transition to the back lever, pause, and reverse under control. Keep feet clear and stop before losing shoulder position.",
       ),

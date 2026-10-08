@@ -16,12 +16,18 @@ import {
 } from "@/lib/schedule";
 import { skillById } from "@/data/skills";
 import { applyWeeklyScheduleSuggestion } from "@/lib/scheduleSuggestions";
+import {
+  saveGraphView as addGraphView,
+  renameGraphView as renameSavedGraphView,
+  removeGraphView as removeSavedGraphView,
+} from "@/lib/graphViews";
 import type {
   Equipment,
   UserProfile,
   PracticeEntry,
   Weekday,
   WeeklySchedule,
+  SavedGraphView,
 } from "@/types/skill";
 
 export function useProgress() {
@@ -134,6 +140,15 @@ export function useProgress() {
   const applyScheduleSuggestion = useCallback((schedule: WeeklySchedule) => {
     setProfile((previous) => applyWeeklyScheduleSuggestion(previous, schedule));
   }, []);
+  const saveGraphView = useCallback((view: SavedGraphView) => {
+    setProfile((previous) => addGraphView(previous, view));
+  }, []);
+  const renameGraphView = useCallback((id: string, name: string) => {
+    setProfile((previous) => renameSavedGraphView(previous, id, name));
+  }, []);
+  const removeGraphView = useCallback((id: string) => {
+    setProfile((previous) => removeSavedGraphView(previous, id));
+  }, []);
   return {
     profile,
     hydrated,
@@ -149,5 +164,8 @@ export function useProgress() {
     addScheduledSkill,
     removeScheduledSkill,
     applyScheduleSuggestion,
+    saveGraphView,
+    renameGraphView,
+    removeGraphView,
   };
 }

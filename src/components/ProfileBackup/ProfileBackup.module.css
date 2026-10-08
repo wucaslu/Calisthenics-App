@@ -12,7 +12,7 @@
 .message {
   margin: 14px 0 0;
   color: var(--text-blue, #a2c9ed);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale, 1));
   line-height: 1.6;
 }
 
