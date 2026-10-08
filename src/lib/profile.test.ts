@@ -31,13 +31,14 @@ describe("removed saved graph views", () => {
 });
 
 describe("personal records", () => {
-  it("archives one-leg records and retains downstream mastery through the shorter routes", () => {
+  it("archives retired records and retains downstream mastery through the shorter routes", () => {
     const profile = createDemoProfile();
     const removed = [
       "one-leg-front-lever",
       "one-leg-back-lever",
       "one-leg-l-sit",
       "single-leg-glute-bridge",
+      "one-arm-back-lever",
     ];
     const successors = [
       "straddle-front-lever",

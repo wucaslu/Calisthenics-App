@@ -1,23 +1,6 @@
 import type { MuscleProfile } from "@/types/skill";
 
 // These roles describe the app's chosen technique, not claims made by the chart.
-const oneArmBackLever: MuscleProfile = {
-  target: "Unilateral shoulder support behind the body and trunk stability",
-  primary: [
-    "Anterior deltoids (front shoulders)",
-    "Pectoralis major (chest)",
-    "Biceps and brachialis",
-  ],
-  secondary: [
-    "Latissimus dorsi (lats)",
-    "Rotator cuff",
-    "Obliques",
-    "Rectus abdominis (abs)",
-    "Gluteus maximus (glutes)",
-    "Forearm finger flexors",
-  ],
-};
-
 const oneArmFrontLever: MuscleProfile = {
   target: "Unilateral straight-arm pulling and horizontal body control",
   primary: ["Latissimus dorsi (lats)", "Teres major", "Lower trapezius"],
@@ -95,7 +78,6 @@ const dragonPress: MuscleProfile = {
 };
 
 export const oneArmPullCoreMuscles: Record<string, MuscleProfile> = {
-  "one-arm-back-lever": oneArmBackLever,
   "one-arm-front-lever": oneArmFrontLever,
   "one-arm-straight-muscle-up": archerMuscleUp,
   "one-arm-one-leg-plank": diagonalPlank,

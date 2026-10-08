@@ -40,25 +40,6 @@ function dragonPress(oneArm: boolean): TechniqueGuidance {
 }
 
 export const oneArmPullCoreTechnique: Record<string, TechniqueGuidance> = {
-  "one-arm-back-lever": {
-    setup: [
-      "Use a secure fixed bar and establish a controlled two-arm inverted position with room to return through a tuck.",
-      "Settle the working grip before transferring load; release the other hand only within shoulder extension you can actively support.",
-    ],
-    cues: [
-      "Keep the working elbow straight while lowering the face-down torso and both straight legs toward horizontal.",
-      "Maintain abdominal and glute tension so the shoulders, hips, and feet remain in one line.",
-      "Keep the free hand off the bar and working arm while resisting uncontrolled torso rotation.",
-      "Return through a controlled shorter lever before the shoulder position breaks; practice both sides separately.",
-    ],
-    mistakes: [
-      "Dropping suddenly into shoulder extension or bending the working elbow to prop up the hold.",
-      "Using the free hand, sharply twisting the trunk, or letting the hips sag below the shoulders.",
-    ],
-    sources: ["pull-gym-rings", "core-positioning"],
-    sourceScope:
-      "These cues adapt the linked two-arm back-lever and body-position mechanics to a one-arm fixed-bar hold. The guides do not demonstrate this exact variant; a fixed bar also prevents the grip rotation available on rings.",
-  },
   "one-arm-front-lever": {
     setup: [
       "Use a secure overhead bar with space beneath it and establish a controlled horizontal front-lever position before releasing the free hand.",

@@ -452,7 +452,7 @@ test("reorganization keeps retired records in the overview and retained records 
   await expect(page.locator(".archived-skill-list")).toContainText("8 reps");
 });
 
-test("one-leg steps leave the tree and goals while their records remain archived", async ({
+test("retired steps leave the tree and goals while their records remain archived", async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -462,6 +462,7 @@ test("one-leg steps leave the tree and goals while their records remain archived
       "one-leg-back-lever",
       "one-leg-l-sit",
       "single-leg-glute-bridge",
+      "one-arm-back-lever",
     ];
     localStorage.setItem(
       "calisthenics-skill-tree:v1",
@@ -515,6 +516,13 @@ test("one-leg steps leave the tree and goals while their records remain archived
     ),
   ).toHaveCount(0);
   await page
+    .getByRole("textbox", { name: "Search all skills" })
+    .fill("One-Arm Back Lever");
+  await expect(page.locator('[data-id="one-arm-back-lever"]')).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", { name: "No skills found" }),
+  ).toBeVisible();
+  await page
     .getByRole("button", { name: "My goals", exact: false })
     .first()
     .click();
@@ -530,6 +538,7 @@ test("one-leg steps leave the tree and goals while their records remain archived
     "One-Leg Back Lever",
     "One-Leg L-Sit",
     "Single-Leg Glute Bridge",
+    "One-Arm Back Lever",
   ])
     await expect(archive).toContainText(name);
   await expect(archive).toContainText("8 seconds");
@@ -538,6 +547,9 @@ test("one-leg steps leave the tree and goals while their records remain archived
   await page.locator(".archived-skills summary").click();
   await expect(page.locator(".archived-skill-list")).toContainText(
     "One-Leg Front Lever",
+  );
+  await expect(page.locator(".archived-skill-list")).toContainText(
+    "One-Arm Back Lever",
   );
 });
 

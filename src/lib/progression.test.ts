@@ -18,8 +18,8 @@ import { getRecommendations } from "@/lib/recommendations";
 import { getDifficultyTier, MAX_DIFFICULTY } from "@/lib/difficulty";
 
 describe("skill database", () => {
-  it("contains all 168 skills with valid, acyclic dependencies and reverse links", () => {
-    expect(skills).toHaveLength(168);
+  it("contains all 167 skills with valid, acyclic dependencies and reverse links", () => {
+    expect(skills).toHaveLength(167);
     expect(new Set(skills.map((skill) => skill.id)).size).toBe(skills.length);
     const visit = (id: string, ancestors: string[] = []) => {
       expect(ancestors).not.toContain(id);

@@ -1,5 +1,6 @@
 // Keep old records readable without leaving retired milestones in the tree.
 export const retiredSkillNames: Record<string, string> = {
+  "one-arm-back-lever": "One-Arm Back Lever",
   "band-muscle-up": "Band-Assisted Muscle-up",
   "wall-handstand": "Wall Handstand",
   "chest-to-wall-handstand": "Chest-to-Wall Handstand",

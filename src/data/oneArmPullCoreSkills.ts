@@ -9,25 +9,6 @@ export function getOneArmPullCoreSkills(
 ): Skill[] {
   return [
     define(
-      "one-arm-back-lever",
-      "One-Arm Back Lever",
-      "pull",
-      "back-lever",
-      8,
-      "static",
-      ["back-lever"],
-      ["pull-up-bar"],
-      "Hold the straight body horizontally face down with one straight arm gripping a secure bar behind the torso. Keep the other hand completely clear and control shoulder extension, body rotation, and the return.",
-      "3-second horizontal hold on each arm with the free hand clear",
-      [
-        hold(
-          "One-arm back lever",
-          "1–3 sec per side",
-          "Transfer from a controlled two-arm position and release the free hand only while the supporting shoulder and straight body remain controlled; return before the position breaks.",
-        ),
-      ],
-    ),
-    define(
       "one-arm-front-lever",
       "One-Arm Front Lever",
       "pull",
@@ -148,7 +129,7 @@ export function getOneArmPullCoreSkills(
       "dragon-flag",
       13,
       "static",
-      ["dragon-press", "one-arm-back-lever"],
+      ["dragon-press", "one-arm-front-lever"],
       ["floor"],
       "Hold a face-up dragon press with one straight arm pressing its palm into the floor beside the hip. The free hand stays clear, the shoulders and upper back remain supported, and the hips and straight legs stay lifted without an overhead anchor.",
       "3-second controlled hold on each arm with the free hand clear",

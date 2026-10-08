@@ -8,7 +8,6 @@ const milestones = [
   ["bent-body-one-arm-dip", 7, "AK11"],
   ["straddle-one-arm-elbow-lever", 7, "AS11"],
   ["one-arm-elbow-lever", 8, "AS12"],
-  ["one-arm-back-lever", 8, "BL12"],
   ["ring-one-arm-push-up", 9, "AJ13"],
   ["straight-body-one-arm-dip", 9, "AK13"],
   ["one-arm-straight-muscle-up", 9, "AR13"],
@@ -26,6 +25,9 @@ for (const mobile of [false, true]) {
     test.setTimeout(90_000);
     if (mobile) await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
+    await expect(page.locator(".page-footer")).toContainText(
+      "Progress saved on this device",
+    );
     const search = page.getByRole("textbox", { name: "Search all skills" });
     const maximum = page.getByRole("combobox", {
       name: "Maximum skill level",
@@ -66,6 +68,20 @@ for (const mobile of [false, true]) {
       await expect(
         panel.getByRole("region", { name: "Technique & form" }),
       ).toBeVisible();
+      if (id === "one-arm-dragon-press") {
+        await expect(
+          panel.getByRole("button", {
+            name: "One-Arm Front Lever",
+            exact: true,
+          }),
+        ).toBeVisible();
+        await expect(
+          panel.getByRole("button", {
+            name: "One-Arm Back Lever",
+            exact: true,
+          }),
+        ).toHaveCount(0);
+      }
       if (id === "one-arm-planche") {
         await panel
           .getByRole("textbox", { name: "Personal Record", exact: true })

@@ -1,6 +1,6 @@
 # Progression reference
 
-Workbook levels rechecked **8 October 2026**; technique sources reviewed **8 October 2026**. The catalog has **168 skills**: Pull 61, Push 66, Legs 13, and Core 28. It includes six bar/floor Victorian variants and Straight Arm Touch alongside the one-arm, Pelican/Hefesto, and OG2 additions. Levels match 96 book-chart entries and 31 community additions; 41 skills use app estimates.
+Workbook levels rechecked **8 October 2026**; technique sources reviewed **8 October 2026**. The catalog has **167 skills**: Pull 60, Push 66, Legs 13, and Core 28. It includes six bar/floor Victorian variants and Straight Arm Touch alongside the one-arm, Pelican/Hefesto, and OG2 additions. Levels match 96 book-chart entries and 30 community additions; 41 skills use app estimates.
 
 ## Workbook source
 
@@ -79,11 +79,11 @@ All eight entries in BI9–BI16 are now mapped at their exact row levels. The fi
 
 The chart supplies names and levels; these apparatus and form details are app choices. Technique links for rare variants are explicitly labeled as adaptations. BI13’s level 9 replaces the former app override of 11. The book’s R13 **GH Pullout** is not added as a duplicate fixed-bar skill.
 
-Ring Rows at U6 also maps the app’s Inverted Row to book level 2. After these additions, the 168-skill catalog has 127 exact chart matches: 96 book and 31 community. The other 41 retain labeled estimates because their grip, apparatus, range, or movement is absent or ambiguous in this workbook.
+Ring Rows at U6 also maps the app’s Inverted Row to book level 2. After these additions, the 167-skill catalog has 126 exact chart matches: 96 book and 30 community. The other 41 retain labeled estimates because their grip, apparatus, range, or movement is absent or ambiguous in this workbook.
 
 ### One-arm workbook additions
 
-These 15 milestones retain the chart’s exact levels and separate grip, apparatus, and body shape. Full Ab Wheel (AU12, level 8) and Dragon Press (BJ14, level 10) are included as foundations for their one-arm forms. Existing one-arm rows, floor push-ups, and chin-ups retain their IDs and records.
+These 14 milestones retain the chart’s exact levels and separate grip, apparatus, and body shape. Full Ab Wheel (AU12, level 8) and Dragon Press (BJ14, level 10) are included as foundations for their one-arm forms. Existing one-arm rows, floor push-ups, and chin-ups retain their IDs and records.
 
 | Cell | Level | Added milestone                |
 | ---- | ----- | ------------------------------ |
@@ -93,7 +93,6 @@ These 15 milestones retain the chart’s exact levels and separate grip, apparat
 | AK11 | 7     | Side Bent-Body One-Arm Dip     |
 | AS11 | 7     | Straddle One-Arm Elbow Lever   |
 | AS12 | 8     | One-Arm Elbow Lever            |
-| BL12 | 8     | One-Arm Back Lever             |
 | AJ13 | 9     | Ring One-Arm Push-up           |
 | AK13 | 9     | Side Straight-Body One-Arm Dip |
 | AR13 | 9     | One-Arm-Straight Muscle-up     |
@@ -103,7 +102,7 @@ These 15 milestones retain the chart’s exact levels and separate grip, apparat
 | BL17 | 13    | One-Arm Dragon Press           |
 | BL20 | 16    | One-Arm Planche                |
 
-`OA Straight MU` is represented as an archer-style ring muscle-up: one arm stays straight and **both grips remain attached**. The workbook’s short label does not establish an unsupported single-arm muscle-up; the app labels its interpretation and technique as adaptations. Dragon Press is a supine floor press with shoulder/upper-back contact and palms beside the hips; it is distinct from an anchored Dragon Flag. Its prerequisites are Hollow Body Hold and Full Front Lever. The one-arm variant releases one supporting hand.
+`OA Straight MU` is represented as an archer-style ring muscle-up: one arm stays straight and **both grips remain attached**. The workbook’s short label does not establish an unsupported single-arm muscle-up; the app labels its interpretation and technique as adaptations. Dragon Press is a supine floor press with shoulder/upper-back contact and palms beside the hips; it is distinct from an anchored Dragon Flag. Its prerequisites are Hollow Body Hold and Full Front Lever. The one-arm variant releases one supporting hand and requires Dragon Press plus One-Arm Front Lever. One-Arm Back Lever is retired from the tree and goals; its existing records remain readable in Overview → Previous skill records.
 
 Wall-assisted one-arm dips (AK10 and AK12), weighted chin-ups, and the unspecific E10 handstand-progressions header remain excluded. AU8 is an explicit exception to the generic one-leg-intermediate exclusion: one hand and the opposite foot support the plank while the other arm and leg are raised. The one-forearm Victorian entry is not relabeled as a straight-arm one-arm skill.
 

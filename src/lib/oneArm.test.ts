@@ -17,7 +17,6 @@ const milestones = [
   ["bent-body-one-arm-dip", 7, "AK11", "book"],
   ["straddle-one-arm-elbow-lever", 7, "AS11", "book"],
   ["one-arm-elbow-lever", 8, "AS12", "book"],
-  ["one-arm-back-lever", 8, "BL12", "community"],
   ["ring-one-arm-push-up", 9, "AJ13", "book"],
   ["straight-body-one-arm-dip", 9, "AK13", "book"],
   ["one-arm-straight-muscle-up", 9, "AR13", "book"],
@@ -29,7 +28,7 @@ const milestones = [
 ] as const;
 
 describe("one-arm workbook milestones", () => {
-  it("uses all fifteen exact cells and preserves the book/community distinction", () => {
+  it("uses all fourteen exact cells and preserves the book/community distinction", () => {
     for (const [id, level, cell, kind] of milestones) {
       expect(og2Levels[id]).toMatchObject({ level, cell, kind });
       expect(skillById[id].difficulty).toBe(level);

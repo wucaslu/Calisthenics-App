@@ -822,13 +822,6 @@ export const og2Levels: Record<string, Og2Level> = {
     kind: "community",
     family: "One arm statics",
   },
-  "one-arm-back-lever": {
-    level: 8,
-    cell: "BL12",
-    name: "OA back lever",
-    kind: "community",
-    family: "One arm statics",
-  },
   "one-arm-front-lever": {
     level: 12,
     cell: "BL16",
