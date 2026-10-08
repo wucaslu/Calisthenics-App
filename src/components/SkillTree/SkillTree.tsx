@@ -148,11 +148,13 @@ interface Props {
 function FitTree({
   viewKey,
   focusGoalPath,
+  focusCategory,
   reducedMotion,
   typographyKey,
 }: {
   viewKey: string;
   focusGoalPath: boolean;
+  focusCategory: Category | "all";
   reducedMotion: boolean;
   typographyKey?: string;
 }) {
@@ -176,7 +178,10 @@ function FitTree({
         const current = getNodes();
         const pathNodes = current.filter(
           (node): node is SkillGraphNode =>
-            node.type === "skill" && node.data.onPath,
+            node.type === "skill" &&
+            node.data.onPath &&
+            (focusCategory === "all" ||
+              node.data.skill.category === focusCategory),
         );
         const focusIds = new Set(
           pathNodes.flatMap((node) => [
@@ -212,6 +217,7 @@ function FitTree({
   }, [
     fittingKey,
     focusGoalPath,
+    focusCategory,
     initialized,
     viewportInitialized,
     width,
@@ -530,6 +536,7 @@ export function SkillTree(props: Props) {
                   />
                   <CanvasControls reducedMotion={reducedMotion} />
                   <FitTree
+                    focusCategory={group}
                     viewKey={`${group}:${branch}:${query}:${maxDifficulty}:${availableOnly ? visible.map((skill) => skill.id).join(",") : "all"}`}
                     focusGoalPath={
                       group !== "all" &&

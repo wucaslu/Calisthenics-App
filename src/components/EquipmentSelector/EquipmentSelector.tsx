@@ -38,6 +38,11 @@ const equipmentInfo = {
     description:
       "Adjustable rings for rows, levers, support holds, and advanced strength skills.",
   },
+  "ab-wheel": {
+    Icon: Circle,
+    description:
+      "A sturdy rollout wheel; one-arm rollouts need a handle designed for a secure one-handed grip.",
+  },
   gym: {
     Icon: Dumbbell,
     description:

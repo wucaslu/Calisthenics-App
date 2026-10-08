@@ -10,7 +10,7 @@ describe("skill tree maximum level", () => {
   it("shows the complete catalog by default and at the workbook's level 17 ceiling", () => {
     expect(getVisibleSkills("all")).toEqual(skills);
     expect(getVisibleSkills("all", "", "all", MAX_DIFFICULTY)).toEqual(skills);
-    expect(skills).toHaveLength(144);
+    expect(skills).toHaveLength(161);
   });
 
   it("enforces an inclusive ceiling for every group and branch, including cross-group prerequisites", () => {
@@ -68,8 +68,10 @@ describe("skill tree maximum level", () => {
   it("retains lower-level foundations when every skill in an advanced branch is hidden", () => {
     const visible = getVisibleSkills("push", "", "planche", 1);
     expect(visible.map((skill) => skill.id).sort()).toEqual([
+      "dead-hang",
       "hollow-body-hold",
       "push-up",
+      "scapular-pull-up",
       "scapular-push-up",
     ]);
     expect(visible.every((skill) => skill.branch === "fundamentals")).toBe(

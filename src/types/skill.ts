@@ -20,11 +20,19 @@ export type Branch =
   | "rings"
   | "pelican"
   | "hefesto"
+  | "one-arm-dip"
+  | "ab-wheel"
   | "maltese"
   | "iron-cross"
   | "one-arm-pull-up";
 export type Equipment =
-  "floor" | "pull-up-bar" | "parallettes" | "dip-bars" | "rings" | "gym";
+  | "floor"
+  | "pull-up-bar"
+  | "parallettes"
+  | "dip-bars"
+  | "rings"
+  | "ab-wheel"
+  | "gym";
 export type SkillState = "locked" | "available" | "training" | "mastered";
 export type Progress = Record<string, "training" | "mastered">;
 export type MovementType = "dynamic" | "static";

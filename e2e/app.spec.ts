@@ -506,9 +506,14 @@ test("one-leg steps leave the tree and goals while their records remain archived
   await page
     .getByRole("textbox", { name: "Search all skills" })
     .fill("one-leg");
+  await expect(page.locator('[data-id="one-arm-one-leg-plank"]')).toHaveCount(
+    1,
+  );
   await expect(
-    page.getByRole("heading", { name: "No skills found" }),
-  ).toBeVisible();
+    page.locator(
+      '.react-flow__node-skill[data-id^="one-leg"], .react-flow__node-skill[data-id^="single-leg"]',
+    ),
+  ).toHaveCount(0);
   await page
     .getByRole("button", { name: "My goals", exact: false })
     .first()
@@ -589,7 +594,7 @@ test("muscle-up follows the ordered pulling chain without band assistance", asyn
     panel.getByRole("button", { name: "Start Training", exact: true }),
   ).toBeEnabled();
   await page.getByRole("button", { name: "Equipment", exact: true }).click();
-  await expect(page.locator(".equipment-card")).toHaveCount(6);
+  await expect(page.locator(".equipment-card")).toHaveCount(7);
   await expect(
     page.getByRole("heading", { name: "Resistance bands", exact: true }),
   ).toHaveCount(0);

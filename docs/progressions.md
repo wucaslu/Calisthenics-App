@@ -1,6 +1,6 @@
 # Progression reference
 
-Workbook levels rechecked **8 October 2026**; technique sources reviewed **7 October 2026**. The catalog has **144 skills**: Pull 51, Push 57, Legs 13, and Core 23. It includes five new Pelican/Hefesto steps alongside the earlier 38 workbook milestones. Levels match 84 book-chart entries and 20 community additions; 40 skills use app estimates.
+Workbook levels rechecked **8 October 2026**; technique sources reviewed **7 October 2026**. The catalog has **161 skills**: Pull 54, Push 66, Legs 13, and Core 28. It includes 15 new one-arm milestones and their Full Ab Wheel / Dragon Press foundations alongside the earlier Pelican/Hefesto and OG2 additions. Levels match 96 book-chart entries and 25 community additions; 40 skills use app estimates.
 
 ## Workbook source
 
@@ -78,7 +78,35 @@ All eight entries in BI9–BI16 are now mapped at their exact row levels. The fi
 
 The chart supplies names and levels; these apparatus and form details are app choices. Technique links for rare variants are explicitly labeled as adaptations. BI13’s level 9 replaces the former app override of 11. The book’s R13 **GH Pullout** is not added as a duplicate fixed-bar skill.
 
-Ring Rows at U6 also maps the app’s Inverted Row to book level 2. After these additions, the 144-skill catalog has 104 exact chart matches: 84 book and 20 community. The other 40 retain labeled estimates because their grip, apparatus, range, or movement is absent or ambiguous in this workbook.
+Ring Rows at U6 also maps the app’s Inverted Row to book level 2. After these additions, the 161-skill catalog has 121 exact chart matches: 96 book and 25 community. The other 40 retain labeled estimates because their grip, apparatus, range, or movement is absent or ambiguous in this workbook.
+
+### One-arm workbook additions
+
+These 15 milestones retain the chart’s exact levels and separate grip, apparatus, and body shape. Full Ab Wheel (AU12, level 8) and Dragon Press (BJ14, level 10) are included as foundations for their one-arm forms. Existing one-arm rows, floor push-ups, and chin-ups retain their IDs and records.
+
+| Cell | Level | Added milestone                |
+| ---- | ----- | ------------------------------ |
+| AU8  | 4     | One-Arm One-Leg Plank          |
+| AJ9  | 5     | Hand-Elevated One-Arm Push-up  |
+| AJ11 | 7     | Ring Straddle One-Arm Push-up  |
+| AK11 | 7     | Side Bent-Body One-Arm Dip     |
+| AS11 | 7     | Straddle One-Arm Elbow Lever   |
+| AS12 | 8     | One-Arm Elbow Lever            |
+| BL12 | 8     | One-Arm Back Lever             |
+| AJ13 | 9     | Ring One-Arm Push-up           |
+| AK13 | 9     | Side Straight-Body One-Arm Dip |
+| AR13 | 9     | One-Arm-Straight Muscle-up     |
+| E14  | 10    | Freestanding One-Arm Handstand |
+| AU14 | 10    | One-Arm Ab Wheel               |
+| BL16 | 12    | One-Arm Front Lever            |
+| BL17 | 13    | One-Arm Dragon Press           |
+| BL20 | 16    | One-Arm Planche                |
+
+`OA Straight MU` is represented as an archer-style ring muscle-up: one arm stays straight and **both grips remain attached**. The workbook’s short label does not establish an unsupported single-arm muscle-up; the app labels its interpretation and technique as adaptations. Dragon Press is a supine floor press with shoulder/upper-back contact and palms beside the hips; it is distinct from an anchored Dragon Flag. The one-arm variant releases one supporting hand.
+
+Wall-assisted one-arm dips (AK10 and AK12), weighted chin-ups, and the unspecific E10 handstand-progressions header remain excluded. AU8 is an explicit exception to the generic one-leg-intermediate exclusion: one hand and the opposite foot support the plank while the other arm and leg are raised. The one-forearm Victorian entry is not relabeled as a straight-arm one-arm skill.
+
+Ab Wheel is a separate equipment selection. Gym does not imply access to it, and a one-arm rollout needs a roller designed for a secure single-hand grip. Full and one-arm rollouts use standing starts and returns, with knees clear; a shortened kneeling rollout is preparation, rather than the full chart milestone.
 
 ## Routes
 
@@ -110,11 +138,11 @@ Goal planning selects one route at each step, includes supporting dependencies, 
 
 Group, progression, search, **Max level**, and **Available only** filter both graph and list. Max level hides higher-level nodes, including prerequisites. Available only keeps available, training, and mastered skills; locked search matches cannot expand the result. Filters do not alter progress. Mastery reveals unlocked children; resets hide relocked descendants.
 
-Each equipment substitution specifies a complete setup and execution notes. Eligible floor holds may use parallettes, L-sit/V-sit may use suitable supports, and levers may use a bar or rings. Full-range handstand pressing needs raised supports. Ring planches, Pelican Push Up, ring muscle-ups, Iron Cross, and Maltese require rings. Fixed-bar archer pull-ups, bar muscle-ups, and Hefesto retain their apparatus. **Gym** does not include rings.
+Each equipment substitution specifies a complete setup and execution notes. Eligible floor holds may use parallettes, L-sit/V-sit may use suitable supports, and levers may use a bar or rings. Full-range handstand pressing needs raised supports. Ring planches, Pelican Push Up, ring muscle-ups, Iron Cross, and Maltese require rings. Fixed-bar archer pull-ups, bar muscle-ups, and Hefesto retain their apparatus. One-arm front/back levers use the app’s fixed-bar setup. **Gym** does not include rings or an ab wheel.
 
 ## Exclusions
 
-Exclude generic assisted, weighted, and one-leg intermediate nodes: bands, walls, spotters, handrails, and foot-supported suspended skills. Keep intrinsic unilateral exercises such as **Pistol, Shrimp, and Dragon Squat**.
+Exclude generic assisted, weighted, and one-leg intermediate nodes: bands, walls, spotters, handrails, and foot-supported suspended skills. Keep intrinsic unilateral exercises such as **Pistol, Shrimp, and Dragon Squat**, and the requested chart’s **One-Arm One-Leg Plank**.
 
 Keep tucks, straddles, half-lays with both knees bent, and controlled negatives. Normal foot contact in push-ups, rows/curls, pike positions, and squats is part of the movement. The requested Hefesto progression includes the workbook’s feet-elevated Pelican Curl and hand-on-wrist variant; keep their foot/wrist support explicit rather than labeling them as fully suspended or unsupported one-arm skills. A decline-pike box increases shoulder load; a Nordic ankle anchor fixes the feet. Nordic Negative allows a hand catch after descent; full Nordic Curl excludes a hand push on return.
 
@@ -165,6 +193,6 @@ Guidance uses reachable written instructions and archived text. Several coaching
 ## Maintain the catalog
 
 1. Add exact source cells, text, levels, origin, and variants to `src/data/overcomingGravity.ts`; generate links in `src/data/references.ts`. A mapped level always overrides the fallback estimate; app ratings cannot override the workbook.
-2. Add stable definitions to `src/data/skills.ts` or `src/data/og2Skills.ts`; muscles to their muscle maps; setup/form/mistakes to the category technique map; routes and equipment to `src/data/trainingOptions.ts`.
+2. Add stable definitions to `src/data/skills.ts`, `src/data/og2Skills.ts`, or the `src/data/oneArm*` modules; muscles to their muscle maps; setup/form/mistakes to the category technique map; routes and equipment to `src/data/trainingOptions.ts`.
 3. Calibrate unmatched integer estimates from 1–17 against the anchors above. Keep tiers and source wording in `src/lib/difficulty.ts`.
 4. Check source matches, exclusions, apparatus/range, duplicate IDs, dependency reachability/cycles, alternatives, graph layout, equipment, and migration. Never reuse a persisted ID for a different movement.

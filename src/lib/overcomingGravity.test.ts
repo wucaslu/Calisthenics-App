@@ -131,10 +131,12 @@ describe("uploaded Overcoming Gravity chart", () => {
       cell: "AE13",
     });
     expect(
-      skills.some((skill) =>
-        /(?:one|single|1)[ -]leg|weighted|\+\s*\d+\s*(?:lbs?|kg)/i.test(
-          `${skill.id} ${skill.name}`,
-        ),
+      skills.some(
+        (skill) =>
+          skill.id !== "one-arm-one-leg-plank" &&
+          /(?:one|single|1)[ -]leg|weighted|\+\s*\d+\s*(?:lbs?|kg)/i.test(
+            `${skill.id} ${skill.name}`,
+          ),
       ),
     ).toBe(false);
   });

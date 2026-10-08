@@ -1,6 +1,6 @@
 # Calisthenics Skill Tree
 
-Explore **144 calisthenics skills** in Pull (51), Push (57), Legs (13), and Core (23). Track progress, personal records, practice, and weekly training plans. Built with Next.js, TypeScript, React, Tailwind CSS, and React Flow.
+Explore **161 calisthenics skills** in Pull (54), Push (66), Legs (13), and Core (28). Track progress, personal records, practice, and weekly training plans. Built with Next.js, TypeScript, React, Tailwind CSS, and React Flow.
 
 The app stores data locally. No account, database, API key, or backend is required.
 
@@ -47,7 +47,7 @@ Desktop data lives in `%APPDATA%\Calisthenics Skill Tree`. Replacing the executa
 - Set goals to highlight a preparation path and get equipment-compatible recommendations.
 - Drag the graph or use zoom and Fit View controls. Mobile uses a skill list. Open or close the sidebar with the top-bar navigation button.
 
-Levels use the **Overcoming Gravity 2nd Edition** workbook where matched: 84 **OG2 book**, 20 **Community chart**, and 40 **App estimate** entries. Hefesto follows the chart at level 9. Its preparation and advanced steps run from Incline Pelican Curl (5) through Hand-on-Wrist Hefesto (12). Details show exact workbook cells. Weighted, generic assisted, and one-leg intermediate progressions are excluded; Pistol, Shrimp, and Dragon Squat remain. The workbook’s feet-supported Pelican Curls and hand-on-wrist Hefesto are included as specific progression variants.
+Levels use the **Overcoming Gravity 2nd Edition** workbook where matched: 96 **OG2 book**, 25 **Community chart**, and 40 **App estimate** entries. Hefesto follows the chart at level 9. Its preparation and advanced steps run from Incline Pelican Curl (5) through Hand-on-Wrist Hefesto (12). Details show exact workbook cells. Weighted, generic assisted, and one-leg intermediate progressions are excluded; Pistol, Shrimp, and Dragon Squat remain. The workbook’s feet-supported Pelican Curls, hand-on-wrist Hefesto, and One-Arm One-Leg Plank are included as specific progression variants. Fifteen new one-arm milestones cover handstands, ring push-ups, side dips, elbow levers, muscle-ups, levers, planche, and core work; Full Ab Wheel and Dragon Press prepare their one-arm versions.
 
 See [progression references](docs/progressions.md) for source mappings, route decisions, exclusions, and migration rules. Mastery examples are practice guides; logs do not assess mastery automatically.
 
@@ -75,7 +75,7 @@ Progress, goals, equipment, records, practice, and schedules persist in localSto
 
 Use **Overview → Profile backup → Export JSON** to keep a copy. **Import JSON** validates version 1 or 2 backups and asks before replacing the current profile. Invalid files and cancelled imports preserve existing data. Retired or relocked skill records remain in **Overview → Previous skill records**. Older backups that contain saved graph views still import; the removed view data is ignored.
 
-The demo starts with nine mastered fundamentals, two training skills, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Floor, pull-up bar, and parallettes are selected. **Gym** supplies a bar, dip bars, parallettes, and a secure dragon-flag bench; select rings separately.
+The demo starts with nine mastered fundamentals, two training skills, and goals for Tuck Planche, Tuck Front Lever, and Freestanding Handstand. Floor, pull-up bar, and parallettes are selected. **Gym** supplies a bar, dip bars, parallettes, and a secure dragon-flag bench; select rings and an ab wheel separately. One-arm rollouts require a wheel designed for a secure one-handed grip.
 
 ## Develop and validate
 
@@ -120,7 +120,7 @@ Data rules are independent of React. Graph layout uses progression lanes with pr
 
 ### Add a skill
 
-1. Add a stable ID and definition to `src/data/skills.ts` or `src/data/og2Skills.ts`: group, branch, level 1–17, Dynamic/Static type, prerequisites, equipment, description, mastery example, and drills.
+1. Add a stable ID and definition to `src/data/skills.ts`, `src/data/og2Skills.ts`, or the `src/data/oneArm*` catalog modules: group, branch, level 1–17, Dynamic/Static type, prerequisites, equipment, description, mastery example, and drills.
 2. Add target/primary/secondary muscles and category-specific technique guidance for the same ID. Label guidance adapted from a related movement.
 3. For a workbook match, add the exact cell, level, origin, and variant to `src/data/overcomingGravity.ts`. Otherwise calibrate an **App estimate** against the [level anchors](docs/progressions.md#difficulty-levels).
 4. Add complete alternative routes and equipment setups to `src/data/trainingOptions.ts` when needed. Keep all dependency routes acyclic.
